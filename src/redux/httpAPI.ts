@@ -1,0 +1,219 @@
+import axios from 'axios'
+import { store } from './store'
+import configs from '../configs'
+import { resetState } from './resetSlice'
+import { refreshTokenFail, refreshTokenSuccess } from './common/common.slice'
+
+const { server } = configs
+const { SERVER_URL } = server
+
+// Create an instance of Axios
+const apiInstance = axios.create({
+    baseURL: SERVER_URL,
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+    }
+})
+
+const refreshToken = async (payload = {}) => {
+    try {
+        const res = await axios.put(`${SERVER_URL}/admin/refreshToken`, payload, {
+            withCredentials: true
+        })
+        return res
+    } catch (error) {
+        //@ts-ignore
+        if (error.response?.status === 401) {
+            store.dispatch(refreshTokenFail())
+        }
+        throw error
+    }
+}
+
+let isRefreshing = false
+let failedQueue: {
+    resolve: (value: unknown) => void
+    reject: (reason?: any) => void
+}[] = []
+
+const processQueue = (error: unknown, token = null) => {
+    failedQueue.forEach((prom) => {
+        if (error) {
+            prom.reject(error)
+        } else {
+            prom.resolve(token)
+        }
+    })
+    failedQueue = []
+}
+
+apiInstance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config
+        const errorStatusCode = error?.response?.status
+        if (error.code === 'ERR_NETWORK') {
+            // store.dispatch(APIErrorOn());
+        } else if (errorStatusCode === 401 && !originalRequest._isRetry) {
+            if (!isRefreshing) {
+                isRefreshing = true
+                try {
+                    originalRequest._isRetry = true
+                    const headers = { ...originalRequest.headers }
+                    const { data } = await refreshToken()
+
+                    apiInstance.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`
+                    processQueue(null, data.accessToken)
+                    return apiInstance.request({ ...originalRequest, headers })
+                } catch (err) {
+                    processQueue(err, null)
+                    store.dispatch(refreshTokenFail())
+                    return Promise.reject(err)
+                } finally {
+                    isRefreshing = false
+                }
+            } else {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject })
+                })
+                    .then((token) => {
+                        originalRequest.headers['Authorization'] = `Bearer ${token}`
+                        return apiInstance(originalRequest)
+                    })
+                    .catch((err) => {
+                        return Promise.reject(err)
+                    })
+            }
+        } else if (errorStatusCode === 429) {
+            store.dispatch(resetState())
+        }
+
+        store.dispatch(refreshTokenSuccess())
+        return Promise.reject(error)
+    }
+)
+
+// Exporting Api
+export default {
+    Auth: {
+        login: async (payload = {}) => {
+            const { data } = await apiInstance.put('/admin/login', payload)
+            return data
+        },
+
+        logout: async () => {
+            const { data } = await apiInstance.put('/admin/logout', {})
+            return data
+        }
+    },
+    Insights: {
+        getInsights: async (signal: AbortSignal) => {
+            const { data } = await apiInstance.get(`/admin/insight`, {
+                signal
+            })
+            return data
+        }
+    },
+    User: {
+        getProfile: async () => {
+            const { data } = await apiInstance.get('/admin/self')
+            return data
+        },
+        fetchUsers: async (signal: AbortSignal, page: number, pageSize: number) => {
+            const queryParams = {
+                page,
+                pageSize
+            }
+            const { data } = await apiInstance.get(`/admin/user`, {
+                params: queryParams,
+                signal
+            })
+            return data
+        }
+    },
+    Category: {
+        createCategory: async (payload = {}) => {
+            const { data } = await apiInstance.post('/admin/category', payload)
+            return data
+        },
+
+        getAllCategories: async (pageSize: number, page: number, feature: string, signal: AbortSignal) => {
+            const queryParams = {
+                pageSize,
+                page,
+                feature
+            }
+            const { data } = await apiInstance.get('/admin/category', {
+                params: queryParams,
+                signal
+            })
+
+            return data
+        },
+        deleteCategory: async (categoryId: string) => {
+            const { data } = await apiInstance.delete(`/admin/category/${categoryId}`)
+            return data
+        }
+    },
+
+    Article: {
+        createArticle: async (payload: unknown) => {
+            const { data } = await apiInstance.post('/admin/article', payload)
+            return data
+        },
+        getArticleById: async (articleId: string) => {
+            const { data } = await apiInstance.get(`/admin/article/${articleId}`)
+            return data
+        },
+        editArticleBySlug: async (articleSlug: string, payload = {}) => {
+            const { data } = await apiInstance.put(`/admin/article/${articleSlug}`, payload)
+            return data
+        },
+        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/article/${slug}/publish`, payload, { signal })
+            return data
+        },
+        uploadFile: async (payload: FormData) => {
+            const { data } = await apiInstance.post('/admin/upload', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            return data
+        },
+        uploadToS3: async (file: File, url: string, onProgress?: (progress: number) => void) => {
+            const response = await axios.put(url, file, {
+                headers: {
+                    'Content-Type': file.type
+                },
+                onUploadProgress: (progressEvent) => {
+                    if (progressEvent.total) {
+                        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        if (onProgress) onProgress(percent)
+                    }
+                }
+            })
+
+            return response
+        },
+
+        getAllArticles: async (pageSize: number, page: number, signal: AbortSignal) => {
+            const queryParams = {
+                pageSize,
+                page
+            }
+            const { data } = await apiInstance.get('/admin/article', {
+                params: queryParams,
+                signal
+            })
+
+            return data
+        },
+        deleteArticle: async (articleId: string) => {
+            const { data } = await apiInstance.delete(`/admin/article/${articleId}`)
+            return data
+        }
+    }
+}
