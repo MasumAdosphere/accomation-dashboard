@@ -1,11 +1,11 @@
 import { Form } from 'antd'
-import { useState } from 'react'
-import Logo from '../../assets/logoImg.png'
+import { ChangeEvent, useState } from 'react'
+import Logo from '../../assets/footer-logopng.png'
 import { useNavigate } from 'react-router-dom'
 import { login } from '../../redux/auth/auth.thunk'
 import { EConfigButtonType } from '../../types/state.types'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
-import { SubmitButton, PasswordInput, PhoneNumberItem } from '../../components/antdesign/form.components'
+import { SubmitButton, PasswordInput, TextItem } from '../../components/antdesign/form.components'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -13,23 +13,21 @@ const Login = () => {
 
     //local states
     const [dataValues, setDataValues] = useState({
-        whatsAppNumber: '',
+        email: '',
         password: ''
     })
 
-    const { whatsAppNumber, password } = dataValues
+    const { email, password } = dataValues
 
     // function to handle change in inputs
     const inputChangeHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value
         setDataValues({ ...dataValues, [name]: value })
     }
-    const phoneInputChangeHandler = (phone: string) => {
-        setDataValues({ ...dataValues, whatsAppNumber: phone })
-    }
+
     const submitBtnHandler = () => {
         // e.preventDefault()
-        form.validateFields() // Validate the form fields
+        form.validateFields()
             .then(() => {
                 return login(dataValues)
             })
@@ -53,6 +51,7 @@ const Login = () => {
                     alt="logo"
                     className="w-40"
                 />
+
                 <span className="font-sans text-primary font-medium text-2xl 2xl:text-[30px]">Login</span>
             </div>
             <Form
@@ -61,8 +60,8 @@ const Login = () => {
                 onFinish={submitBtnHandler}
                 fields={[
                     {
-                        name: 'whatsAppNumber',
-                        value: whatsAppNumber
+                        name: 'email',
+                        value: email
                     },
                     {
                         name: 'password',
@@ -70,13 +69,20 @@ const Login = () => {
                     }
                 ]}>
                 <div className="flex flex-col items-start justify-center gap-2">
-                    <label className="font-sans text-lg 2xl:text-[22px]">WhatsApp Number</label>
-                    <PhoneNumberItem
+                    <label className="font-sans text-lg 2xl:text-[22px]">Email Address</label>
+                    <TextItem
+                        placeholder="Enter email address"
+                        type="email"
+                        name="email"
+                        required={true}
+                        onChange={inputChangeHandler('email')}
+                    />
+                    {/* <PhoneNumberItem
                         name="whatsAppNumber"
                         required={true}
                         contact={{ phone: whatsAppNumber }}
                         onChange={phoneInputChangeHandler}
-                    />
+                    /> */}
                 </div>
                 <div className="flex flex-col items-start justify-center gap-2 pb-4 !mt-4">
                     <label className="font-sans text-lg 2xl:text-[22px]">Password</label>

@@ -13,7 +13,7 @@ export const getAllArticles = async (pageSize: number, page: number, signal: Abo
     }
 }
 
-export const createArticle = async (payload: unknown) => {
+export const createArticle = async (payload: FormData) => {
     try {
         store.dispatch(responseRequest())
         const { data, message } = await Api.Article.createArticle(payload)

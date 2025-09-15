@@ -97,42 +97,44 @@ export const CreateNewCategoryModal = ({
                         />
                     </div>
                     <div className="font-sans space-y-1 md:space-y-1">
-                        <label className="font-sans  text-sm font-semibold text-primary">
-                            Feature
-                            <span className="font-sans text-red-500 pl-1">*</span>
-                        </label>
-                        <ConfigProvider
-                            theme={{
-                                components: {
-                                    Radio: {
-                                        colorPrimary: '#083050'
+                        <div className="">
+                            <label className="font-sans  text-sm font-semibold text-primary">
+                                Blog
+                                <span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <ConfigProvider
+                                theme={{
+                                    components: {
+                                        Radio: {
+                                            colorPrimary: '#083050'
+                                        }
                                     }
-                                }
-                            }}>
-                            <Radio.Group
-                                onChange={handleRadioChange}
-                                value={feature}
-                                className="space-y-2 w-full">
-                                <div className="grid grid-cols-12 gap-4">
-                                    {['Article'].map((item) => (
-                                        <label
-                                            key={item}
-                                            className={`col-span-6 cursor-pointer rounded-[10px] hover:bg-grayBg py-2 border border-[#eee] ${
-                                                feature === item ? 'bg-grayBg border-primary' : ''
-                                            }`}
-                                            onClick={() =>
-                                                //@ts-ignore
-                                                handleRadioChange({ target: { value: item } })
-                                            }>
-                                            <div className="flex items-center gap-2 px-4">
-                                                <Radio value={item} />
-                                                <span className="text-base 2xl:text-lg font-semibold">{item}</span>
-                                            </div>
-                                        </label>
-                                    ))}
-                                </div>
-                            </Radio.Group>
-                        </ConfigProvider>
+                                }}>
+                                <Radio.Group
+                                    onChange={handleRadioChange}
+                                    value={feature}
+                                    className="space-y-2 w-full">
+                                    <div className="grid grid-cols-12 gap-4">
+                                        {['Blog', 'Testimonial'].map((item) => (
+                                            <label
+                                                key={item}
+                                                className={`col-span-6 cursor-pointer rounded-[10px] hover:bg-grayBg py-2 border border-[#eee] ${
+                                                    feature === item ? 'bg-grayBg border-primary' : ''
+                                                }`}
+                                                onClick={() =>
+                                                    //@ts-ignore
+                                                    handleRadioChange({ target: { value: item } })
+                                                }>
+                                                <div className="flex items-center gap-2 px-4">
+                                                    <Radio value={item} />
+                                                    <span className="text-base 2xl:text-lg font-semibold">{item}</span>
+                                                </div>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </Radio.Group>
+                            </ConfigProvider>
+                        </div>
                     </div>
 
                     <div className="font-sans flex space-x-3 pt-[50px] justify-end items-center">

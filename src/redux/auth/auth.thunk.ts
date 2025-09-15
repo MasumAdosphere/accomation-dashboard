@@ -3,7 +3,7 @@ import { store } from '../store.js'
 import execError from '../execError.js'
 import { responseRequest, responseSuccess, setAccessToken } from '../common/common.slice.js'
 
-export const login = async (reqBody: { whatsAppNumber: string; password: string }) => {
+export const login = async (reqBody: { email: string; password: string }) => {
     try {
         store.dispatch(responseRequest())
         const data = await Api.Auth.login(reqBody)

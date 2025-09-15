@@ -80,7 +80,7 @@ const Article = () => {
             key: 'category',
             width: '10%',
             dataIndex: 'category',
-            render: (_text: string, record: any) => <span className="font-sans text-sm 2xl:text-base font-semibold">{record?.category.title}</span>
+            render: (_text: string, record: any) => <span className="font-sans text-sm 2xl:text-base font-semibold">{record?.category?.title}</span>
         },
         {
             title: 'Created At',

@@ -96,3 +96,12 @@ export interface IInsights {
     categories: number
     users: number
 }
+
+export interface ArticlePayload {
+    title: string
+    category: string
+    author: string
+    content: string
+    image?: string
+    thumbnail?: string
+}

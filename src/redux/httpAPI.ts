@@ -16,6 +16,14 @@ const apiInstance = axios.create({
         Accept: 'application/json'
     }
 })
+const formDataApiInstance = axios.create({
+    baseURL: SERVER_URL,
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'multipart/form-data',
+        Accept: 'multipart/form-data'
+    }
+})
 
 const refreshToken = async (payload = {}) => {
     try {
@@ -159,20 +167,20 @@ export default {
     },
 
     Article: {
-        createArticle: async (payload: unknown) => {
-            const { data } = await apiInstance.post('/admin/article', payload)
+        createArticle: async (formData: FormData) => {
+            const { data } = await formDataApiInstance.post('/admin/blog', formData)
             return data
         },
         getArticleById: async (articleId: string) => {
-            const { data } = await apiInstance.get(`/admin/article/${articleId}`)
+            const { data } = await apiInstance.get(`/admin/blog/${articleId}`)
             return data
         },
         editArticleBySlug: async (articleSlug: string, payload = {}) => {
-            const { data } = await apiInstance.put(`/admin/article/${articleSlug}`, payload)
+            const { data } = await formDataApiInstance.put(`/admin/blog/${articleSlug}`, payload)
             return data
         },
         publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
-            const { data } = await apiInstance.put(`/admin/article/${slug}/publish`, payload, { signal })
+            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
             return data
         },
         uploadFile: async (payload: FormData) => {
@@ -204,7 +212,7 @@ export default {
                 pageSize,
                 page
             }
-            const { data } = await apiInstance.get('/admin/article', {
+            const { data } = await apiInstance.get('/admin/blog', {
                 params: queryParams,
                 signal
             })
@@ -212,7 +220,7 @@ export default {
             return data
         },
         deleteArticle: async (articleId: string) => {
-            const { data } = await apiInstance.delete(`/admin/article/${articleId}`)
+            const { data } = await apiInstance.delete(`/admin/blog/${articleId}`)
             return data
         }
     }

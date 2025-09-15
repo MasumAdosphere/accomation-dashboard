@@ -335,29 +335,35 @@ interface UploadImgFileProps {
     handleFileUpload: (file: File) => boolean | Promise<boolean>
     accept: string
     isUploading: boolean
+    onChange?: (value: string | null) => void // Add onChange prop
+
     // fileList?: UploadFile[]
 }
-export const UploadImgFile: React.FC<UploadImgFileProps> = ({ handleFileUpload, accept, isUploading }) => {
+export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploading, handleFileUpload, onChange }) => {
     const props: UploadProps = {
         listType: 'picture',
         accept,
         showUploadList: true,
-        // fileList,
+        maxCount: 1,
         beforeUpload: async (file) => {
-            await handleFileUpload(file)
+            try {
+                const result = await handleFileUpload(file)
+                if (result && onChange) {
+                    onChange(result)
+                }
+            } catch (error) {
+                console.error('Upload failed:', error)
+            }
             return false // prevent Ant Design's auto-upload
         },
         previewFile: async (file) => {
-            // Optional custom preview logic
             const blob = new Blob([file])
-            return URL.createObjectURL(blob) // generates a preview URL
+            return URL.createObjectURL(blob)
         }
     }
 
     return (
-        <Upload
-            {...props}
-            maxCount={1}>
+        <Upload {...props}>
             <Button
                 icon={<UploadOutlined />}
                 loading={isUploading}
@@ -367,7 +373,6 @@ export const UploadImgFile: React.FC<UploadImgFileProps> = ({ handleFileUpload, 
         </Upload>
     )
 }
-
 export const MediaGallery = ({ handleFileUpload, accept, isUploading }: UploadImgFileProps) => {
     const props: UploadProps = {
         name: 'file',
