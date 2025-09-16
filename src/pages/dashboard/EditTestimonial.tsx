@@ -84,7 +84,7 @@ const EditTestimonials = () => {
             } else {
                 //No new file → send existing URL
                 if (formValues.image) {
-                    formData.append('image', formValues.image) // 👈Send URL as string
+                    formData.append('image', formValues.image)
                 }
             }
 
@@ -103,35 +103,6 @@ const EditTestimonials = () => {
     if (loading) {
         return <LoadingComponent />
     }
-
-    // const handleFileUpload = (file: File, type: 'thumbnail'): boolean => {
-    //     const uploadFile = async () => {
-    //         try {
-    //             const formData = new FormData()
-    //             formData.append('image', file)
-    //             formData.append('type', type)
-
-    //             // Start the upload process
-    //             const response = await uploadFileUrl(formData)
-    //             if (response.success) {
-    //                 const { url } = response.data
-
-    //                 form.setFieldsValue({ thumbnail: url })
-    //                 setFormValues((prev) => ({ ...prev, thumbnail: url }))
-    //             }
-    //         } catch (error) {
-    //             //@ts-ignore
-    //             message.error(error.message || 'Upload failed')
-    //         } finally {
-    //             setIsUploading(false)
-    //         }
-    //     }
-
-    //     setIsUploading(true)
-    //     uploadFile()
-
-    //     return false
-    // }
 
     return (
         <div>
@@ -212,12 +183,27 @@ const EditTestimonials = () => {
                                         accept="image/png,image/jpeg"
                                         isUploading={isUploading}
                                         onFileSelect={(file) => {
-                                            setImageFile(file)
-                                            const previewUrl = URL.createObjectURL(file)
-                                            setUploadImage(previewUrl)
-                                            form.setFieldsValue({ image: 'uploaded' })
+                                            // 1. Start upload → show loading
+                                            setIsUploading(true)
+
+                                            // 2. Simulate upload (or call API)
+                                            const uploadFile = async () => {
+                                                try {
+                                                    await new Promise((resolve) => setTimeout(resolve, 1000))
+                                                    const previewUrl = URL.createObjectURL(file)
+                                                    setUploadImage(previewUrl)
+                                                    setImageFile(file)
+                                                    form.setFieldsValue({ image: 'uploaded' })
+                                                } catch (error) {
+                                                    message.error('Upload failed')
+                                                } finally {
+                                                    setIsUploading(false)
+                                                }
+                                            }
+
+                                            uploadFile()
                                         }}
-                                        handleFileUpload={function (file: File): boolean | Promise<boolean> {
+                                        handleFileUpload={function (): boolean | Promise<boolean> {
                                             throw new Error('Function not implemented.')
                                         }}
                                     />

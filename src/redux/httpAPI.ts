@@ -3,7 +3,6 @@ import { store } from './store'
 import configs from '../configs'
 import { resetState } from './resetSlice'
 import { refreshTokenFail, refreshTokenSuccess } from './common/common.slice'
-import { getAllTestimonials } from './testimonials/testimonial.thunk'
 
 const { server } = configs
 const { SERVER_URL } = server
