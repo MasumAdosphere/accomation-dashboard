@@ -18,7 +18,17 @@ export interface ArticleData {
     updatedAt: Date
     _id: string
 }
-
+export interface ITestimonial {
+    _id: string
+    name: string
+    designation: string
+    description: string
+    slug: string
+    image: string | null // 👈 nullable in case image is optional
+    createdAt: string // ISO date string
+    updatedAt: string // ISO date string
+    __v?: number // version key (Mongoose)
+}
 export interface ICategory {
     createdAt: Date
     feature: string

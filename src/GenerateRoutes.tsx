@@ -6,6 +6,9 @@ import EditArticle from './pages/dashboard/EditArticle'
 import DashboardLayout from './layouts/dashboard.layout'
 import { Navigate, RouteObject } from 'react-router-dom'
 import CreateArticle from './pages/dashboard/CreateArticle'
+import Testimonial from './pages/dashboard/testimonail'
+import CreateTestimonials from './pages/dashboard/CreateTestimonial'
+import EditTestimonials from './pages/dashboard/EditTestimonial'
 
 const { Categories, Overview } = DashboardPages
 
@@ -53,6 +56,14 @@ const generateRoutes = (): RouteObject[] => {
                     )
                 },
                 {
+                    path: 'testimonials',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
+                        <Testimonial />
+                        // </ProtectedRoute>
+                    )
+                },
+                {
                     path: 'articles/add',
                     element: (
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
@@ -61,10 +72,26 @@ const generateRoutes = (): RouteObject[] => {
                     )
                 },
                 {
+                    path: 'testimonials/add',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
+                        <CreateTestimonials />
+                        // </ProtectedRoute>
+                    )
+                },
+                {
                     path: 'articles/edit/:articleSlug',
                     element: (
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
                         <EditArticle />
+                        // </ProtectedRoute>
+                    )
+                },
+                {
+                    path: 'testimonials/edit/:testimonialId',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
+                        <EditTestimonials />
                         // </ProtectedRoute>
                     )
                 },

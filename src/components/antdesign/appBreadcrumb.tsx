@@ -7,9 +7,12 @@ import Separator from '../../assets/seperator.svg'
 type Path =
     | '/dashboard/overview'
     | '/dashboard/articles'
+    | '/dashboard/testimonials'
     | '/dashboard/articles/add'
+    | '/dashboard/testimonials/add'
     | '/dashboard/categories'
     | '/dashboard/articles/edit'
+    | '/dashboard/testimonials/edit'
     | '/dashboard/users'
 
 // Define a type for the pathTitleMap object
@@ -21,6 +24,7 @@ const AppBreadcrumb = () => {
     const allowedPaths = [
         '/dashboard/overview',
         '/dashboard/articles',
+        '/dashboard/testimonials',
         '/dashboard/articles/edit',
         '/dashboard/categories',
         '/dashboard/articles/add',
@@ -35,6 +39,9 @@ const AppBreadcrumb = () => {
     const pathTitleMap: PathTitleMap = {
         '/dashboard/overview': 'Overview',
         '/dashboard/articles': 'Articles',
+        '/dashboard/testimonials': 'Testimonials',
+        '/dashboard/testimonials/add': 'Add Testimonials',
+        '/dashboard/testimonials/edit': 'Edit Testimonials',
         '/dashboard/articles/edit': 'Edit Article',
         '/dashboard/categories': 'Categories',
         '/dashboard/articles/add': 'Add Article',

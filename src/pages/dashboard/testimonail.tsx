@@ -5,25 +5,26 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
-import { ArticleData, EConfigButtonType } from '../../types/state.types'
 import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
-import { DeleteArticleModal } from '../../components/antdesign/modal.components'
+import { DeleteTestimonialModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
-import { getAllArticles, publishActionById } from '../../redux/article/article.thunk'
+import { publishActionById } from '../../redux/article/article.thunk'
+import { EConfigButtonType, ITestimonial } from '../../types/state.types'
+import { getAllTestimonials } from '../../redux/testimonials/testimonial.thunk'
 
-const Article = () => {
+const Testimonial = () => {
     const pageSize = 20
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    // states
+    //states
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
-    const [article, setArticle] = useState<ArticleData[]>([])
-    const [selectedArticleId, SetSelectedArticleId] = useState<string | null>(null)
+    const [testimonials, setTestimonials] = useState<ITestimonial[]>([])
+    const [selectedTestimonialId, SetSelectedTestimonialId] = useState<string | null>(null)
     const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
-    const [isDeleteArticleModalOpen, setIsDeleteArticleModalOpen] = useState<boolean>(false)
+    const [isDeleteTestimonialModalOpen, setIsDeleteTestimonialModalOpen] = useState<boolean>(false)
     const controllerRef = useRef<AbortController | null>(null)
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
@@ -53,9 +54,9 @@ const Article = () => {
         }
     }
 
-    const columns: ColumnsType<ArticleData> = [
+    const columns: ColumnsType<ITestimonial> = [
         {
-            title: 'Sr no.',
+            title: 'Sr.',
             dataIndex: 'index',
             width: '5%',
             key: 'index',
@@ -64,23 +65,37 @@ const Article = () => {
             )
         },
         {
-            title: 'Title',
-            dataIndex: 'title',
-            width: '25%',
-            key: 'title',
+            title: 'Name',
+            dataIndex: 'name',
+            width: '20%',
+            key: 'name',
             render: (_, record) => (
                 <span className="font-sans text-sm 2xl:text-base font-medium">
-                    {record.title.length > 40 ? `${record.title.slice(0, 40)}...` : `${record.title}`}
+                    {record?.name?.length > 40 ? `${record?.name?.slice(0, 40)}...` : record?.name}
                 </span>
             )
         },
-
         {
-            title: 'Category',
-            key: 'category',
-            width: '10%',
-            dataIndex: 'category',
-            render: (_text: string, record: any) => <span className="font-sans text-sm 2xl:text-base font-semibold">{record?.category?.title}</span>
+            title: 'Designation',
+            dataIndex: 'designation',
+            width: '20%',
+            key: 'designation',
+            render: (_, record) => (
+                <span className="font-sans text-sm 2xl:text-base font-medium">
+                    {record?.designation?.length > 40 ? `${record?.designation?.slice(0, 40)}...` : record?.designation}
+                </span>
+            )
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            width: '30%',
+            key: 'description',
+            render: (_, record) => (
+                <span className="font-sans text-sm 2xl:text-base font-medium">
+                    {record?.description?.length > 40 ? `${record?.description.slice(0, 40)}...` : record?.description}
+                </span>
+            )
         },
         {
             title: 'Created At',
@@ -88,16 +103,15 @@ const Article = () => {
             width: '10%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-semibold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-sans text-sm 2xl:text-base font-bold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
             )
         },
-
         {
             title: 'Action',
             key: 'action',
             width: '10%',
             render: (record) => (
-                <div className="flex justify-start items-center gap-5">
+                <div className="flex justify-start item-center gap-5">
                     <Tooltip title={record?.isPublished ? 'Unpublish' : 'Publish'}>
                         <Switch
                             checked={record?.isPublished}
@@ -109,7 +123,7 @@ const Article = () => {
                     </Tooltip>
                     <Tooltip title="Preview">
                         <Link
-                            to={`${websiteUrl}/article-preview/${record.slug}?accessToken=${accessToken}`}
+                            to={`${websiteUrl}/testimonial-preview/${record.slug}?accessToken=${accessToken}`}
                             target="_blank">
                             <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl">Open</EyeOutlined>
                         </Link>
@@ -118,8 +132,8 @@ const Article = () => {
                     <Tooltip title="Edit">
                         <EditFilled
                             onClick={() => {
-                                console.log('Edit record id:', record._id)
-                                navigate(`/dashboard/articles/edit/${record._id}`)
+                                console.log(record._id)
+                                navigate(`/dashboard/testimonials/edit/${record._id}`)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -127,8 +141,8 @@ const Article = () => {
                     <Tooltip title="Delete">
                         <DeleteFilled
                             onClick={() => {
-                                setIsDeleteArticleModalOpen(true)
-                                SetSelectedArticleId(record._id)
+                                setIsDeleteTestimonialModalOpen(true)
+                                SetSelectedTestimonialId(record._id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -138,17 +152,17 @@ const Article = () => {
         }
     ]
 
-    const getArticles = async (signal: AbortSignal) => {
+    const getTestimonials = async (pageSize: number, page: number, signal: AbortSignal) => {
         try {
             setLoading(true)
-
-            const { data, meta } = await getAllArticles(pageSize, page, signal)
+            const { data, meta } = await getAllTestimonials(pageSize, page, signal)
             if (data) {
                 setTotalPages(meta?.page.pages)
-                setArticle(data)
+                setTestimonials(data)
             }
         } catch (error) {
             //@ts-ignore
+
             message.error(error.message)
         } finally {
             setLoading(false)
@@ -158,29 +172,25 @@ const Article = () => {
     useEffect(() => {
         const controller = new AbortController()
         const signal = controller.signal
-        getArticles(signal)
+        getTestimonials(pageSize, page, signal)
         return () => {
             controller.abort()
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, isDataRefreshed])
 
     return (
         <div className="font-sans space-y-3">
             <Form>
-                <div className="mb-4 flex justify-end items-center text-lg">
-                    {/* <h2 className="text-primary font-sans text-lg 2xl:text-font22 font-semibold">Articles</h2> */}
-                    <div>
-                        <Link to="/dashboard/articles/add">
-                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                                <Button
-                                    className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
-                                    type="default">
-                                    Add Article
-                                </Button>
-                            </ButtonThemeConfig>
-                        </Link>
-                    </div>
+                <div className="mb-4 flex justify-end item-center text-lg">
+                    <Link to="/dashboard/testimonials/add">
+                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                            <Button
+                                className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                type="default">
+                                Add Testimonial
+                            </Button>
+                        </ButtonThemeConfig>
+                    </Link>
                 </div>
             </Form>
             <ConfigProvider
@@ -190,7 +200,6 @@ const Article = () => {
                         fontWeightStrong: 500,
                         colorPrimary: '#816348',
                         fontSize: 16
-                        // borderRadius: 0
                     },
                     components: {
                         Table: {
@@ -200,7 +209,7 @@ const Article = () => {
                     }
                 }}>
                 <Table
-                    dataSource={article}
+                    dataSource={testimonials}
                     loading={loading}
                     scroll={{ x: '1100px' }}
                     columns={columns}
@@ -217,15 +226,15 @@ const Article = () => {
                     }}
                 />
             </ConfigProvider>
-            {isDeleteArticleModalOpen && (
-                <DeleteArticleModal
-                    isDeleteArticleModalOpen={isDeleteArticleModalOpen}
-                    setIsDeleteArticleModalOpen={setIsDeleteArticleModalOpen}
-                    selectedArticleId={selectedArticleId || ''}
+            {isDeleteTestimonialModalOpen && (
+                <DeleteTestimonialModal
+                    isDeleteTestimonialModalOpen={isDeleteTestimonialModalOpen}
+                    setIsDeleteTestimonialModalOpen={setIsDeleteTestimonialModalOpen}
+                    selectedTestimonialId={selectedTestimonialId || ''}
                 />
             )}
         </div>
     )
 }
 
-export default Article
+export default Testimonial

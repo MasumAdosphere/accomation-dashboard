@@ -52,6 +52,11 @@ const DashboardLayout = () => {
             to: 'articles'
         },
         {
+            key: 'testimonials',
+            label: 'Testimonials',
+            to: 'testimonials'
+        },
+        {
             key: 'users',
             label: 'Users',
             to: 'users'
@@ -68,9 +73,15 @@ const DashboardLayout = () => {
             return `Welcome, ${user?.username}`
         } else if (path === '/dashboard/articles') {
             return 'Articles'
+        } else if (path === '/dashboard/testimonials') {
+            return 'Testimonials'
+        } else if (path === `/dashboard/testimonials/add`) {
+            return 'Add Testimonial'
         } else if (path === `/dashboard/articles/add`) {
             return 'Add Article'
         } else if (path.startsWith('/dashboard/articles/edit/')) {
+            return 'Edit Article'
+        } else if (path.startsWith('/dashboard/testimonials/edit/')) {
             return 'Edit Article'
         } else if (path === '/dashboard/categories') {
             return 'Categories'
@@ -88,7 +99,7 @@ const DashboardLayout = () => {
     ) =>
         menuItems.map((item) => ({
             ...item,
-            label: <span>{item.label}</span> // Full label when not collapsed
+            label: <span>{item.label}</span>
         }))
     useEffect(() => {
         setCurrent(location.pathname.slice(11).split('/')[0])

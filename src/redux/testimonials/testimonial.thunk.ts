@@ -3,9 +3,9 @@ import { store } from '../store'
 import execError from '../execError'
 import { responseRequest, responseSuccess } from '../common/common.slice'
 
-export const getAllArticles = async (pageSize: number, page: number, signal: AbortSignal) => {
+export const getAllTestimonials = async (pageSize: number, page: number, signal: AbortSignal) => {
     try {
-        const res = await Api.Article.getAllArticles(pageSize, page, signal)
+        const res = await Api.Testimonial.getAllTestimonials(pageSize, page, signal)
         // const { data } = res
         return res
     } catch (error) {
@@ -13,10 +13,10 @@ export const getAllArticles = async (pageSize: number, page: number, signal: Abo
     }
 }
 
-export const createArticle = async (payload: FormData) => {
+export const createTestimonials = async (payload: FormData) => {
     try {
         store.dispatch(responseRequest())
-        const { data, message } = await Api.Article.createArticle(payload)
+        const { data, message } = await Api.Testimonial.createTestimonials(payload)
         store.dispatch(responseSuccess({ message }))
         return data
     } catch (error) {
@@ -36,18 +36,18 @@ export const publishActionById = async (slug: string, isPublished: boolean, sign
     }
 }
 
-export const getArticleById = async (articleId: string) => {
+export const getTestimonialById = async (testimonialId: string) => {
     try {
-        const { data } = await Api.Article.getArticleById(articleId)
+        const { data } = await Api.Testimonial.getTestimonialById(testimonialId)
         return data
     } catch (error) {
         return execError(error)
     }
 }
-export const editArticle = async (articleId: string, payload: any) => {
+export const editTestimonials = async (testimonialId: string, payload: any) => {
     try {
         store.dispatch(responseRequest())
-        const { data, message } = await Api.Article.editArticleBySlug(articleId, payload)
+        const { data, message } = await Api.Testimonial.editTestimonialById(testimonialId, payload)
         store.dispatch(responseSuccess({ message }))
         return data
     } catch (error) {
@@ -74,9 +74,9 @@ export const uploadToS3 = async (file: File, url: string, onProgress?: (progress
     }
 }
 
-export const deleteArticleById = async (articleId: string) => {
+export const deleteTestimonialById = async (testimonialId: string) => {
     try {
-        const data = await Api.Article.deleteArticle(articleId)
+        const data = await Api.Testimonial.deleteTestimonial(testimonialId)
         const { message } = data
         store.dispatch(responseSuccess({ message }))
         return data

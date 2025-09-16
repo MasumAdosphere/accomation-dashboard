@@ -335,21 +335,27 @@ interface UploadImgFileProps {
     handleFileUpload: (file: File) => boolean | Promise<boolean>
     accept: string
     isUploading: boolean
+    value?: string
     onChange?: (value: string | null) => void // Add onChange prop
+    onFileSelect: (file: File) => void // Simple callback - no return value needed
 
     // fileList?: UploadFile[]
 }
-export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploading, handleFileUpload, onChange }) => {
+export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploading, onFileSelect, handleFileUpload, onChange }) => {
     const props: UploadProps = {
         listType: 'picture',
         accept,
+
         showUploadList: true,
         maxCount: 1,
         beforeUpload: async (file) => {
             try {
-                const result = await handleFileUpload(file)
-                if (result && onChange) {
-                    onChange(result)
+                // Use the new onFileSelect approach (preferred)
+                if (onFileSelect) {
+                    onFileSelect(file)
+                    if (onChange) {
+                        onChange(file.name)
+                    }
                 }
             } catch (error) {
                 console.error('Upload failed:', error)

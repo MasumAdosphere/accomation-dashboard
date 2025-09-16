@@ -4,17 +4,18 @@ import { Button, ConfigProvider, Form, message, Select } from 'antd'
 import { EConfigButtonType, ICategory } from '../../types/state.types'
 import { getAllCategories } from '../../redux/category/category.thunk'
 import { audioBoxRegex, urlRegex, videoRegex } from '../../quicker/quicker'
-import { createArticle, uploadFileUrl } from '../../redux/article/article.thunk'
+import { createArticle } from '../../redux/article/article.thunk'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
-import { SubmitButton, TextEditor, TextItem, UploadImgFile } from '../../components/antdesign/form.components'
+import { TextEditor, TextItem, UploadImgFile } from '../../components/antdesign/form.components'
+import { LoadingOutlined } from '@ant-design/icons'
 
 const CreateArticle = () => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
     const [isUploading, setIsUploading] = useState(false)
-    const [uploadThumbnail, setUploadThumbnail] = useState<string | null>(null)
-    const [uploadImage, setUploadImage] = useState<string | null>(null)
     const [categories, setCategories] = useState<Array<ICategory>>([])
+
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     // Store the actual File objects
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
@@ -29,6 +30,7 @@ const CreateArticle = () => {
 
     const submitBtnHandler = async () => {
         try {
+            setIsSubmitting(true)
             const values = await form.validateFields()
 
             // Create FormData with File objects (not URLs)
@@ -50,8 +52,6 @@ const CreateArticle = () => {
 
             const success = await createArticle(formData)
             if (success) {
-                setUploadImage(null)
-                setUploadThumbnail(null)
                 setThumbnailFile(null)
                 setImageFile(null)
                 form.resetFields()
@@ -59,6 +59,8 @@ const CreateArticle = () => {
             }
         } catch (error: any) {
             message.error(error.message)
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -87,34 +89,6 @@ const CreateArticle = () => {
     }, [])
 
     const filterOption = (input: any, option: any) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-
-    const handleFileUpload = async (file: File, type: 'thumbnail' | 'image') => {
-        try {
-            setIsUploading(true)
-
-            // Store the File object for form submission
-            if (type === 'thumbnail') {
-                setThumbnailFile(file)
-                // Create preview URL for display
-                const previewUrl = URL.createObjectURL(file)
-                setUploadThumbnail(previewUrl)
-                form.setFieldsValue({ [type]: file.name }) // Set filename for validation
-            } else {
-                setImageFile(file)
-                // Create preview URL for display
-                const previewUrl = URL.createObjectURL(file)
-                setUploadImage(previewUrl)
-                form.setFieldsValue({ [type]: file.name }) // Set filename for validation
-            }
-
-            return file.name // Return filename for Form.Item
-        } catch (err: any) {
-            message.error(err.message || 'Upload failed')
-            return null
-        } finally {
-            setIsUploading(false)
-        }
-    }
 
     return (
         <div>
@@ -173,7 +147,7 @@ const CreateArticle = () => {
                         </ConfigProvider>
                     </div>
 
-                    <div className="font-sans mb-4 space-y-2">
+                    {/* <div className="font-sans mb-4 space-y-2">
                         <label className="font-sans  text-sm font-semibold text-primary">
                             Author<span className="font-sans text-red-500 pl-1">*</span>
                         </label>
@@ -186,9 +160,9 @@ const CreateArticle = () => {
                             required={true}
                             onChange={inputChangeHandler('author')}
                         />
-                    </div>
+                    </div> */}
 
-                    <div className="font-sans mb-4 space-y-2">
+                    {/* <div className="font-sans mb-4 space-y-2">
                         <div className="font-sans  w-full">
                             <label className="font-sans  text-sm font-semibold text-primary mb-2">
                                 Thumbnail
@@ -196,22 +170,25 @@ const CreateArticle = () => {
                             </label>
                             <div className="mt-2">
                                 <Form.Item
-                                    key="thumbnail"
                                     name="thumbnail"
-                                    rules={[{ required: true, message: 'Please select thumbnail' }]}
-                                    valuePropName="value"
-                                    getValueFromEvent={(e) => e}>
+                                    rules={[{ required: true, message: 'Please select thumbnail' }]}>
                                     <UploadImgFile
-                                        handleFileUpload={async (file) => {
-                                            return await handleFileUpload(file, 'thumbnail')
-                                        }}
                                         accept="image/png,image/jpeg"
                                         isUploading={isUploading}
+                                        onFileSelect={(file) => {
+                                            setImageFile(file)
+                                            const previewUrl = URL.createObjectURL(file)
+                                            setUploadImage(previewUrl)
+                                            form.setFieldsValue({ image: 'uploaded' })
+                                        }}
+                                        handleFileUpload={function (): boolean | Promise<boolean> {
+                                            throw new Error('Function not implemented.')
+                                        }}
                                     />
                                 </Form.Item>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="font-sans col-span-2 mb-4 h-auto">
                         <label className="font-sans  text-sm font-semibold text-primary mb-2">
@@ -236,17 +213,19 @@ const CreateArticle = () => {
                             </label>
                             <div className="mt-2">
                                 <Form.Item
-                                    key="image"
                                     name="image"
-                                    rules={[{ required: true, message: 'Please select image' }]}
-                                    valuePropName="value"
-                                    getValueFromEvent={(e) => e}>
+                                    rules={[{ required: true, message: 'Please select image' }]}>
                                     <UploadImgFile
-                                        handleFileUpload={async (file) => {
-                                            return await handleFileUpload(file, 'image')
-                                        }}
                                         accept="image/png,image/jpeg"
                                         isUploading={isUploading}
+                                        onFileSelect={(file) => {
+                                            setThumbnailFile(file)
+
+                                            form.setFieldsValue({ thumbnail: 'uploaded' })
+                                        }}
+                                        handleFileUpload={function (): boolean | Promise<boolean> {
+                                            throw new Error('Function not implemented.')
+                                        }}
                                     />
                                 </Form.Item>
                             </div>
@@ -357,7 +336,15 @@ const CreateArticle = () => {
                     </ButtonThemeConfig>
                     <div>
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                            <SubmitButton text={`Add`} />
+                            <Button
+                                htmlType="submit"
+                                type="primary"
+                                icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
+                                disabled={isSubmitting}
+                                className="font-sans h-auto rounded-lg bg-primary text-white border-primary text-base 2xl:text-[20px] shadow-none flex justify-center items-center px-6 py-2"
+                                style={{ width: 'auto' }}>
+                                {isSubmitting ? 'Adding...' : 'Add'}
+                            </Button>
                         </ButtonThemeConfig>
                     </div>
                 </div>

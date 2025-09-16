@@ -3,6 +3,7 @@ import { store } from './store'
 import configs from '../configs'
 import { resetState } from './resetSlice'
 import { refreshTokenFail, refreshTokenSuccess } from './common/common.slice'
+import { getAllTestimonials } from './testimonials/testimonial.thunk'
 
 const { server } = configs
 const { SERVER_URL } = server
@@ -175,8 +176,8 @@ export default {
             const { data } = await apiInstance.get(`/admin/blog/${articleId}`)
             return data
         },
-        editArticleBySlug: async (articleSlug: string, payload = {}) => {
-            const { data } = await formDataApiInstance.put(`/admin/blog/${articleSlug}`, payload)
+        editArticleBySlug: async (articleId: string, payload = {}) => {
+            const { data } = await formDataApiInstance.put(`/admin/blog/${articleId}`, payload)
             return data
         },
         publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
@@ -221,6 +222,65 @@ export default {
         },
         deleteArticle: async (articleId: string) => {
             const { data } = await apiInstance.delete(`/admin/blog/${articleId}`)
+            return data
+        }
+    },
+
+    Testimonial: {
+        createTestimonials: async (formData: FormData) => {
+            const { data } = await formDataApiInstance.post('/admin/testimonial', formData)
+            return data
+        },
+        getTestimonialById: async (testimonialId: string) => {
+            const { data } = await apiInstance.get(`/admin/testimonial/${testimonialId}`)
+            return data
+        },
+        editTestimonialById: async (testimonialId: string, payload = {}) => {
+            const { data } = await formDataApiInstance.put(`/admin/testimonial/${testimonialId}`, payload)
+            return data
+        },
+        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+            return data
+        },
+        uploadFile: async (payload: FormData) => {
+            const { data } = await apiInstance.post('/admin/upload', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            return data
+        },
+        uploadToS3: async (file: File, url: string, onProgress?: (progress: number) => void) => {
+            const response = await axios.put(url, file, {
+                headers: {
+                    'Content-Type': file.type
+                },
+                onUploadProgress: (progressEvent) => {
+                    if (progressEvent.total) {
+                        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        if (onProgress) onProgress(percent)
+                    }
+                }
+            })
+
+            return response
+        },
+
+        getAllTestimonials: async (pageSize: number, page: number, signal: AbortSignal) => {
+            const queryParams = {
+                pageSize,
+                page
+            }
+            const { data } = await apiInstance.get('/admin/testimonial', {
+                params: queryParams,
+                signal
+            })
+
+            return data
+        },
+        deleteTestimonial: async (testimonialId: string) => {
+            const { data } = await apiInstance.delete(`/admin/testimonial/${testimonialId}`)
             return data
         }
     }
