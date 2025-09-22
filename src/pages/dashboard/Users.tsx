@@ -110,7 +110,7 @@ const Users = () => {
                         columns={columns}
                         scroll={{ x: '1300' }}
                         rowHoverable={true}
-                        rowKey={(record) => record._id}
+                        rowKey={(record) => record.id}
                         pagination={{
                             current: page,
                             pageSize: pageSize,

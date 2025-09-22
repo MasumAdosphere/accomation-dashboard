@@ -6,7 +6,7 @@ export enum EConfigButtonType {
 export interface ArticleData {
     body: string
     category: {
-        _id: string
+        id: string
         title: string
         feature: string
     }
@@ -16,10 +16,10 @@ export interface ArticleData {
     thumbnail: string
     title: string
     updatedAt: Date
-    _id: string
+    id: string
 }
 export interface ITestimonial {
-    _id: string
+    id: string
     name: string
     designation: string
     description: string
@@ -29,12 +29,44 @@ export interface ITestimonial {
     updatedAt: string // ISO date string
     __v?: number // version key (Mongoose)
 }
+export interface IfaqPayload {
+    question: string
+    answer: String
+    pageName: string
+}
+export interface ILogo {
+    id: string
+    companyName: string
+    logo: string
+    createdAt: string
+    isPublished: boolean
+}
+export interface ICreatelogo {
+    companyName: string
+    logo: string
+}
+
+export interface IFaq {
+    id: string
+    name: string
+    designation: string
+    question: string
+    answer: String
+    pageName: string
+    description: string
+    slug: string
+    image: string | null // 👈 nullable in case image is optional
+    createdAt: string // ISO date string
+    updatedAt: string // ISO date string
+    __v?: number // version key (Mongoose)
+}
+
 export interface ICategory {
     createdAt: Date
     feature: string
     title: string
     updatedAt: Date
-    _id: string
+    id: string
 }
 // Videos
 export interface ICreateVideo {
@@ -55,9 +87,9 @@ export interface IMeta {
 }
 
 export interface IGetVideos {
-    _id: string
+    id: string
     category: {
-        _id: string
+        id: string
         title: string
         feature: string
     }
@@ -73,9 +105,9 @@ export interface IGetVideos {
 
 // Audios
 export interface IGetAudio {
-    _id: string
+    id: string
     category: {
-        _id: string
+        id: string
         title: string
         feature: string
     }
@@ -97,7 +129,7 @@ export interface IUsers {
     username: string
     verification: { status: boolean }
     whatsAppNumber: string
-    _id: string
+    id: string
 }
 
 // Insights

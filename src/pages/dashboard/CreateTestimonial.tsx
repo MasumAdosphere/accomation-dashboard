@@ -55,7 +55,7 @@ const CreateTestimonials = () => {
             if (data) {
                 const categoryItems = data.map((cat: ICategory) => ({
                     label: cat.title,
-                    value: cat._id
+                    value: cat.id
                 }))
                 setCategories(categoryItems)
             }

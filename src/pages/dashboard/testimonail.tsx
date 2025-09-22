@@ -132,8 +132,8 @@ const Testimonial = () => {
                     <Tooltip title="Edit">
                         <EditFilled
                             onClick={() => {
-                                console.log(record._id)
-                                navigate(`/dashboard/testimonials/edit/${record._id}`)
+                                console.log(record.id)
+                                navigate(`/dashboard/testimonials/edit/${record.id}`)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -142,7 +142,7 @@ const Testimonial = () => {
                         <DeleteFilled
                             onClick={() => {
                                 setIsDeleteTestimonialModalOpen(true)
-                                SetSelectedTestimonialId(record._id)
+                                SetSelectedTestimonialId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -214,7 +214,7 @@ const Testimonial = () => {
                     scroll={{ x: '1100px' }}
                     columns={columns}
                     rowHoverable={true}
-                    rowKey={(record) => record._id}
+                    rowKey={(record) => record.id}
                     pagination={{
                         current: page,
                         pageSize: pageSize,

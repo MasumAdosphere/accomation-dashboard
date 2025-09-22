@@ -11,6 +11,8 @@ import { setIsDataRefreshed } from '../../redux/common/common.slice'
 import { createCategory, deleteCategoryById } from '../../redux/category/category.thunk'
 import { Modal, Button, message, Form, Radio, RadioChangeEvent, ConfigProvider } from 'antd'
 import { deleteTestimonialById } from '../../redux/testimonials/testimonial.thunk'
+import { deleteFaqById } from '../../redux/faq/faq.thunk'
+import { deleteLogoById } from '../../redux/logo/logo.thunk'
 
 //Category Modal
 export const CreateNewCategoryModal = ({
@@ -376,6 +378,159 @@ export const DeleteTestimonialModal = ({
                         />
                     )}{' '}
                     Yes, Delete Testimonial
+                </button>
+            </div>
+        </Modal>
+    )
+}
+
+export const DeleteFaqModal = ({
+    selectedFaqId,
+    isDeleteFaqModalOpen,
+    setIsDeleteFaqModalOpen
+}: {
+    selectedFaqId: string
+    isDeleteFaqModalOpen: boolean
+    setIsDeleteFaqModalOpen: Dispatch<boolean>
+}) => {
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(false)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
+
+    const deleteContent = async () => {
+        console.log('id', selectedFaqId)
+        try {
+            setLoading(true)
+            setIsDisabled(true)
+
+            const res = await deleteFaqById(selectedFaqId as string)
+
+            if (res.success) {
+                setIsDeleteFaqModalOpen(false)
+                setLoading(false)
+                setIsDisabled(false)
+                dispatch(setIsDataRefreshed(!isDataRefreshed))
+            }
+        } catch {
+            setIsDeleteFaqModalOpen(false)
+            setLoading(false)
+            setIsDisabled(false)
+        } finally {
+            setIsDisabled(false)
+            setLoading(false)
+        }
+    }
+
+    return (
+        <Modal
+            open={isDeleteFaqModalOpen}
+            onCancel={() => setIsDeleteFaqModalOpen(false)}
+            footer={null}
+            centered
+            width={500}>
+            <div className="flex item-center mt-5 gap-[12px]">
+                <img
+                    src={Exclaim}
+                    alt=""
+                />
+                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Faq?</h6>
+            </div>
+            <div className="flex w-full justify-end mt-6 gap-[17px]">
+                <button
+                    className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
+                    onClick={() => setIsDeleteFaqModalOpen(false)}>
+                    No
+                </button>
+
+                <button
+                    disabled={isDisabled}
+                    onClick={() => deleteContent()}
+                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center item-center px-4 py-2 ${isDisabled ? 'opacity-40cursor-not-allowed' : ''}`}>
+                    {loading && (
+                        <img
+                            src={loadingSvg}
+                            className="h-6 w-auto animate-spin"
+                            alt=""
+                        />
+                    )}{' '}
+                    Yes, Delete Faq
+                </button>
+            </div>
+        </Modal>
+    )
+}
+export const DeleteLogoModal = ({
+    selectedLogoId,
+    isDeleteLogoModalOpen,
+    setIsDeleteLogoModalOpen
+}: {
+    selectedLogoId: string | null
+    isDeleteLogoModalOpen: boolean
+    setIsDeleteLogoModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(false)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
+
+    const deleteContent = async () => {
+        if (!selectedLogoId) return
+
+        try {
+            setLoading(true)
+            setIsDisabled(true)
+            const res = await deleteLogoById(selectedLogoId)
+
+            if (res.success) {
+                setIsDeleteLogoModalOpen(false)
+                dispatch(setIsDataRefreshed(!isDataRefreshed))
+            }
+        } catch (error) {
+            console.error('Delete failed:', error)
+            setIsDeleteLogoModalOpen(false)
+        } finally {
+            setIsDisabled(false)
+            setLoading(false)
+        }
+    }
+
+    return (
+        <Modal
+            open={isDeleteLogoModalOpen}
+            onCancel={() => setIsDeleteLogoModalOpen(false)}
+            footer={null}
+            centered
+            width={500}
+            className="rounded-xl">
+            <div className="flex items-center mt-5 gap-[12px]">
+                <img
+                    src={Exclaim}
+                    alt="Warning"
+                    width={24}
+                    height={24}
+                />
+                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Logo?</h6>
+            </div>
+            <div className="flex w-full justify-end mt-6 gap-[17px]">
+                <button
+                    className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
+                    onClick={() => setIsDeleteLogoModalOpen(false)}>
+                    No
+                </button>
+
+                <button
+                    disabled={isDisabled}
+                    onClick={deleteContent}
+                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    {loading && (
+                        <img
+                            src={loadingSvg}
+                            className="h-6 w-auto animate-spin"
+                            alt="Loading"
+                        />
+                    )}
+                    Yes, Delete Logo
                 </button>
             </div>
         </Modal>

@@ -70,7 +70,7 @@ const Categories = () => {
                         <DeleteFilled
                             onClick={() => {
                                 setIsDeleteCategoryModalOpen(true)
-                                setSelectedCategoryId(record._id)
+                                setSelectedCategoryId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -144,7 +144,7 @@ const Categories = () => {
                         columns={columns}
                         scroll={{ x: '900px' }}
                         rowHoverable={true}
-                        rowKey={(record) => record._id}
+                        rowKey={(record) => record.id}
                         pagination={{
                             current: page,
                             pageSize: pageSize,

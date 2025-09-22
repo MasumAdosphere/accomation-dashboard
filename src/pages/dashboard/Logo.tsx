@@ -4,56 +4,56 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
-import { setIsDataRefreshed } from '../../redux/common/common.slice'
-import { ArticleData, EConfigButtonType } from '../../types/state.types'
-import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
-import { DeleteArticleModal } from '../../components/antdesign/modal.components'
+import { ILogo, EConfigButtonType } from '../../types/state.types'
+import { DeleteFilled } from '@ant-design/icons'
+import { DeleteLogoModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
-import { getAllArticles, publishActionById } from '../../redux/article/article.thunk'
+import { getAllLogo } from '../../redux/logo/logo.thunk'
 
-const Article = () => {
+const Logo = () => {
     const pageSize = 20
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    // states
+
+    // States
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
-    const [article, setArticle] = useState<ArticleData[]>([])
-    const [selectedArticleId, SetSelectedArticleId] = useState<string | null>(null)
+    const [logos, setLogos] = useState<ILogo[]>([]) // 👈 Renamed from article
+    const [selectedLogoId, setSelectedLogoId] = useState<string | null>(null) // 👈 Renamed
     const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
-    const [isDeleteArticleModalOpen, setIsDeleteArticleModalOpen] = useState<boolean>(false)
+    const [isDeleteLogoModalOpen, setIsDeleteLogoModalOpen] = useState<boolean>(false) // 👈 Renamed
     const controllerRef = useRef<AbortController | null>(null)
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
 
-    const handleSwitchChange = async (slug: string, checked: boolean) => {
-        if (loading) return
+    // const handleSwitchChange = async (slug: string, checked: boolean) => {
+    //     if (loading) return
 
-        try {
-            setLoading(true)
+    //     try {
+    //         setLoading(true)
 
-            if (controllerRef.current) {
-                controllerRef.current.abort()
-            }
+    //         if (controllerRef.current) {
+    //             controllerRef.current.abort()
+    //         }
 
-            controllerRef.current = new AbortController()
-            const signal = controllerRef.current.signal
+    //         controllerRef.current = new AbortController()
+    //         const signal = controllerRef.current.signal
 
-            const data = await publishActionById(slug, checked, signal)
+    //         const data = await publishActionById(slug, checked, signal)
 
-            if (data.success) {
-                dispatch(setIsDataRefreshed(!isDataRefreshed))
-            }
-        } catch (error) {
-            console.error(error)
-        } finally {
-            setLoading(false)
-        }
-    }
+    //         if (data.success) {
+    //             dispatch(setIsDataRefreshed(!isDataRefreshed))
+    //         }
+    //     } catch (error) {
+    //         console.error(error)
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
 
-    const columns: ColumnsType<ArticleData> = [
+    const columns: ColumnsType<ILogo> = [
         {
             title: 'Sr no.',
             dataIndex: 'index',
@@ -64,71 +64,63 @@ const Article = () => {
             )
         },
         {
-            title: 'Title',
-            dataIndex: 'title',
-            width: '25%',
-            key: 'title',
+            title: 'Name',
+            dataIndex: 'name',
+            width: '30%',
+            key: 'name',
             render: (_, record) => (
                 <span className="font-sans text-sm 2xl:text-base font-medium">
-                    {record.title.length > 40 ? `${record.title.slice(0, 40)}...` : `${record.title}`}
+                    {record?.companyName?.length > 40 ? `${record.companyName.slice(0, 40)}...` : record?.companyName}
                 </span>
             )
         },
-
         {
-            title: 'Category',
-            key: 'category',
-            width: '10%',
-            dataIndex: 'category',
-            render: (_text: string, record: any) => <span className="font-sans text-sm 2xl:text-base font-semibold">{record?.category?.title}</span>
+            title: 'Logo',
+            dataIndex: 'logo',
+            width: '25%',
+            key: 'logo',
+            render: (_, record) => (
+                <div className="flex items-center justify-center">
+                    <Tooltip title="Preview Logo">
+                        <img
+                            src={record.logo}
+                            alt={record.companyName}
+                            className="h-12 w-auto object-contain cursor-pointer rounded border border-gray-200 hover:scale-110 transition-transform duration-200"
+                        />
+                    </Tooltip>
+                </div>
+            )
         },
         {
             title: 'Created At',
             key: 'createdAt',
-            width: '10%',
+            width: '15%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-semibold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-sans text-sm 2xl:text-base font-semibold">{moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
             )
         },
-
         {
             title: 'Action',
             key: 'action',
-            width: '10%',
+            width: '15%',
             render: (record) => (
                 <div className="flex justify-start items-center gap-5">
                     <Tooltip title={record?.isPublished ? 'Unpublish' : 'Publish'}>
                         <Switch
                             checked={record?.isPublished}
                             disabled={loading}
-                            onChange={async (checked) => {
-                                handleSwitchChange(record?.slug, checked)
-                            }}
+                            // onChange={async (checked) => {
+                            //     handleSwitchChange(record?.slug, checked)
+                            // }}
                         />
-                    </Tooltip>
-                    <Tooltip title="Preview">
-                        <Link
-                            to={`${websiteUrl}/article-preview/${record.slug}?accessToken=${accessToken}`}
-                            target="_blank">
-                            <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl">Open</EyeOutlined>
-                        </Link>
                     </Tooltip>
 
-                    <Tooltip title="Edit">
-                        <EditFilled
-                            onClick={() => {
-                                console.log('Edit record id:', record.id)
-                                navigate(`/dashboard/articles/edit/${record.id}`)
-                            }}
-                            className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        />
-                    </Tooltip>
                     <Tooltip title="Delete">
                         <DeleteFilled
                             onClick={() => {
-                                setIsDeleteArticleModalOpen(true)
-                                SetSelectedArticleId(record.id)
+                                setIsDeleteLogoModalOpen(true)
+                                setSelectedLogoId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -138,18 +130,16 @@ const Article = () => {
         }
     ]
 
-    const getArticles = async (signal: AbortSignal) => {
+    const getLogos = async (signal: AbortSignal) => {
         try {
             setLoading(true)
-
-            const { data, meta } = await getAllArticles(pageSize, page, signal)
+            const { data, meta } = await getAllLogo(pageSize, page, signal)
             if (data) {
-                setTotalPages(meta?.page.pages)
-                setArticle(data)
+                setTotalPages(meta?.page.pages || 1)
+                setLogos(data)
             }
-        } catch (error) {
-            //@ts-ignore
-            message.error(error.message)
+        } catch (error: any) {
+            message.error(error.message || 'Failed to load logos. Please try again.')
         } finally {
             setLoading(false)
         }
@@ -158,31 +148,30 @@ const Article = () => {
     useEffect(() => {
         const controller = new AbortController()
         const signal = controller.signal
-        getArticles(signal)
+        getLogos(signal)
         return () => {
             controller.abort()
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, isDataRefreshed])
 
     return (
         <div className="font-sans space-y-3">
             <Form>
                 <div className="mb-4 flex justify-end items-center text-lg">
-                    {/* <h2 className="text-primary font-sans text-lg 2xl:text-font22 font-semibold">Articles</h2> */}
                     <div>
-                        <Link to="/dashboard/articles/add">
+                        <Link to="/dashboard/logos/add">
                             <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                                 <Button
                                     className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
                                     type="default">
-                                    Add Article
+                                    Add Logo
                                 </Button>
                             </ButtonThemeConfig>
                         </Link>
                     </div>
                 </div>
             </Form>
+
             <ConfigProvider
                 theme={{
                     token: {
@@ -190,7 +179,6 @@ const Article = () => {
                         fontWeightStrong: 500,
                         colorPrimary: '#816348',
                         fontSize: 16
-                        // borderRadius: 0
                     },
                     components: {
                         Table: {
@@ -200,7 +188,7 @@ const Article = () => {
                     }
                 }}>
                 <Table
-                    dataSource={article}
+                    dataSource={logos}
                     loading={loading}
                     scroll={{ x: '1100px' }}
                     columns={columns}
@@ -217,15 +205,16 @@ const Article = () => {
                     }}
                 />
             </ConfigProvider>
-            {isDeleteArticleModalOpen && (
-                <DeleteArticleModal
-                    isDeleteArticleModalOpen={isDeleteArticleModalOpen}
-                    setIsDeleteArticleModalOpen={setIsDeleteArticleModalOpen}
-                    selectedArticleId={selectedArticleId || ''}
+
+            {isDeleteLogoModalOpen && (
+                <DeleteLogoModal
+                    isDeleteLogoModalOpen={isDeleteLogoModalOpen}
+                    setIsDeleteLogoModalOpen={setIsDeleteLogoModalOpen}
+                    selectedLogoId={selectedLogoId || ''}
                 />
             )}
         </div>
     )
 }
 
-export default Article
+export default Logo

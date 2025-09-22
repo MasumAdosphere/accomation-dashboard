@@ -3,6 +3,8 @@ import { store } from './store'
 import configs from '../configs'
 import { resetState } from './resetSlice'
 import { refreshTokenFail, refreshTokenSuccess } from './common/common.slice'
+import { getAllFaqs } from './faq/faq.thunk'
+import { IFaq, IfaqPayload } from '../types/state.types'
 
 const { server } = configs
 const { SERVER_URL } = server
@@ -224,6 +226,60 @@ export default {
             return data
         }
     },
+    Logo: {
+        createLogo: async (formData: FormData) => {
+            const { data } = await formDataApiInstance.post('/admin/logo', formData)
+            return data
+        },
+        getLogoById: async (logoId: string) => {
+            const { data } = await apiInstance.get(`/admin/logo/${logoId}`)
+            return data
+        },
+        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+            return data
+        },
+        uploadFile: async (payload: FormData) => {
+            const { data } = await apiInstance.post('/admin/upload', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            return data
+        },
+        uploadToS3: async (file: File, url: string, onProgress?: (progress: number) => void) => {
+            const response = await axios.put(url, file, {
+                headers: {
+                    'Content-Type': file.type
+                },
+                onUploadProgress: (progressEvent) => {
+                    if (progressEvent.total) {
+                        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        if (onProgress) onProgress(percent)
+                    }
+                }
+            })
+
+            return response
+        },
+
+        getAllLogo: async (pageSize: number, page: number, signal: AbortSignal) => {
+            const queryParams = {
+                pageSize,
+                page
+            }
+            const { data } = await apiInstance.get('/admin/logo', {
+                params: queryParams,
+                signal
+            })
+
+            return data
+        },
+        deleteLogo: async (logoId: string) => {
+            const { data } = await apiInstance.delete(`/admin/logo/${logoId}`)
+            return data
+        }
+    },
 
     Testimonial: {
         createTestimonials: async (formData: FormData) => {
@@ -280,6 +336,66 @@ export default {
         },
         deleteTestimonial: async (testimonialId: string) => {
             const { data } = await apiInstance.delete(`/admin/testimonial/${testimonialId}`)
+            return data
+        }
+    },
+    Faq: {
+        createFaqs: async (payload: IfaqPayload) => {
+            // 👈 Changed from FormData to IFaq
+            const { data } = await apiInstance.post('/admin/faq', payload)
+            return data
+        },
+        getFaqById: async (FaqId: string) => {
+            const { data } = await apiInstance.get(`/admin/faq/${FaqId}`)
+            return data
+        },
+        editFaqById: async (FaqId: string, payload = {}) => {
+            const { data } = await apiInstance.put(`/admin/faq/${FaqId}`, payload)
+            return data
+        },
+        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+            return data
+        },
+        uploadFile: async (payload: FormData) => {
+            const { data } = await apiInstance.post('/admin/upload', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            return data
+        },
+        uploadToS3: async (file: File, url: string, onProgress?: (progress: number) => void) => {
+            const response = await axios.put(url, file, {
+                headers: {
+                    'Content-Type': file.type
+                },
+                onUploadProgress: (progressEvent) => {
+                    if (progressEvent.total) {
+                        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        if (onProgress) onProgress(percent)
+                    }
+                }
+            })
+
+            return response
+        },
+
+        getAllFaq: async (pageSize: number, page: number, pageName: String, signal: AbortSignal) => {
+            const queryParams = {
+                pageSize,
+                page,
+                pageName
+            }
+            const { data } = await apiInstance.get('/admin/faq', {
+                params: queryParams,
+                signal
+            })
+
+            return data
+        },
+        deleteFaq: async (FaqId: string) => {
+            const { data } = await apiInstance.delete(`/admin/faq/${FaqId}`)
             return data
         }
     }

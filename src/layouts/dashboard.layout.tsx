@@ -57,6 +57,16 @@ const DashboardLayout = () => {
             to: 'testimonials'
         },
         {
+            key: 'faq',
+            label: 'Faqs',
+            to: 'faq'
+        },
+        {
+            key: 'logos',
+            label: 'Logos',
+            to: 'logos'
+        },
+        {
             key: 'users',
             label: 'Users',
             to: 'users'
@@ -77,16 +87,26 @@ const DashboardLayout = () => {
             return 'Testimonials'
         } else if (path === `/dashboard/testimonials/add`) {
             return 'Add Testimonial'
+        } else if (path.startsWith('/dashboard/testimonials/edit/')) {
+            return 'Edit Article'
         } else if (path === `/dashboard/articles/add`) {
             return 'Add Article'
         } else if (path.startsWith('/dashboard/articles/edit/')) {
-            return 'Edit Article'
-        } else if (path.startsWith('/dashboard/testimonials/edit/')) {
             return 'Edit Article'
         } else if (path === '/dashboard/categories') {
             return 'Categories'
         } else if (path === '/dashboard/users') {
             return 'Users'
+        } else if (path === '/dashboard/faq') {
+            return 'Faqs'
+        } else if (path === `/dashboard/faq/add`) {
+            return 'Add Faqs'
+        } else if (path.startsWith('/dashboard/faq/edit/')) {
+            return 'Edit Faqs'
+        } else if (path === '/dashboard/logos') {
+            return 'Logos'
+        } else if (path === '/dashboard/logos/add') {
+            return 'Add Logos'
         }
     }
 

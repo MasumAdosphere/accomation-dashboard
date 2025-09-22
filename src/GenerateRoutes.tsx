@@ -9,6 +9,11 @@ import CreateArticle from './pages/dashboard/CreateArticle'
 import Testimonial from './pages/dashboard/testimonail'
 import CreateTestimonials from './pages/dashboard/CreateTestimonial'
 import EditTestimonials from './pages/dashboard/EditTestimonial'
+import CreateFaq from './pages/dashboard/CreateFaq'
+import EditFaq from './pages/dashboard/EditFaq'
+import Faq from './pages/dashboard/faq'
+import Logo from './pages/dashboard/Logo'
+import CreateLogo from './pages/dashboard/CreateLogo'
 
 const { Categories, Overview } = DashboardPages
 
@@ -64,6 +69,30 @@ const generateRoutes = (): RouteObject[] => {
                     )
                 },
                 {
+                    path: 'faq',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
+                        <Faq />
+                        // </ProtectedRoute>
+                    )
+                },
+                {
+                    path: 'logos',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
+                        <Logo />
+                        // </ProtectedRoute>
+                    )
+                },
+                {
+                    path: 'logos/add',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
+                        <CreateLogo />
+                        // </ProtectedRoute>
+                    )
+                },
+                {
                     path: 'articles/add',
                     element: (
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
@@ -80,6 +109,14 @@ const generateRoutes = (): RouteObject[] => {
                     )
                 },
                 {
+                    path: 'faq/add',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
+                        <CreateFaq />
+                        // </ProtectedRoute>
+                    )
+                },
+                {
                     path: 'articles/edit/:articleSlug',
                     element: (
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
@@ -92,6 +129,15 @@ const generateRoutes = (): RouteObject[] => {
                     element: (
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
                         <EditTestimonials />
+                        // </ProtectedRoute>
+                    )
+                },
+
+                {
+                    path: 'faq/edit/:faqId',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
+                        <EditFaq />
                         // </ProtectedRoute>
                     )
                 },

@@ -8,11 +8,16 @@ type Path =
     | '/dashboard/overview'
     | '/dashboard/articles'
     | '/dashboard/testimonials'
+    | '/dashboard/faq'
+    | '/dashboard/logos'
     | '/dashboard/articles/add'
     | '/dashboard/testimonials/add'
+    | '/dashboard/faq/add'
+    | '/dashboard/logos/add'
     | '/dashboard/categories'
     | '/dashboard/articles/edit'
     | '/dashboard/testimonials/edit'
+    | '/dashboard/faq/edit'
     | '/dashboard/users'
 
 // Define a type for the pathTitleMap object
@@ -25,9 +30,12 @@ const AppBreadcrumb = () => {
         '/dashboard/overview',
         '/dashboard/articles',
         '/dashboard/testimonials',
+        '/dashboard/faq',
+        '/dashboard/logos',
         '/dashboard/articles/edit',
         '/dashboard/categories',
         '/dashboard/articles/add',
+        '/dashboard/logos/add',
         '/dashboard/users'
     ]
 
@@ -45,7 +53,12 @@ const AppBreadcrumb = () => {
         '/dashboard/articles/edit': 'Edit Article',
         '/dashboard/categories': 'Categories',
         '/dashboard/articles/add': 'Add Article',
-        '/dashboard/users': 'Users'
+        '/dashboard/users': 'Users',
+        '/dashboard/faq': 'Faq',
+        '/dashboard/faq/add': 'Add Faq',
+        '/dashboard/faq/edit': 'Edit Faq',
+        '/dashboard/logos': 'Logos',
+        '/dashboard/logos/add': 'Add Logos'
     }
 
     const items = [

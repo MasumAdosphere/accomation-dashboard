@@ -41,7 +41,7 @@ const EditArticle = () => {
             if (data) {
                 const categoryItems = data.map((cat: ICategory) => ({
                     label: cat.title,
-                    value: cat._id
+                    value: cat.id
                 }))
                 setCategories(categoryItems)
             }
@@ -59,7 +59,7 @@ const EditArticle = () => {
                 const updatedValues = {
                     title: data.title || '',
 
-                    category: data.category?._id || null,
+                    category: data.category?.id || null,
 
                     thumbnail: data.thumbnail || '',
                     content: data.content || ''

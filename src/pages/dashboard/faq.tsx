@@ -1,3 +1,5 @@
+'use client'
+
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
@@ -5,28 +7,40 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
-import { ArticleData, EConfigButtonType } from '../../types/state.types'
 import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
-import { DeleteArticleModal } from '../../components/antdesign/modal.components'
+// import { DeleteFaqModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
-import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
-import { getAllArticles, publishActionById } from '../../redux/article/article.thunk'
+import { Button, ConfigProvider, Form, message, Select, Switch, Table, Tooltip } from 'antd'
+import { publishActionById } from '../../redux/article/article.thunk'
+import { EConfigButtonType, IFaq } from '../../types/state.types'
+import { getAllFaqs } from '../../redux/faq/faq.thunk'
+import { DeleteFaqModal } from '../../components/antdesign/modal.components'
 
-const Article = () => {
+const Faq = () => {
     const pageSize = 20
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    // states
+
+    // States
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
-    const [article, setArticle] = useState<ArticleData[]>([])
-    const [selectedArticleId, SetSelectedArticleId] = useState<string | null>(null)
+    const [faqs, setFaqs] = useState<IFaq[]>([]) // 👈 Renamed from testimonials
+    const [selectedFaqId, setSelectedFaqId] = useState<string | null>(null) // 👈 Renamed
     const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
-    const [isDeleteArticleModalOpen, setIsDeleteArticleModalOpen] = useState<boolean>(false)
+    const [isDeleteFaqModalOpen, setIsDeleteFaqModalOpen] = useState<boolean>(false) // 👈 Renamed
+    const [pageName, setPageName] = useState<string>('') // 👈 New: Dropdown filter value
     const controllerRef = useRef<AbortController | null>(null)
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
+
+    // Options for dropdown
+    const pageNameOptions = [
+        { value: '', label: 'All' },
+        { value: 'Overview', label: 'Overview' },
+        { value: 'Blog', label: 'Blog' },
+        { value: 'Testimonial', label: 'Testimonial' }
+    ]
 
     const handleSwitchChange = async (slug: string, checked: boolean) => {
         if (loading) return
@@ -53,9 +67,9 @@ const Article = () => {
         }
     }
 
-    const columns: ColumnsType<ArticleData> = [
+    const columns: ColumnsType<IFaq> = [
         {
-            title: 'Sr no.',
+            title: 'Sr.',
             dataIndex: 'index',
             width: '5%',
             key: 'index',
@@ -64,34 +78,43 @@ const Article = () => {
             )
         },
         {
-            title: 'Title',
-            dataIndex: 'title',
+            title: 'Question',
+            dataIndex: 'question',
             width: '25%',
-            key: 'title',
+            key: 'question',
             render: (_, record) => (
                 <span className="font-sans text-sm 2xl:text-base font-medium">
-                    {record.title.length > 40 ? `${record.title.slice(0, 40)}...` : `${record.title}`}
+                    {record?.question?.length > 40 ? `${record?.question?.slice(0, 40)}...` : record?.question}
                 </span>
             )
         },
-
         {
-            title: 'Category',
-            key: 'category',
+            title: 'Answer',
+            dataIndex: 'answer',
+            width: '35%',
+            key: 'answer',
+            render: (_, record) => (
+                <span className="font-sans text-sm 2xl:text-base font-medium">
+                    {record?.answer?.length > 40 ? `${record?.answer?.slice(0, 40)}...` : record?.answer}
+                </span>
+            )
+        },
+        {
+            title: 'Page Name',
+            dataIndex: 'pageName',
             width: '10%',
-            dataIndex: 'category',
-            render: (_text: string, record: any) => <span className="font-sans text-sm 2xl:text-base font-semibold">{record?.category?.title}</span>
+            key: 'pageName',
+            render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium capitalize">{record?.pageName || 'N/A'}</span>
         },
         {
             title: 'Created At',
             key: 'createdAt',
-            width: '10%',
+            width: '20%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-semibold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-sans text-sm 2xl:text-base font-bold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
             )
         },
-
         {
             title: 'Action',
             key: 'action',
@@ -109,17 +132,16 @@ const Article = () => {
                     </Tooltip>
                     <Tooltip title="Preview">
                         <Link
-                            to={`${websiteUrl}/article-preview/${record.slug}?accessToken=${accessToken}`}
+                            to={`${websiteUrl}/faq-preview/${record.slug}?accessToken=${accessToken}`}
                             target="_blank">
-                            <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl">Open</EyeOutlined>
+                            <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" />
                         </Link>
                     </Tooltip>
 
                     <Tooltip title="Edit">
                         <EditFilled
                             onClick={() => {
-                                console.log('Edit record id:', record.id)
-                                navigate(`/dashboard/articles/edit/${record.id}`)
+                                navigate(`/dashboard/faq/edit/${record.id}`)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -127,8 +149,8 @@ const Article = () => {
                     <Tooltip title="Delete">
                         <DeleteFilled
                             onClick={() => {
-                                setIsDeleteArticleModalOpen(true)
-                                SetSelectedArticleId(record.id)
+                                setIsDeleteFaqModalOpen(true)
+                                setSelectedFaqId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -138,18 +160,19 @@ const Article = () => {
         }
     ]
 
-    const getArticles = async (signal: AbortSignal) => {
+    const getFaqs = async (pageSize: number, page: number, pageNameParam: string, signal: AbortSignal) => {
         try {
             setLoading(true)
-
-            const { data, meta } = await getAllArticles(pageSize, page, signal)
+            const { data, meta } = await getAllFaqs(pageSize, page, pageNameParam, signal) // 👈 Pass pageName as third param
             if (data) {
-                setTotalPages(meta?.page.pages)
-                setArticle(data)
+                setTotalPages(meta?.page.pages || 1)
+                setFaqs(data)
             }
-        } catch (error) {
-            //@ts-ignore
-            message.error(error.message)
+        } catch (error: any) {
+            message.error({
+                content: error.message || 'Failed to load FAQs. Please try again.',
+                duration: 8
+            })
         } finally {
             setLoading(false)
         }
@@ -158,31 +181,51 @@ const Article = () => {
     useEffect(() => {
         const controller = new AbortController()
         const signal = controller.signal
-        getArticles(signal)
+
+        getFaqs(pageSize, page, pageName, signal)
+
         return () => {
             controller.abort()
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, isDataRefreshed])
+    }, [page, pageName, isDataRefreshed])
+
+    const handlePageNameChange = (value: string) => {
+        setPageName(value)
+        setPage(1) // Reset to page 1 when filter changes
+    }
 
     return (
         <div className="font-sans space-y-3">
             <Form>
-                <div className="mb-4 flex justify-end items-center text-lg">
-                    {/* <h2 className="text-primary font-sans text-lg 2xl:text-font22 font-semibold">Articles</h2> */}
-                    <div>
-                        <Link to="/dashboard/articles/add">
+                <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    {/* Filter Dropdown */}
+                    <div className="w-full sm:w-auto">
+                        <Select
+                            placeholder="Filter by Category"
+                            value={pageName}
+                            onChange={handlePageNameChange}
+                            options={pageNameOptions}
+                            style={{ width: '200px' }}
+                            className="font-sans text-sm"
+                            allowClear
+                        />
+                    </div>
+
+                    {/* Add Button */}
+                    <div className="w-full sm:w-auto">
+                        <Link to="/dashboard/faq/add">
                             <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                                 <Button
-                                    className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                    className="font-sans text-sm 2xl:text-lg rounded w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
                                     type="default">
-                                    Add Article
+                                    Add FAQ
                                 </Button>
                             </ButtonThemeConfig>
                         </Link>
                     </div>
                 </div>
             </Form>
+
             <ConfigProvider
                 theme={{
                     token: {
@@ -190,7 +233,6 @@ const Article = () => {
                         fontWeightStrong: 500,
                         colorPrimary: '#816348',
                         fontSize: 16
-                        // borderRadius: 0
                     },
                     components: {
                         Table: {
@@ -200,7 +242,7 @@ const Article = () => {
                     }
                 }}>
                 <Table
-                    dataSource={article}
+                    dataSource={faqs}
                     loading={loading}
                     scroll={{ x: '1100px' }}
                     columns={columns}
@@ -217,15 +259,16 @@ const Article = () => {
                     }}
                 />
             </ConfigProvider>
-            {isDeleteArticleModalOpen && (
-                <DeleteArticleModal
-                    isDeleteArticleModalOpen={isDeleteArticleModalOpen}
-                    setIsDeleteArticleModalOpen={setIsDeleteArticleModalOpen}
-                    selectedArticleId={selectedArticleId || ''}
+
+            {isDeleteFaqModalOpen && (
+                <DeleteFaqModal
+                    isDeleteFaqModalOpen={isDeleteFaqModalOpen}
+                    setIsDeleteFaqModalOpen={setIsDeleteFaqModalOpen}
+                    selectedFaqId={selectedFaqId || ''}
                 />
             )}
         </div>
     )
 }
 
-export default Article
+export default Faq
