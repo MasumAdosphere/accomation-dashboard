@@ -163,7 +163,7 @@ const EditArticle = () => {
 
         return false
     }
-    console.log(formValues)
+
     return (
         <div>
             <Form

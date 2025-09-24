@@ -13,6 +13,7 @@ import { Modal, Button, message, Form, Radio, RadioChangeEvent, ConfigProvider }
 import { deleteTestimonialById } from '../../redux/testimonials/testimonial.thunk'
 import { deleteFaqById } from '../../redux/faq/faq.thunk'
 import { deleteLogoById } from '../../redux/logo/logo.thunk'
+import { deleteCareer } from '../../redux/career/career.thunk'
 
 //Category Modal
 export const CreateNewCategoryModal = ({
@@ -99,7 +100,7 @@ export const CreateNewCategoryModal = ({
                             onChange={inputChangeHandler('title')}
                         />
                     </div>
-                    <div className="font-sans space-y-1 md:space-y-1">
+                    {/* <div className="font-sans space-y-1 md:space-y-1">
                         <div className="">
                             <label className="font-sans  text-sm font-semibold text-primary">
                                 Blog
@@ -138,7 +139,7 @@ export const CreateNewCategoryModal = ({
                                 </Radio.Group>
                             </ConfigProvider>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="font-sans flex space-x-3 pt-[50px] justify-end items-center">
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
@@ -531,6 +532,83 @@ export const DeleteLogoModal = ({
                         />
                     )}
                     Yes, Delete Logo
+                </button>
+            </div>
+        </Modal>
+    )
+}
+
+export const DeleteCareerModal = ({
+    selectedCareerId,
+    isDeleteCareerModalOpen,
+    setIsDeleteCareerModalOpen
+}: {
+    selectedCareerId: string | null
+    isDeleteCareerModalOpen: boolean
+    setIsDeleteCareerModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(false)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
+
+    const deleteContent = async () => {
+        if (!selectedCareerId) return
+
+        try {
+            setLoading(true)
+            setIsDisabled(true)
+            const res = await deleteCareer(selectedCareerId)
+
+            if (res.success) {
+                setIsDeleteCareerModalOpen(false)
+                dispatch(setIsDataRefreshed(!isDataRefreshed))
+            }
+        } catch (error) {
+            console.error('Delete failed:', error)
+            setIsDeleteCareerModalOpen(false)
+        } finally {
+            setIsDisabled(false)
+            setLoading(false)
+        }
+    }
+
+    return (
+        <Modal
+            open={isDeleteCareerModalOpen}
+            onCancel={() => setIsDeleteCareerModalOpen(false)}
+            footer={null}
+            centered
+            width={500}
+            className="rounded-xl">
+            <div className="flex items-center mt-5 gap-[12px]">
+                <img
+                    src={Exclaim}
+                    alt="Warning"
+                    width={24}
+                    height={24}
+                />
+                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Career Listing?</h6>
+            </div>
+            <div className="flex w-full justify-end mt-6 gap-[17px]">
+                <button
+                    className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
+                    onClick={() => setIsDeleteCareerModalOpen(false)}>
+                    No
+                </button>
+
+                <button
+                    disabled={isDisabled}
+                    onClick={deleteContent}
+                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    {loading && (
+                        <img
+                            src={loadingSvg}
+                            className="h-6 w-auto animate-spin"
+                            alt="Loading"
+                        />
+                    )}
+                    Yes, Delete Career
                 </button>
             </div>
         </Modal>

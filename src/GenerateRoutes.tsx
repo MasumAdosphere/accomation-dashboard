@@ -14,6 +14,7 @@ import EditFaq from './pages/dashboard/EditFaq'
 import Faq from './pages/dashboard/faq'
 import Logo from './pages/dashboard/Logo'
 import CreateLogo from './pages/dashboard/CreateLogo'
+import Career from './pages/dashboard/career'
 
 const { Categories, Overview } = DashboardPages
 
@@ -147,6 +148,14 @@ const generateRoutes = (): RouteObject[] => {
                     element: (
                         // <ProtectedRoute allowedRoles={allowedRoles.categories}>
                         <Categories />
+                        // </ProtectedRoute>
+                    )
+                },
+                {
+                    path: 'career',
+                    element: (
+                        // <ProtectedRoute allowedRoles={allowedRoles.categories}>
+                        <Career />
                         // </ProtectedRoute>
                     )
                 },

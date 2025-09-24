@@ -67,6 +67,11 @@ const DashboardLayout = () => {
             to: 'logos'
         },
         {
+            key: 'career',
+            label: 'Career',
+            to: 'career'
+        },
+        {
             key: 'users',
             label: 'Users',
             to: 'users'

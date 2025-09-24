@@ -12,6 +12,7 @@ import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'a
 import { publishActionById } from '../../redux/article/article.thunk'
 import { EConfigButtonType, ITestimonial } from '../../types/state.types'
 import { getAllTestimonials } from '../../redux/testimonials/testimonial.thunk'
+import { CreateTestimonialDrawer, EditTestimonialDrawer } from '../../components/antdesign/drawer.components'
 
 const Testimonial = () => {
     const pageSize = 20
@@ -25,6 +26,10 @@ const Testimonial = () => {
     const [selectedTestimonialId, SetSelectedTestimonialId] = useState<string | null>(null)
     const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
     const [isDeleteTestimonialModalOpen, setIsDeleteTestimonialModalOpen] = useState<boolean>(false)
+
+    const [isCreateTestimonialDrawerOpen, SetIsCreateTestimonialDrawerOpen] = useState<boolean>(false)
+    const [isEditTestimonialDrawerOpen, SetIsEditTestimonialDrawerOpen] = useState<boolean>(false)
+
     const controllerRef = useRef<AbortController | null>(null)
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
@@ -67,7 +72,7 @@ const Testimonial = () => {
         {
             title: 'Name',
             dataIndex: 'name',
-            width: '20%',
+            width: '10%',
             key: 'name',
             render: (_, record) => (
                 <span className="font-sans text-sm 2xl:text-base font-medium">
@@ -89,18 +94,18 @@ const Testimonial = () => {
         {
             title: 'Description',
             dataIndex: 'description',
-            width: '30%',
+            width: '20%',
             key: 'description',
             render: (_, record) => (
                 <span className="font-sans text-sm 2xl:text-base font-medium">
-                    {record?.description?.length > 40 ? `${record?.description.slice(0, 40)}...` : record?.description}
+                    {record?.description?.length > 30 ? `${record?.description.slice(0, 30)}...` : record?.description}
                 </span>
             )
         },
         {
             title: 'Created At',
             key: 'createdAt',
-            width: '10%',
+            width: '20%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
                 <span className="font-sans text-sm 2xl:text-base font-bold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
@@ -132,8 +137,8 @@ const Testimonial = () => {
                     <Tooltip title="Edit">
                         <EditFilled
                             onClick={() => {
-                                console.log(record.id)
-                                navigate(`/dashboard/testimonials/edit/${record.id}`)
+                                SetIsEditTestimonialDrawerOpen(true)
+                                SetSelectedTestimonialId(record.id)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -182,15 +187,18 @@ const Testimonial = () => {
         <div className="font-sans space-y-3">
             <Form>
                 <div className="mb-4 flex justify-end item-center text-lg">
-                    <Link to="/dashboard/testimonials/add">
-                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                            <Button
-                                className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
-                                type="default">
-                                Add Testimonial
-                            </Button>
-                        </ButtonThemeConfig>
-                    </Link>
+                    {/* <Link to="/dashboard/testimonials/add"> */}
+                    <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                        <Button
+                            onClick={() => {
+                                SetIsCreateTestimonialDrawerOpen(true)
+                            }}
+                            className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                            type="default">
+                            Add Testimonial
+                        </Button>
+                    </ButtonThemeConfig>
+                    {/* </Link> */}
                 </div>
             </Form>
             <ConfigProvider
@@ -230,6 +238,19 @@ const Testimonial = () => {
                 <DeleteTestimonialModal
                     isDeleteTestimonialModalOpen={isDeleteTestimonialModalOpen}
                     setIsDeleteTestimonialModalOpen={setIsDeleteTestimonialModalOpen}
+                    selectedTestimonialId={selectedTestimonialId || ''}
+                />
+            )}
+            {isCreateTestimonialDrawerOpen && (
+                <CreateTestimonialDrawer
+                    isCreateTestimonialDrawerOpen={isCreateTestimonialDrawerOpen}
+                    SetIsCreateTestimonialDrawerOpen={SetIsCreateTestimonialDrawerOpen}
+                />
+            )}
+            {isEditTestimonialDrawerOpen && (
+                <EditTestimonialDrawer
+                    isEditTestimonialDrawerOpen={isEditTestimonialDrawerOpen}
+                    SetIsEditTestimonialDrawerOpen={SetIsEditTestimonialDrawerOpen}
                     selectedTestimonialId={selectedTestimonialId || ''}
                 />
             )}

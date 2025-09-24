@@ -11,6 +11,7 @@ import { DeleteArticleModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
 import { getAllArticles, publishActionById } from '../../redux/article/article.thunk'
+import { CreateArticleDrawer, EditArticleDrawer } from '../../components/antdesign/drawer.components'
 
 const Article = () => {
     const pageSize = 20
@@ -24,6 +25,8 @@ const Article = () => {
     const [selectedArticleId, SetSelectedArticleId] = useState<string | null>(null)
     const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
     const [isDeleteArticleModalOpen, setIsDeleteArticleModalOpen] = useState<boolean>(false)
+    const [isCreateArticleDrawerOpen, SetIsCreateArticleDrawerOpen] = useState<boolean>(false)
+    const [isEditArticleDrawerOpen, SetIsEditArticleDrawerOpen] = useState<boolean>(false)
     const controllerRef = useRef<AbortController | null>(null)
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
@@ -118,8 +121,8 @@ const Article = () => {
                     <Tooltip title="Edit">
                         <EditFilled
                             onClick={() => {
-                                console.log('Edit record id:', record.id)
-                                navigate(`/dashboard/articles/edit/${record.id}`)
+                                SetIsEditArticleDrawerOpen(true)
+                                SetSelectedArticleId(record.id)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -171,15 +174,14 @@ const Article = () => {
                 <div className="mb-4 flex justify-end items-center text-lg">
                     {/* <h2 className="text-primary font-sans text-lg 2xl:text-font22 font-semibold">Articles</h2> */}
                     <div>
-                        <Link to="/dashboard/articles/add">
-                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                                <Button
-                                    className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
-                                    type="default">
-                                    Add Article
-                                </Button>
-                            </ButtonThemeConfig>
-                        </Link>
+                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                            <Button
+                                onClick={() => SetIsCreateArticleDrawerOpen(true)}
+                                className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                type="default">
+                                Add Article
+                            </Button>
+                        </ButtonThemeConfig>
                     </div>
                 </div>
             </Form>
@@ -224,6 +226,18 @@ const Article = () => {
                     selectedArticleId={selectedArticleId || ''}
                 />
             )}
+            {isCreateArticleDrawerOpen && (
+                <CreateArticleDrawer
+                    isCreateArticleDrawerOpen={isCreateArticleDrawerOpen}
+                    SetIsCreateArticleDrawerOpen={SetIsCreateArticleDrawerOpen}
+                />
+            )}
+
+            <EditArticleDrawer
+                isEditArticleDrawerOpen={isEditArticleDrawerOpen}
+                SetIsEditArticleDrawerOpen={SetIsEditArticleDrawerOpen}
+                selectedArticleId={selectedArticleId || ''}
+            />
         </div>
     )
 }

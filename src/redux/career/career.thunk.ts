@@ -2,21 +2,21 @@ import Api from '../httpAPI'
 import { store } from '../store'
 import execError from '../execError'
 import { responseRequest, responseSuccess } from '../common/common.slice'
-import { IfaqPayload } from '../../types/state.types'
+import { ICareer, ICareerCreate, IfaqPayload } from '../../types/state.types'
 
-export const getAllFaqs = async (pageName: string, signal: AbortSignal) => {
+export const getAllCareers = async (pageName: string, signal: AbortSignal) => {
     try {
-        const res = await Api.Faq.getAllFaq(pageName, signal)
+        const res = await Api.Career.getAllCareers(pageName, signal)
         return res
     } catch (error) {
         return execError(error)
     }
 }
 
-export const createFaq = async (payload: IfaqPayload) => {
+export const createCareer = async (payload: ICareerCreate) => {
     try {
         store.dispatch(responseRequest())
-        const { data, message } = await Api.Faq.createFaqs(payload)
+        const { data, message } = await Api.Career.createCareer(payload)
         store.dispatch(responseSuccess({ message }))
         return data
     } catch (error) {
@@ -36,18 +36,18 @@ export const publishActionById = async (slug: string, isPublished: boolean, sign
     }
 }
 
-export const getFaqById = async (faqId: string) => {
+export const getCareerById = async (faqId: string) => {
     try {
-        const { data } = await Api.Faq.getFaqById(faqId)
+        const { data } = await Api.Career.getCareerById(faqId)
         return data
     } catch (error) {
         return execError(error)
     }
 }
-export const editFaq = async (faqId: string, payload: any) => {
+export const editCareer = async (faqId: string, payload: any) => {
     try {
         store.dispatch(responseRequest())
-        const { data, message } = await Api.Faq.editFaqById(faqId, payload)
+        const { data, message } = await Api.Career.editCareerById(faqId, payload)
         store.dispatch(responseSuccess({ message }))
         return data
     } catch (error) {
@@ -74,9 +74,9 @@ export const uploadToS3 = async (file: File, url: string, onProgress?: (progress
     }
 }
 
-export const deleteFaqById = async (faqId: string) => {
+export const deleteCareer = async (faqId: string) => {
     try {
-        const data = await Api.Faq.deleteFaq(faqId)
+        const data = await Api.Career.deleteCareer(faqId)
         const { message } = data
         store.dispatch(responseSuccess({ message }))
         return data

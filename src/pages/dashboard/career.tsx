@@ -8,16 +8,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
 import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
-// import { DeleteFaqModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
-import { Button, ConfigProvider, Form, message, Select, Switch, Table, Tooltip } from 'antd'
-import { publishActionById } from '../../redux/article/article.thunk'
-import { EConfigButtonType, IFaq } from '../../types/state.types'
-import { getAllFaqs } from '../../redux/faq/faq.thunk'
-import { DeleteFaqModal } from '../../components/antdesign/modal.components'
-import { CreateFaqDrawer, EditFaqDrawer } from '../../components/antdesign/drawer.components'
+import { Button, ConfigProvider, Form, Input, message, Select, Switch, Table, Tooltip } from 'antd'
+import { DeleteCareerModal } from '../../components/antdesign/modal.components'
+import { EConfigButtonType, ICareer } from '../../types/state.types'
+import { publishActionById } from '../../redux/faq/faq.thunk'
+import { getAllCareers } from '../../redux/career/career.thunk'
+import { CreateCareerDrawer, EditCareerDrawer } from '../../components/antdesign/drawer.components'
 
-const Faq = () => {
+const Career = () => {
     const pageSize = 20
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -25,23 +24,23 @@ const Faq = () => {
     // States
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(false)
-    const [totalPages, setTotalPages] = useState(1)
-    const [faqs, setFaqs] = useState<IFaq[]>([])
-    const [selectedFaqId, setSelectedFaqId] = useState<string | null>(null)
+    const [totalItems, setTotalItems] = useState(0)
+    const [careers, setCareers] = useState<ICareer[]>([])
+    const [selectedCareerId, setSelectedCareerId] = useState<string | null>(null)
     const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
-    const [isDeleteFaqModalOpen, setIsDeleteFaqModalOpen] = useState<boolean>(false)
-    const [isCreateFaqDrawerOpen, SetIsCreateFaqDrawerOpen] = useState<boolean>(false)
-    const [isEditFaqDrawerOpen, SetIsEditFaqDrawerOpen] = useState<boolean>(false)
-    const [pageName, setPageName] = useState<string>('Overview')
+    const [isDeleteCareerModalOpen, setIsDeleteCareerModalOpen] = useState<boolean>(false)
+    const [isCreateCareerDrawerOpen, setIsCreateCareerDrawerOpen] = useState<boolean>(false)
+    const [isEditCareerDrawerOpen, setIsEditCareerDrawerOpen] = useState<boolean>(false)
+    const [filter, setFilter] = useState<string>('') // Filter by job role or location
     const controllerRef = useRef<AbortController | null>(null)
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
 
-    // Options for dropdown
-    const pageNameOptions = [
-        { value: 'Overview', label: 'Overview' },
-        { value: 'Blog', label: 'Blog' },
-        { value: 'Testimonial', label: 'Testimonial' }
+    // Options for employment type filter (optional — we'll use text search instead)
+    const employmentTypeOptions = [
+        { value: 'Full-time', label: 'Full-time' },
+        { value: 'Part-time', label: 'Part-time' },
+        { value: 'Contract', label: 'Contract' }
     ]
 
     const handleSwitchChange = async (slug: string, checked: boolean) => {
@@ -69,7 +68,7 @@ const Faq = () => {
         }
     }
 
-    const columns: ColumnsType<IFaq> = [
+    const columns: ColumnsType<ICareer> = [
         {
             title: 'Sr.',
             dataIndex: 'index',
@@ -80,33 +79,40 @@ const Faq = () => {
             )
         },
         {
-            title: 'Question',
-            dataIndex: 'question',
-            width: '25%',
-            key: 'question',
+            title: 'Job Role',
+            dataIndex: 'jobRole',
+            width: '15%',
+            key: 'jobRole',
             render: (_, record) => (
                 <span className="font-sans text-sm 2xl:text-base font-medium">
-                    {record?.question?.length > 40 ? `${record?.question?.slice(0, 40)}...` : record?.question}
+                    {record?.jobrole.length > 40 ? `${record.jobrole.slice(0, 40)}...` : record?.jobrole}
                 </span>
             )
         },
         {
-            title: 'Answer',
-            dataIndex: 'answer',
-            width: '35%',
-            key: 'answer',
-            render: (_, record) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">
-                    {record?.answer?.length > 40 ? `${record?.answer?.slice(0, 40)}...` : record?.answer}
-                </span>
-            )
-        },
-        {
-            title: 'Page Name',
-            dataIndex: 'pageName',
+            title: 'Employment Type',
+            dataIndex: 'employmentType',
             width: '10%',
-            key: 'pageName',
-            render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium capitalize">{record?.pageName || 'N/A'}</span>
+            key: 'employmentType',
+            render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium capitalize">{record.employmentType}</span>
+        },
+        {
+            title: 'Location',
+            dataIndex: 'location',
+            width: '15%',
+            key: 'location',
+            render: (_, record) => (
+                <span className="font-sans text-sm 2xl:text-base font-medium">
+                    {record.location.length > 40 ? `${record.location.slice(0, 40)}...` : record.location}
+                </span>
+            )
+        },
+        {
+            title: 'Experience',
+            dataIndex: 'experience',
+            width: '12%',
+            key: 'experience',
+            render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium">{record.experience}</span>
         },
         {
             title: 'Created At',
@@ -114,7 +120,7 @@ const Faq = () => {
             width: '20%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-bold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-sans text-sm 2xl:text-base font-bold">{moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
             )
         },
         {
@@ -132,19 +138,12 @@ const Faq = () => {
                             }}
                         />
                     </Tooltip>
-                    <Tooltip title="Preview">
-                        <Link
-                            to={`${websiteUrl}/faq-preview/${record.slug}?accessToken=${accessToken}`}
-                            target="_blank">
-                            <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" />
-                        </Link>
-                    </Tooltip>
 
                     <Tooltip title="Edit">
                         <EditFilled
                             onClick={() => {
-                                SetIsEditFaqDrawerOpen(true)
-                                setSelectedFaqId(record.id)
+                                setIsEditCareerDrawerOpen(true)
+                                setSelectedCareerId(record.id)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -152,8 +151,8 @@ const Faq = () => {
                     <Tooltip title="Delete">
                         <DeleteFilled
                             onClick={() => {
-                                setIsDeleteFaqModalOpen(true)
-                                setSelectedFaqId(record.id)
+                                setIsDeleteCareerModalOpen(true)
+                                setSelectedCareerId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         />
@@ -163,17 +162,18 @@ const Faq = () => {
         }
     ]
 
-    const getFaqs = async (pageNameParam: string, signal: AbortSignal) => {
+    const getCareers = async (signal: AbortSignal) => {
         try {
             setLoading(true)
-            const res = await getAllFaqs(pageNameParam, signal) // 👈 Pass pageName as third param
-            if (res.data) {
-                console.log('res', res.data)
-                setFaqs(res.data)
-            }
+            const res = await getAllCareers(filter, signal)
+
+            console.log('✅ Career data:', res.data)
+
+            setCareers(res.data || [])
+            setTotalItems(res.meta?.total || 0)
         } catch (error: any) {
             message.error({
-                content: error.message || 'Failed to load FAQs. Please try again.',
+                content: error.message || 'Failed to load careers. Please try again.',
                 duration: 8
             })
         } finally {
@@ -185,44 +185,30 @@ const Faq = () => {
         const controller = new AbortController()
         const signal = controller.signal
 
-        getFaqs(pageName, signal)
+        getCareers(signal)
 
         return () => {
             controller.abort()
         }
-    }, [page, pageName, isDataRefreshed])
+    }, [page, filter, isDataRefreshed])
 
-    const handlePageNameChange = (value: string) => {
-        setPageName(value)
-        setPage(1) // Reset to page 1 when filter changes
+    const handleFilterChange = (value: string) => {
+        setFilter(value)
+        setPage(1)
     }
-    console.log('2', faqs)
 
     return (
         <div className="font-sans space-y-3">
             <Form>
                 <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    {/* Filter Dropdown */}
-                    <div className="w-full sm:w-auto">
-                        <Select
-                            placeholder="Filter by Category"
-                            value={pageName}
-                            onChange={handlePageNameChange}
-                            options={pageNameOptions}
-                            style={{ width: '200px' }}
-                            className="font-sans text-sm"
-                            allowClear
-                        />
-                    </div>
-
                     {/* Add Button */}
                     <div className="w-full sm:w-auto">
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
-                                onClick={() => SetIsCreateFaqDrawerOpen(true)}
+                                onClick={() => setIsCreateCareerDrawerOpen(true)}
                                 className="font-sans text-sm 2xl:text-lg rounded w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
                                 type="default">
-                                Add FAQ
+                                Add Career
                             </Button>
                         </ButtonThemeConfig>
                     </div>
@@ -245,9 +231,9 @@ const Faq = () => {
                     }
                 }}>
                 <Table
-                    dataSource={faqs}
+                    dataSource={careers}
                     loading={loading}
-                    scroll={{ x: '1100px' }}
+                    scroll={{ x: '1300px' }}
                     columns={columns}
                     rowHoverable={true}
                     rowKey={(record) => record.id}
@@ -255,7 +241,7 @@ const Faq = () => {
                         current: page,
                         pageSize: pageSize,
                         showSizeChanger: false,
-                        total: totalPages * pageSize,
+                        total: totalItems,
                         onChange: (page: number) => {
                             setPage(page)
                         }
@@ -263,28 +249,30 @@ const Faq = () => {
                 />
             </ConfigProvider>
 
-            {isDeleteFaqModalOpen && (
-                <DeleteFaqModal
-                    isDeleteFaqModalOpen={isDeleteFaqModalOpen}
-                    setIsDeleteFaqModalOpen={setIsDeleteFaqModalOpen}
-                    selectedFaqId={selectedFaqId || ''}
+            {isDeleteCareerModalOpen && (
+                <DeleteCareerModal
+                    isDeleteCareerModalOpen={isDeleteCareerModalOpen}
+                    setIsDeleteCareerModalOpen={setIsDeleteCareerModalOpen}
+                    selectedCareerId={selectedCareerId || ''}
                 />
             )}
-            {isCreateFaqDrawerOpen && (
-                <CreateFaqDrawer
-                    isCreateFaqDrawerOpen={isCreateFaqDrawerOpen}
-                    SetIsCreateFaqDrawerOpen={SetIsCreateFaqDrawerOpen}
+
+            {isCreateCareerDrawerOpen && (
+                <CreateCareerDrawer
+                    isCreateCareerDrawerOpen={isCreateCareerDrawerOpen}
+                    SetIsCreateCareerDrawerOpen={setIsCreateCareerDrawerOpen}
                 />
             )}
-            {isEditFaqDrawerOpen && (
-                <EditFaqDrawer
-                    isEditFaqDrawerOpen={isEditFaqDrawerOpen}
-                    SetIsEditFaqDrawerOpen={SetIsEditFaqDrawerOpen}
-                    selectedFaqId={selectedFaqId || ''}
+
+            {isEditCareerDrawerOpen && (
+                <EditCareerDrawer
+                    isEditCareerDrawerOpen={isEditCareerDrawerOpen}
+                    SetIsEditCareerDrawerOpen={setIsEditCareerDrawerOpen}
+                    selectedCareerId={selectedCareerId || ''}
                 />
             )}
         </div>
     )
 }
 
-export default Faq
+export default Career

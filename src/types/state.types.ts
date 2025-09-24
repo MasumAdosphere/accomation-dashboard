@@ -45,6 +45,25 @@ export interface ICreatelogo {
     companyName: string
     logo: string
 }
+export interface ICareerCreate {
+    jobrole: string
+    employmentType: string
+    location: string
+    experience: string
+    jobDescription: string
+}
+// types/state.types.ts
+export interface ICareer {
+    id: string
+    jobrole: string
+    employmentType: 'fullTime' | 'partTime' | 'internship'
+    location: string
+    experience: string
+    jobDescription: string
+    createdAt: string
+    updatedAt: string
+    isPublished: boolean
+}
 
 export interface IFaq {
     id: string

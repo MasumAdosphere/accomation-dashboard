@@ -4,7 +4,7 @@ import configs from '../configs'
 import { resetState } from './resetSlice'
 import { refreshTokenFail, refreshTokenSuccess } from './common/common.slice'
 import { getAllFaqs } from './faq/faq.thunk'
-import { IFaq, IfaqPayload } from '../types/state.types'
+import { ICareer, ICareerCreate, IFaq, IfaqPayload } from '../types/state.types'
 
 const { server } = configs
 const { SERVER_URL } = server
@@ -381,10 +381,8 @@ export default {
             return response
         },
 
-        getAllFaq: async (pageSize: number, page: number, pageName: String, signal: AbortSignal) => {
+        getAllFaq: async (pageName: String, signal: AbortSignal) => {
             const queryParams = {
-                pageSize,
-                page,
                 pageName
             }
             const { data } = await apiInstance.get('/admin/faq', {
@@ -396,6 +394,63 @@ export default {
         },
         deleteFaq: async (FaqId: string) => {
             const { data } = await apiInstance.delete(`/admin/faq/${FaqId}`)
+            return data
+        }
+    },
+    Career: {
+        createCareer: async (payload: ICareerCreate) => {
+            const { data } = await apiInstance.post('/admin/career', payload)
+            return data
+        },
+        getCareerById: async (CareerId: string) => {
+            const { data } = await apiInstance.get(`/admin/career/${CareerId}`)
+            return data
+        },
+        editCareerById: async (CareerId: string, payload = {}) => {
+            const { data } = await apiInstance.put(`/admin/career/${CareerId}`, payload)
+            return data
+        },
+        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+            return data
+        },
+        uploadFile: async (payload: FormData) => {
+            const { data } = await apiInstance.post('/admin/upload', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            return data
+        },
+        uploadToS3: async (file: File, url: string, onProgress?: (progress: number) => void) => {
+            const response = await axios.put(url, file, {
+                headers: {
+                    'Content-Type': file.type
+                },
+                onUploadProgress: (progressEvent) => {
+                    if (progressEvent.total) {
+                        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        if (onProgress) onProgress(percent)
+                    }
+                }
+            })
+
+            return response
+        },
+
+        getAllCareers: async (pageName: String, signal: AbortSignal) => {
+            const queryParams = {
+                pageName
+            }
+            const { data } = await apiInstance.get('/admin/career', {
+                params: queryParams,
+                signal
+            })
+
+            return data
+        },
+        deleteCareer: async (CareerId: string) => {
+            const { data } = await apiInstance.delete(`/admin/career/${CareerId}`)
             return data
         }
     }

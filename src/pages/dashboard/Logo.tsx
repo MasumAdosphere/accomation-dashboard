@@ -10,6 +10,7 @@ import { DeleteLogoModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
 import { getAllLogo } from '../../redux/logo/logo.thunk'
+import { CreateLogoDrawer } from '../../components/antdesign/drawer.components'
 
 const Logo = () => {
     const pageSize = 20
@@ -24,6 +25,7 @@ const Logo = () => {
     const [selectedLogoId, setSelectedLogoId] = useState<string | null>(null) // 👈 Renamed
     const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
     const [isDeleteLogoModalOpen, setIsDeleteLogoModalOpen] = useState<boolean>(false) // 👈 Renamed
+    const [isCreateLogoDrawerOpen, SetIsCreateLogoDrawerOpen] = useState<boolean>(false) // 👈 Renamed
     const controllerRef = useRef<AbortController | null>(null)
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
@@ -159,15 +161,16 @@ const Logo = () => {
             <Form>
                 <div className="mb-4 flex justify-end items-center text-lg">
                     <div>
-                        <Link to="/dashboard/logos/add">
-                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                                <Button
-                                    className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
-                                    type="default">
-                                    Add Logo
-                                </Button>
-                            </ButtonThemeConfig>
-                        </Link>
+                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                            <Button
+                                onClick={() => {
+                                    SetIsCreateLogoDrawerOpen(true)
+                                }}
+                                className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                type="default">
+                                Add Logo
+                            </Button>
+                        </ButtonThemeConfig>
                     </div>
                 </div>
             </Form>
@@ -211,6 +214,12 @@ const Logo = () => {
                     isDeleteLogoModalOpen={isDeleteLogoModalOpen}
                     setIsDeleteLogoModalOpen={setIsDeleteLogoModalOpen}
                     selectedLogoId={selectedLogoId || ''}
+                />
+            )}
+            {isCreateLogoDrawerOpen && (
+                <CreateLogoDrawer
+                    isCreateLogoDrawerOpen={isCreateLogoDrawerOpen}
+                    SetIsCreateLogoDrawerOpen={SetIsCreateLogoDrawerOpen}
                 />
             )}
         </div>
