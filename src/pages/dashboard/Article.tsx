@@ -1,12 +1,10 @@
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
 import { ArticleData, EConfigButtonType } from '../../types/state.types'
-import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
 import { DeleteArticleModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
@@ -15,10 +13,10 @@ import { CreateArticleDrawer, EditArticleDrawer } from '../../components/antdesi
 
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
+import plusicon from '../../assets/plus.svg'
 
 const Article = () => {
     const pageSize = 20
-    const navigate = useNavigate()
     const dispatch = useDispatch()
     // states
     const [page, setPage] = useState(1)
@@ -26,13 +24,11 @@ const Article = () => {
     const [totalPages, setTotalPages] = useState(1)
     const [article, setArticle] = useState<ArticleData[]>([])
     const [selectedArticleId, SetSelectedArticleId] = useState<string | null>(null)
-    const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [isDeleteArticleModalOpen, setIsDeleteArticleModalOpen] = useState<boolean>(false)
     const [isCreateArticleDrawerOpen, SetIsCreateArticleDrawerOpen] = useState<boolean>(false)
     const [isEditArticleDrawerOpen, SetIsEditArticleDrawerOpen] = useState<boolean>(false)
     const controllerRef = useRef<AbortController | null>(null)
-
-    const websiteUrl = import.meta.env.VITE_WEBSITE_URL
 
     const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
@@ -191,8 +187,12 @@ const Article = () => {
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={() => SetIsCreateArticleDrawerOpen(true)}
-                                className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="font-sans rounded-[40px] text-sm 2xl:text-lg  w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
                                 type="default">
+                                <img
+                                    src={plusicon}
+                                    alt=""
+                                />
                                 Add Article
                             </Button>
                         </ButtonThemeConfig>
@@ -204,7 +204,7 @@ const Article = () => {
                     token: {
                         fontFamily: 'Inter, sans-serif',
                         fontWeightStrong: 500,
-                        colorPrimary: '#816348',
+                        colorPrimary: '#4226C4',
                         fontSize: 16
                         // borderRadius: 0
                     },

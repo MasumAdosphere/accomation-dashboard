@@ -3,15 +3,12 @@
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
-import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
 // import { DeleteFaqModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Select, Switch, Table, Tooltip } from 'antd'
-import { publishActionById } from '../../redux/article/article.thunk'
 import { EConfigButtonType, IFaq } from '../../types/state.types'
 import { getAllFaqs, publishFaqById, updateFaqSequences } from '../../redux/faq/faq.thunk'
 import { DeleteFaqModal } from '../../components/antdesign/modal.components'
@@ -24,6 +21,7 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
+import plusicon from '../../assets/plus.svg'
 
 const Row: React.FC<Readonly<RowProps>> = (props) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -54,23 +52,19 @@ interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 
 const Faq = () => {
     const pageSize = 20
-    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     // States
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(false)
-    const [totalPages, setTotalPages] = useState(1)
     const [faqs, setFaqs] = useState<IFaq[]>([])
     const [selectedFaqId, setSelectedFaqId] = useState<string | null>(null)
-    const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [isDeleteFaqModalOpen, setIsDeleteFaqModalOpen] = useState<boolean>(false)
     const [isCreateFaqDrawerOpen, SetIsCreateFaqDrawerOpen] = useState<boolean>(false)
     const [isEditFaqDrawerOpen, SetIsEditFaqDrawerOpen] = useState<boolean>(false)
     const [pageName, setPageName] = useState<string>('Overview')
     const controllerRef = useRef<AbortController | null>(null)
-
-    const websiteUrl = import.meta.env.VITE_WEBSITE_URL
 
     // Options for dropdown
     const pageNameOptions = [
@@ -167,13 +161,13 @@ const Faq = () => {
                             }}
                         />
                     </Tooltip>
-                    <Tooltip title="Preview">
+                    {/* <Tooltip title="Preview">
                         <Link
                             to={`${websiteUrl}/faq-preview/${record.slug}?accessToken=${accessToken}`}
                             target="_blank">
                             <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" />
                         </Link>
-                    </Tooltip>
+                    </Tooltip> */}
 
                     <Tooltip title="Edit">
                         <div
@@ -323,8 +317,12 @@ const Faq = () => {
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={() => SetIsCreateFaqDrawerOpen(true)}
-                                className="font-sans text-sm 2xl:text-lg rounded w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="font-sans text-sm 2xl:text-lg rounded-[40px] w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
                                 type="default">
+                                <img
+                                    src={plusicon}
+                                    alt=""
+                                />
                                 Add FAQ
                             </Button>
                         </ButtonThemeConfig>
@@ -337,7 +335,7 @@ const Faq = () => {
                     token: {
                         fontFamily: 'Inter, sans-serif',
                         fontWeightStrong: 500,
-                        colorPrimary: '#816348',
+                        colorPrimary: '#4226C4',
                         fontSize: 16
                     },
                     components: {
@@ -365,15 +363,6 @@ const Faq = () => {
                             columns={columns}
                             rowHoverable={true}
                             rowKey={(record) => record.id}
-                            pagination={{
-                                current: page,
-                                pageSize: pageSize,
-                                showSizeChanger: false,
-                                total: totalPages * pageSize,
-                                onChange: (page: number) => {
-                                    setPage(page)
-                                }
-                            }}
                         />
                     </SortableContext>
                 </DndContext>

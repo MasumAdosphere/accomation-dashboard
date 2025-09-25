@@ -9,6 +9,8 @@ import { ButtonThemeConfig } from '../../components/antdesign/configs.components
 import { CreateNewCategoryModal, DeleteCategoryModal } from '../../components/antdesign/modal.components'
 import deleteIcon from '../../assets/delete.svg'
 
+import plusicon from '../../assets/plus.svg'
+
 const Categories = () => {
     const pageSize = 20
     // states
@@ -127,7 +129,11 @@ const Categories = () => {
                             setIsNewCategoryModalOpen(true)
                         }}
                         type="default"
-                        className="font-sans text-sm 2xl:text-lg rounded- h-8 2xl:h-[46px] bg-primary text-white border-primary">
+                        className="font-sans rounded-[40px]  text-sm 2xl:text-lg rounded- h-8 2xl:h-[46px] bg-primary text-white border-primary">
+                        <img
+                            src={plusicon}
+                            alt=""
+                        />
                         Add Category
                     </Button>
                 </ButtonThemeConfig>
@@ -139,7 +145,7 @@ const Categories = () => {
                         token: {
                             fontFamily: 'Inter, sans-serif',
                             fontWeightStrong: 500,
-                            colorPrimary: '#816348',
+                            colorPrimary: '#4226C4',
                             fontSize: 16
                         },
                         components: {

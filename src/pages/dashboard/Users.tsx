@@ -94,7 +94,7 @@ const Users = () => {
                         token: {
                             fontFamily: 'Inter, sans-serif',
                             fontWeightStrong: 500,
-                            colorPrimary: '#816348',
+                            colorPrimary: '#4226C4',
                             fontSize: 16
                         },
                         components: {

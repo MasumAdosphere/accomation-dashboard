@@ -1,25 +1,22 @@
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
-import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
 import { DeleteTestimonialModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
-import { publishActionById } from '../../redux/article/article.thunk'
 import { EConfigButtonType, ITestimonial } from '../../types/state.types'
 import { getAllTestimonials, publishTestimonialById } from '../../redux/testimonials/testimonial.thunk'
 import { CreateTestimonialDrawer, EditTestimonialDrawer } from '../../components/antdesign/drawer.components'
 
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
+import plusicon from '../../assets/plus.svg'
 
 const Testimonial = () => {
     const pageSize = 20
-    const navigate = useNavigate()
     const dispatch = useDispatch()
     //states
     const [page, setPage] = useState(1)
@@ -27,15 +24,13 @@ const Testimonial = () => {
     const [totalPages, setTotalPages] = useState(1)
     const [testimonials, setTestimonials] = useState<ITestimonial[]>([])
     const [selectedTestimonialId, SetSelectedTestimonialId] = useState<string | null>(null)
-    const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [isDeleteTestimonialModalOpen, setIsDeleteTestimonialModalOpen] = useState<boolean>(false)
 
     const [isCreateTestimonialDrawerOpen, SetIsCreateTestimonialDrawerOpen] = useState<boolean>(false)
     const [isEditTestimonialDrawerOpen, SetIsEditTestimonialDrawerOpen] = useState<boolean>(false)
 
     const controllerRef = useRef<AbortController | null>(null)
-
-    const websiteUrl = import.meta.env.VITE_WEBSITE_URL
 
     const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
@@ -219,8 +214,12 @@ const Testimonial = () => {
                             onClick={() => {
                                 SetIsCreateTestimonialDrawerOpen(true)
                             }}
-                            className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                            className="font-sans rounded-[40px] text-sm 2xl:text-lg w-[180px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
                             type="default">
+                            <img
+                                src={plusicon}
+                                alt=""
+                            />
                             Add Testimonial
                         </Button>
                     </ButtonThemeConfig>
@@ -232,7 +231,7 @@ const Testimonial = () => {
                     token: {
                         fontFamily: 'Inter, sans-serif',
                         fontWeightStrong: 500,
-                        colorPrimary: '#816348',
+                        colorPrimary: '#4226C4',
                         fontSize: 16
                     },
                     components: {

@@ -1,11 +1,9 @@
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { ILogo, EConfigButtonType } from '../../types/state.types'
-import { DeleteFilled } from '@ant-design/icons'
 import { DeleteLogoModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
@@ -13,10 +11,10 @@ import { getAllLogo, publishLogoById } from '../../redux/logo/logo.thunk'
 import { CreateLogoDrawer } from '../../components/antdesign/drawer.components'
 import deleteIcon from '../../assets/delete.svg'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
+import plusicon from '../../assets/plus.svg'
 
 const Logo = () => {
     const pageSize = 20
-    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     // States
@@ -25,12 +23,10 @@ const Logo = () => {
     const [totalPages, setTotalPages] = useState(1)
     const [logos, setLogos] = useState<ILogo[]>([]) // 👈 Renamed from article
     const [selectedLogoId, setSelectedLogoId] = useState<string | null>(null) // 👈 Renamed
-    const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [isDeleteLogoModalOpen, setIsDeleteLogoModalOpen] = useState<boolean>(false) // 👈 Renamed
     const [isCreateLogoDrawerOpen, SetIsCreateLogoDrawerOpen] = useState<boolean>(false) // 👈 Renamed
     const controllerRef = useRef<AbortController | null>(null)
-
-    const websiteUrl = import.meta.env.VITE_WEBSITE_URL
 
     const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
@@ -179,8 +175,12 @@ const Logo = () => {
                                 onClick={() => {
                                     SetIsCreateLogoDrawerOpen(true)
                                 }}
-                                className="font-sans text-sm 2xl:text-lg rounded w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="font-sans text-sm 2xl:text-lg rounded-[40px] w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
                                 type="default">
+                                <img
+                                    src={plusicon}
+                                    alt=""
+                                />
                                 Add Logo
                             </Button>
                         </ButtonThemeConfig>
@@ -193,7 +193,7 @@ const Logo = () => {
                     token: {
                         fontFamily: 'Inter, sans-serif',
                         fontWeightStrong: 500,
-                        colorPrimary: '#816348',
+                        colorPrimary: '#4226C4',
                         fontSize: 16
                     },
                     components: {

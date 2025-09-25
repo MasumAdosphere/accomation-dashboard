@@ -16,9 +16,10 @@ import { CreateCareerDrawer, EditCareerDrawer } from '../../components/antdesign
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
+import plusicon from '../../assets/plus.svg'
+
 const Career = () => {
     const pageSize = 20
-    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     // States
@@ -27,21 +28,12 @@ const Career = () => {
     const [totalItems, setTotalItems] = useState(0)
     const [careers, setCareers] = useState<ICareer[]>([])
     const [selectedCareerId, setSelectedCareerId] = useState<string | null>(null)
-    const { isDataRefreshed, accessToken } = useSelector((state: RootState) => state.Common)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [isDeleteCareerModalOpen, setIsDeleteCareerModalOpen] = useState<boolean>(false)
     const [isCreateCareerDrawerOpen, setIsCreateCareerDrawerOpen] = useState<boolean>(false)
     const [isEditCareerDrawerOpen, setIsEditCareerDrawerOpen] = useState<boolean>(false)
     const [filter, setFilter] = useState<string>('') // Filter by job role or location
     const controllerRef = useRef<AbortController | null>(null)
-
-    const websiteUrl = import.meta.env.VITE_WEBSITE_URL
-
-    // Options for employment type filter (optional — we'll use text search instead)
-    const employmentTypeOptions = [
-        { value: 'Full-time', label: 'Full-time' },
-        { value: 'Part-time', label: 'Part-time' },
-        { value: 'Contract', label: 'Contract' }
-    ]
 
     const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
@@ -215,22 +207,21 @@ const Career = () => {
         }
     }, [page, filter, isDataRefreshed])
 
-    const handleFilterChange = (value: string) => {
-        setFilter(value)
-        setPage(1)
-    }
-
     return (
         <div className="font-sans space-y-3">
             <Form>
-                <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="mb-4 flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4">
                     {/* Add Button */}
                     <div className="w-full sm:w-auto">
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={() => setIsCreateCareerDrawerOpen(true)}
-                                className="font-sans text-sm 2xl:text-lg rounded w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="font-sans text-sm 2xl:text-lg rounded-[40px] w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
                                 type="default">
+                                <img
+                                    src={plusicon}
+                                    alt=""
+                                />
                                 Add Career
                             </Button>
                         </ButtonThemeConfig>
@@ -243,7 +234,7 @@ const Career = () => {
                     token: {
                         fontFamily: 'Inter, sans-serif',
                         fontWeightStrong: 500,
-                        colorPrimary: '#816348',
+                        colorPrimary: '#4226C4',
                         fontSize: 16
                     },
                     components: {

@@ -77,7 +77,7 @@ body {
 .loader {
     width: 50px;
     aspect-ratio: 1;
-    --_g: no-repeat radial-gradient(farthest-side, #816348 94%, #816348);
+    --_g: no-repeat radial-gradient(farthest-side, #4226c4 94%, #4226c4);
     background:
         var(--_g) 0 0,
         var(--_g) 100% 0,
@@ -97,7 +97,7 @@ body {
 }
 
 .ant-breadcrumb span {
-    color: #816348 !important;
+    color: #4226c4 !important;
 }
 
 .ant-breadcrumb-separator {
@@ -111,7 +111,7 @@ body {
 }
 
 .ant-spin .ant-spin-dot-holder {
-    color: #816348;
+    color: #4226c4;
 }
 
 .ant-select-selection-overflow {
