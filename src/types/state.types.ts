@@ -71,6 +71,7 @@ export interface IFaq {
     designation: string
     question: string
     answer: String
+    sequenceId: Number
     pageName: string
     description: string
     slug: string

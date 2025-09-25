@@ -25,7 +25,7 @@ export default {
                 custom: '0px 8px 24px 0px rgba(149, 157, 165, 0.2)' // rgba equivalent of #959DA533
             },
             colors: {
-                primary: '#816348',
+                primary: '#4226C4',
                 secondary: '#634d39',
                 textBlack: '#232323',
                 grayText: '#757575',

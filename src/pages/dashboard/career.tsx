@@ -8,14 +8,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
 import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
-import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, Input, message, Select, Switch, Table, Tooltip } from 'antd'
 import { DeleteCareerModal } from '../../components/antdesign/modal.components'
 import { EConfigButtonType, ICareer } from '../../types/state.types'
-import { publishActionById } from '../../redux/faq/faq.thunk'
-import { getAllCareers } from '../../redux/career/career.thunk'
+import { getAllCareers, publishCareerById } from '../../redux/career/career.thunk'
 import { CreateCareerDrawer, EditCareerDrawer } from '../../components/antdesign/drawer.components'
-
+import deleteIcon from '../../assets/delete.svg'
+import editIcon from '../../assets/edit.svg'
+import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 const Career = () => {
     const pageSize = 20
     const navigate = useNavigate()
@@ -43,7 +43,7 @@ const Career = () => {
         { value: 'Contract', label: 'Contract' }
     ]
 
-    const handleSwitchChange = async (slug: string, checked: boolean) => {
+    const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
 
         try {
@@ -56,7 +56,7 @@ const Career = () => {
             controllerRef.current = new AbortController()
             const signal = controllerRef.current.signal
 
-            const data = await publishActionById(slug, checked, signal)
+            const data = await publishCareerById(id, checked, signal)
 
             if (data.success) {
                 dispatch(setIsDataRefreshed(!isDataRefreshed))
@@ -126,36 +126,59 @@ const Career = () => {
         {
             title: 'Action',
             key: 'action',
-            width: '10%',
+            width: '20%',
             render: (record) => (
                 <div className="flex justify-start items-center gap-5">
-                    <Tooltip title={record?.isPublished ? 'Unpublish' : 'Publish'}>
+                    <Tooltip title={record?.isLive ? 'Unpublish' : 'Publish'}>
                         <Switch
-                            checked={record?.isPublished}
+                            checked={record?.isLive}
                             disabled={loading}
                             onChange={async (checked) => {
-                                handleSwitchChange(record?.slug, checked)
+                                handleSwitchChange(record?.id, checked)
                             }}
                         />
                     </Tooltip>
 
                     <Tooltip title="Edit">
-                        <EditFilled
+                        <div
+                            className="flex cursor-pointer gap-2 bg-primary py-3 px-6 font-medium text-white rounded-[50px] item-center justify-center"
+                            onClick={() => {
+                                setIsEditCareerDrawerOpen(true)
+                                setSelectedCareerId(record.id)
+                            }}>
+                            <img
+                                src={editIcon}
+                                alt=""
+                            />
+                            <h6>Edit</h6>
+                        </div>
+                        {/* <EditFilled
                             onClick={() => {
                                 setIsEditCareerDrawerOpen(true)
                                 setSelectedCareerId(record.id)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        />
+                        /> */}
                     </Tooltip>
                     <Tooltip title="Delete">
-                        <DeleteFilled
+                        <div
+                            className="w-6 cursor-pointer h-6"
+                            onClick={() => {
+                                setIsDeleteCareerModalOpen(true)
+                                setSelectedCareerId(record.id)
+                            }}>
+                            <img
+                                src={deleteIcon}
+                                alt=""
+                            />
+                        </div>
+                        {/* <DeleteFilled
                             onClick={() => {
                                 setIsDeleteCareerModalOpen(true)
                                 setSelectedCareerId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        />
+                        /> */}
                     </Tooltip>
                 </div>
             )
@@ -225,8 +248,8 @@ const Career = () => {
                     },
                     components: {
                         Table: {
-                            headerBg: '#816348',
-                            headerColor: '#fff'
+                            headerBg: '#F0F3F4',
+                            headerColor: '#000'
                         }
                     }
                 }}>

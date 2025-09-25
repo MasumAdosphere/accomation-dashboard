@@ -146,11 +146,11 @@ const DashboardLayout = () => {
                         siderBg: '#FFF'
                     },
                     Menu: {
-                        itemSelectedBg: '#816348',
+                        itemSelectedBg: '#4226C4',
                         itemSelectedColor: '#FFF',
-                        itemColor: '#816348',
+                        itemColor: '#4226C4',
                         itemBorderRadius: 0,
-                        itemHoverBg: '#816348',
+                        itemHoverBg: '#4226C4',
                         itemHoverColor: '#FFF'
                     }
                 }
@@ -162,7 +162,7 @@ const DashboardLayout = () => {
                     collapsible
                     // onCollapse={(value) => setCollapsed(value)}
                     breakpoint="xl"
-                    className="font-sans border-r border-[#E5E5E6] bg-[#EDE3D2]"
+                    className="font-sans border-r border-[#F0F3F4] bg-[#F0F3F4]"
                     collapsedWidth={150}>
                     <Link
                         to="/dashboard/overview"
@@ -178,36 +178,40 @@ const DashboardLayout = () => {
                         items={renderMenuItems(adminItems)}
                         mode="inline"
                         selectedKeys={[current]}
-                        className="font-sans px-2 2xl:px-6 mt-6 text-sm 2xl:text-[20px] space-y-2 font-medium 2xl:leading-[22px] bg-[#EDE3D2] !border-none"
+                        className="font-sans px-2 2xl:px-6 mt-6 text-sm 2xl:text-[20px] space-y-2 font-medium 2xl:leading-[22px] bg-[#F0F3F4] !border-none"
                     />
-
-                    <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                        <Button
-                            className="font-sans text-lg w-5/6 rounded-[100px] bg-primary h-8 2xl:h-12 text-white absolute m-2 2xl:m-6 bottom-5 border-primary"
-                            type="default"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                logoutHandler()
-                            }}>
-                            Logout
-                        </Button>
-                    </ButtonThemeConfig>
                 </Sider>
                 <Layout>
-                    <Header className="font-sans p-0 flex items-center flex-row justify-between h-14 2xl:h-16 bg-[url('/iktara-bg.png')] bg-cover bg-center bg-no-repeat w-full  border-primary">
-                        <div className="lg:flex hidden flex-col justify-center items-start px-6">
-                            <h3 className=" font-sans text-primary text-base 2xl:text-lg font-semibold capitalize">{getHeaderText()}</h3>
-                            <div className="xl:flex hidden font-sans items-center justify-start text-grayText text-base">
-                                {current !== 'overview' && <AppBreadcrumb />}
+                    <Header className="font-sans p-0 flex items-center flex-row justify-between h-14 2xl:h-16 bg-[#F0F3F4] bg-cover bg-center bg-no-repeat w-full  border-primary">
+                        <div className="lg:flex w-full hidden  justify-between items-center px-6">
+                            <div className="">
+                                <h3 className=" font-sans text-primary text-base 2xl:text-lg font-semibold capitalize">{getHeaderText()}</h3>
+                                <div className="xl:flex hidden font-sans items-center justify-start text-grayText text-base">
+                                    {current !== 'overview' && <AppBreadcrumb />}
+                                </div>
+                            </div>
+                            <div className="">
+                                <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                                    <Button
+                                        className="font-sans text-lg w-[120px] h-[48px] rounded-[100px] bg-primary  2xl:h-12 text-white  m-2 2xl:m-6  border-primary"
+                                        type="default"
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            logoutHandler()
+                                        }}>
+                                        Logout
+                                    </Button>
+                                </ButtonThemeConfig>
                             </div>
                         </div>
-                        <div className="px-6 flex items-center justify-center gap-2"></div>
+
+                        {/* <div className="px-6 flex items-center justify-center gap-2"></div> */}
                     </Header>
                     <Content
                         style={{
                             minHeight: 280
                         }}
-                        className="font-sans bg-[url('/iktara-bg.png')] bg-cover bg-center bg-no-repeat min-h-screen w-full p-3 2xl:p-6 overflow-auto ">
+                        className="font-sans bg-white bg-cover bg-center bg-no-repeat min-h-screen w-full p-3 2xl:p-6 overflow-auto ">
                         <Outlet />
                     </Content>
                 </Layout>

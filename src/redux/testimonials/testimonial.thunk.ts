@@ -24,10 +24,10 @@ export const createTestimonials = async (payload: FormData) => {
     }
 }
 
-export const publishActionById = async (slug: string, isPublished: boolean, signal: AbortSignal) => {
+export const publishTestimonialById = async (id: string, isFeatured: boolean, signal: AbortSignal) => {
     try {
         store.dispatch(responseRequest())
-        const data = await Api.Article.publishAction(slug, { isPublished }, signal)
+        const data = await Api.Testimonial.publishAction(id, { isFeatured }, signal)
         const { message } = data
         store.dispatch(responseSuccess({ message }))
         return data

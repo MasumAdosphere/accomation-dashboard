@@ -181,8 +181,8 @@ export default {
             const { data } = await formDataApiInstance.put(`/admin/blog/${articleId}`, payload)
             return data
         },
-        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
-            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+        publishAction: async (id: string, payload: { isFeatured: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/blog/${id}/mark-featured`, payload, { signal })
             return data
         },
         uploadFile: async (payload: FormData) => {
@@ -235,8 +235,8 @@ export default {
             const { data } = await apiInstance.get(`/admin/logo/${logoId}`)
             return data
         },
-        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
-            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+        publishAction: async (id: string, payload: { isLive: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/logo/${id}/mark-featured`, payload, { signal })
             return data
         },
         uploadFile: async (payload: FormData) => {
@@ -294,8 +294,8 @@ export default {
             const { data } = await formDataApiInstance.put(`/admin/testimonial/${testimonialId}`, payload)
             return data
         },
-        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
-            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+        publishAction: async (id: string, payload: { isFeatured: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/testimonial/${id}/mark-featured`, payload, { signal })
             return data
         },
         uploadFile: async (payload: FormData) => {
@@ -353,8 +353,8 @@ export default {
             const { data } = await apiInstance.put(`/admin/faq/${FaqId}`, payload)
             return data
         },
-        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
-            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+        publishAction: async (id: string, payload: { isFeatured: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/faq/${id}/mark-featured`, payload, { signal })
             return data
         },
         uploadFile: async (payload: FormData) => {
@@ -395,6 +395,10 @@ export default {
         deleteFaq: async (FaqId: string) => {
             const { data } = await apiInstance.delete(`/admin/faq/${FaqId}`)
             return data
+        },
+        updateFaqSequences: async (faqs: { id: string; sequenceId: number }[]) => {
+            const { data } = await apiInstance.put(`/admin/faq/sequence`, faqs)
+            return data
         }
     },
     Career: {
@@ -410,8 +414,8 @@ export default {
             const { data } = await apiInstance.put(`/admin/career/${CareerId}`, payload)
             return data
         },
-        publishAction: async (slug: string, payload: { isPublished: boolean }, signal: AbortSignal) => {
-            const { data } = await apiInstance.put(`/admin/blog/${slug}/publish`, payload, { signal })
+        publishAction: async (id: string, payload: { isLive: boolean }, signal: AbortSignal) => {
+            const { data } = await apiInstance.put(`/admin/career/${id}/mark-featured`, payload, { signal })
             return data
         },
         uploadFile: async (payload: FormData) => {

@@ -2,12 +2,12 @@ import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { ColumnsType } from 'antd/es/table'
 import { RootState } from '../../types/selector.types'
-import { DeleteFilled } from '@ant-design/icons'
 import { Table, Button, message, ConfigProvider, Tooltip } from 'antd'
 import { getAllCategories } from '../../redux/category/category.thunk'
 import { EConfigButtonType, ICategory } from '../../types/state.types'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { CreateNewCategoryModal, DeleteCategoryModal } from '../../components/antdesign/modal.components'
+import deleteIcon from '../../assets/delete.svg'
 
 const Categories = () => {
     const pageSize = 20
@@ -67,13 +67,24 @@ const Categories = () => {
                         </Button>
                     </ButtonThemeConfig> */}
                     <Tooltip title="Delete">
-                        <DeleteFilled
+                        <div
+                            className=""
+                            onClick={() => {
+                                setIsDeleteCategoryModalOpen(true)
+                                setSelectedCategoryId(record.id)
+                            }}>
+                            <img
+                                src={deleteIcon}
+                                alt=""
+                            />
+                        </div>
+                        {/* <DeleteFilled
                             onClick={() => {
                                 setIsDeleteCategoryModalOpen(true)
                                 setSelectedCategoryId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        />
+                        /> */}
                     </Tooltip>
                 </div>
             )
@@ -133,8 +144,8 @@ const Categories = () => {
                         },
                         components: {
                             Table: {
-                                headerBg: '#816348',
-                                headerColor: '#fff'
+                                headerBg: '#F0F3F4',
+                                headerColor: '#000'
                             }
                         }
                     }}>

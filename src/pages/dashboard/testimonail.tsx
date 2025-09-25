@@ -11,8 +11,11 @@ import { ButtonThemeConfig } from '../../components/antdesign/configs.components
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
 import { publishActionById } from '../../redux/article/article.thunk'
 import { EConfigButtonType, ITestimonial } from '../../types/state.types'
-import { getAllTestimonials } from '../../redux/testimonials/testimonial.thunk'
+import { getAllTestimonials, publishTestimonialById } from '../../redux/testimonials/testimonial.thunk'
 import { CreateTestimonialDrawer, EditTestimonialDrawer } from '../../components/antdesign/drawer.components'
+
+import deleteIcon from '../../assets/delete.svg'
+import editIcon from '../../assets/edit.svg'
 
 const Testimonial = () => {
     const pageSize = 20
@@ -34,7 +37,7 @@ const Testimonial = () => {
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
 
-    const handleSwitchChange = async (slug: string, checked: boolean) => {
+    const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
 
         try {
@@ -47,7 +50,7 @@ const Testimonial = () => {
             controllerRef.current = new AbortController()
             const signal = controllerRef.current.signal
 
-            const data = await publishActionById(slug, checked, signal)
+            const data = await publishTestimonialById(id, checked, signal)
 
             if (data.success) {
                 dispatch(setIsDataRefreshed(!isDataRefreshed))
@@ -116,41 +119,64 @@ const Testimonial = () => {
             key: 'action',
             width: '10%',
             render: (record) => (
-                <div className="flex justify-start item-center gap-5">
+                <div className="flex justify-center items-center gap-5">
                     <Tooltip title={record?.isPublished ? 'Unpublish' : 'Publish'}>
                         <Switch
                             checked={record?.isPublished}
                             disabled={loading}
                             onChange={async (checked) => {
-                                handleSwitchChange(record?.slug, checked)
+                                handleSwitchChange(record?.id, checked)
                             }}
                         />
                     </Tooltip>
-                    <Tooltip title="Preview">
+                    {/* <Tooltip title="Preview">
                         <Link
                             to={`${websiteUrl}/testimonial-preview/${record.slug}?accessToken=${accessToken}`}
                             target="_blank">
                             <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl">Open</EyeOutlined>
                         </Link>
-                    </Tooltip>
+                    </Tooltip> */}
 
                     <Tooltip title="Edit">
-                        <EditFilled
+                        <div
+                            className="flex cursor-pointer gap-2 bg-primary py-3 px-6 font-medium text-white rounded-[50px] item-center justify-center"
+                            onClick={() => {
+                                SetIsEditTestimonialDrawerOpen(true)
+                                SetSelectedTestimonialId(record.id)
+                            }}>
+                            <img
+                                src={editIcon}
+                                alt=""
+                            />
+                            <h6>Edit</h6>
+                        </div>
+                        {/* <EditFilled
                             onClick={() => {
                                 SetIsEditTestimonialDrawerOpen(true)
                                 SetSelectedTestimonialId(record.id)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        />
+                        /> */}
                     </Tooltip>
                     <Tooltip title="Delete">
-                        <DeleteFilled
+                        <div
+                            className="h-6 w-6 cursor-pointer"
+                            onClick={() => {
+                                setIsDeleteTestimonialModalOpen(true)
+                                SetSelectedTestimonialId(record.id)
+                            }}>
+                            <img
+                                src={deleteIcon}
+                                alt=""
+                            />
+                        </div>
+                        {/* <DeleteFilled
                             onClick={() => {
                                 setIsDeleteTestimonialModalOpen(true)
                                 SetSelectedTestimonialId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        />
+                        /> */}
                     </Tooltip>
                 </div>
             )
@@ -211,8 +237,8 @@ const Testimonial = () => {
                     },
                     components: {
                         Table: {
-                            headerBg: '#816348',
-                            headerColor: '#fff'
+                            headerBg: '#F0F3F4',
+                            headerColor: '#000'
                         }
                     }
                 }}>

@@ -24,10 +24,10 @@ export const createFaq = async (payload: IfaqPayload) => {
     }
 }
 
-export const publishActionById = async (slug: string, isPublished: boolean, signal: AbortSignal) => {
+export const publishFaqById = async (id: string, isFeatured: boolean, signal: AbortSignal) => {
     try {
         store.dispatch(responseRequest())
-        const data = await Api.Article.publishAction(slug, { isPublished }, signal)
+        const data = await Api.Faq.publishAction(id, { isFeatured }, signal)
         const { message } = data
         store.dispatch(responseSuccess({ message }))
         return data
@@ -77,6 +77,17 @@ export const uploadToS3 = async (file: File, url: string, onProgress?: (progress
 export const deleteFaqById = async (faqId: string) => {
     try {
         const data = await Api.Faq.deleteFaq(faqId)
+        const { message } = data
+        store.dispatch(responseSuccess({ message }))
+        return data
+    } catch (error) {
+        return execError(error)
+    }
+}
+
+export const updateFaqSequences = async (faqs: { id: string; sequenceId: number }[]) => {
+    try {
+        const data = await Api.Faq.updateFaqSequences(faqs)
         const { message } = data
         store.dispatch(responseSuccess({ message }))
         return data

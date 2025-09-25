@@ -24,10 +24,10 @@ export const createCareer = async (payload: ICareerCreate) => {
     }
 }
 
-export const publishActionById = async (slug: string, isPublished: boolean, signal: AbortSignal) => {
+export const publishCareerById = async (id: string, isLive: boolean, signal: AbortSignal) => {
     try {
         store.dispatch(responseRequest())
-        const data = await Api.Article.publishAction(slug, { isPublished }, signal)
+        const data = await Api.Career.publishAction(id, { isLive }, signal)
         const { message } = data
         store.dispatch(responseSuccess({ message }))
         return data

@@ -99,8 +99,8 @@ const Users = () => {
                         },
                         components: {
                             Table: {
-                                headerBg: '#816348',
-                                headerColor: '#fff'
+                                headerBg: '#F0F3F4',
+                                headerColor: '#000'
                             }
                         }
                     }}>

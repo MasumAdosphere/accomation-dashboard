@@ -9,8 +9,10 @@ import { DeleteFilled } from '@ant-design/icons'
 import { DeleteLogoModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
-import { getAllLogo } from '../../redux/logo/logo.thunk'
+import { getAllLogo, publishLogoById } from '../../redux/logo/logo.thunk'
 import { CreateLogoDrawer } from '../../components/antdesign/drawer.components'
+import deleteIcon from '../../assets/delete.svg'
+import { setIsDataRefreshed } from '../../redux/common/common.slice'
 
 const Logo = () => {
     const pageSize = 20
@@ -30,30 +32,30 @@ const Logo = () => {
 
     const websiteUrl = import.meta.env.VITE_WEBSITE_URL
 
-    // const handleSwitchChange = async (slug: string, checked: boolean) => {
-    //     if (loading) return
+    const handleSwitchChange = async (id: string, checked: boolean) => {
+        if (loading) return
 
-    //     try {
-    //         setLoading(true)
+        try {
+            setLoading(true)
 
-    //         if (controllerRef.current) {
-    //             controllerRef.current.abort()
-    //         }
+            if (controllerRef.current) {
+                controllerRef.current.abort()
+            }
 
-    //         controllerRef.current = new AbortController()
-    //         const signal = controllerRef.current.signal
+            controllerRef.current = new AbortController()
+            const signal = controllerRef.current.signal
 
-    //         const data = await publishActionById(slug, checked, signal)
+            const data = await publishLogoById(id, checked, signal)
 
-    //         if (data.success) {
-    //             dispatch(setIsDataRefreshed(!isDataRefreshed))
-    //         }
-    //     } catch (error) {
-    //         console.error(error)
-    //     } finally {
-    //         setLoading(false)
-    //     }
-    // }
+            if (data.success) {
+                dispatch(setIsDataRefreshed(!isDataRefreshed))
+            }
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const columns: ColumnsType<ILogo> = [
         {
@@ -108,24 +110,35 @@ const Logo = () => {
             width: '15%',
             render: (record) => (
                 <div className="flex justify-start items-center gap-5">
-                    <Tooltip title={record?.isPublished ? 'Unpublish' : 'Publish'}>
+                    <Tooltip title={record?.isLive ? 'Unpublish' : 'Publish'}>
                         <Switch
-                            checked={record?.isPublished}
+                            checked={record?.isLive}
                             disabled={loading}
-                            // onChange={async (checked) => {
-                            //     handleSwitchChange(record?.slug, checked)
-                            // }}
+                            onChange={async (checked) => {
+                                handleSwitchChange(record?.id, checked)
+                            }}
                         />
                     </Tooltip>
 
                     <Tooltip title="Delete">
-                        <DeleteFilled
+                        <div
+                            className=""
+                            onClick={() => {
+                                setIsDeleteLogoModalOpen(true)
+                                setSelectedLogoId(record.id)
+                            }}>
+                            <img
+                                src={deleteIcon}
+                                alt=""
+                            />
+                        </div>
+                        {/* <DeleteFilled
                             onClick={() => {
                                 setIsDeleteLogoModalOpen(true)
                                 setSelectedLogoId(record.id)
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        />
+                        /> */}
                     </Tooltip>
                 </div>
             )
@@ -185,8 +198,8 @@ const Logo = () => {
                     },
                     components: {
                         Table: {
-                            headerBg: '#816348',
-                            headerColor: '#fff'
+                            headerBg: '#F0F3F4',
+                            headerColor: '#000'
                         }
                     }
                 }}>
