@@ -26,11 +26,10 @@ export const CreateNewCategoryModal = ({
     const dispatch = useDispatch()
     const [form] = Form.useForm()
     const [dataValues, setDataValues] = useState({
-        title: '',
-        feature: 'Article'
+        title: ''
     })
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
-    const { title, feature } = dataValues
+    const { title } = dataValues
 
     const inputChangeHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value
@@ -81,14 +80,10 @@ export const CreateNewCategoryModal = ({
                         {
                             name: 'title',
                             value: title
-                        },
-                        {
-                            name: 'feature',
-                            value: feature
                         }
                     ]}>
                     <div className="font-sans space-y-1 md:space-y-1">
-                        <label className="font-sans  text-sm font-semibold text-primary">
+                        <label className="font-sans  text-font18 font-medium text-gray44">
                             Title
                             <span className="font-sans text-red-500 pl-1">*</span>
                         </label>

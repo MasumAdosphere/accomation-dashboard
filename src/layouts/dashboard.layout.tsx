@@ -1,14 +1,16 @@
-import Logo from '../assets/logoImg.png'
-import { useSelector } from 'react-redux'
+import Logo from '../assets/white-logo.png'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { Header } from 'antd/es/layout/layout'
 import { logout } from '../redux/auth/auth.thunk'
 import { RootState } from '../types/selector.types'
 import { EConfigButtonType } from '../types/state.types'
 import AppBreadcrumb from '../components/antdesign/appBreadcrumb'
-import { Layout, Menu, Button, ConfigProvider, message } from 'antd'
+import { Layout, Menu, Button, ConfigProvider, message, MenuProps } from 'antd'
 import { ButtonThemeConfig } from '../components/antdesign/configs.components'
 import { useLocation, Outlet, useNavigate, Link, Navigate } from 'react-router-dom'
+import logoutIcon from '../assets/logout.png'
+import { getProfile } from '../redux/user/user.thunk'
 
 const { Sider, Content } = Layout
 
@@ -20,7 +22,24 @@ const DashboardLayout = () => {
 
     const [current, setCurrent] = useState(location.pathname.slice(11).split('/')[0])
 
+    const [openKeys, setOpenKeys] = useState<string[]>([])
+
     const path = location.pathname
+
+    const [profileName, setProfileName] = useState<string>('')
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const data = await getProfile()
+                setProfileName(data?.name || '')
+            } catch (error) {
+                setProfileName('')
+            }
+        }
+
+        fetchProfile()
+    }, [])
 
     const logoutHandler = async () => {
         try {
@@ -42,14 +61,20 @@ const DashboardLayout = () => {
             to: 'overview'
         },
         {
-            key: 'categories',
-            label: 'Categories',
-            to: 'categories'
-        },
-        {
-            key: 'articles',
-            label: 'Articles',
-            to: 'articles'
+            key: 'blogs',
+            label: 'Blogs',
+            children: [
+                {
+                    key: 'categories',
+                    label: 'Categories',
+                    to: 'categories'
+                },
+                {
+                    key: 'articles',
+                    label: 'Articles',
+                    to: 'articles'
+                }
+            ]
         },
         {
             key: 'testimonials',
@@ -115,19 +140,29 @@ const DashboardLayout = () => {
         }
     }
 
-    const renderMenuItems = (
-        menuItems: {
-            key: string
-            label: string
-            to: string
-        }[]
-    ) =>
-        menuItems.map((item) => ({
-            ...item,
-            label: <span>{item.label}</span>
-        }))
+    const renderMenuItems = (menuItems: any[]): MenuProps['items'] =>
+        menuItems.map((item) =>
+            item.children
+                ? {
+                      key: item.key,
+                      label: item.label,
+                      children: renderMenuItems(item.children)
+                  }
+                : {
+                      key: item.to,
+                      label: <span>{item.label}</span>
+                  }
+        )
     useEffect(() => {
-        setCurrent(location.pathname.slice(11).split('/')[0])
+        const page = location.pathname.slice(11).split('/')[0]
+
+        if (page === 'categories' || page === 'articles') {
+            setCurrent(page)
+            setOpenKeys(['blogs'])
+        } else {
+            setCurrent(page)
+            setOpenKeys([])
+        }
     }, [location.pathname])
 
     if (Object.keys(user).length === 0) {
@@ -143,15 +178,15 @@ const DashboardLayout = () => {
             theme={{
                 components: {
                     Layout: {
-                        siderBg: '#FFF'
+                        siderBg: '#0E082B'
                     },
                     Menu: {
-                        itemSelectedBg: '#4226C4',
-                        itemSelectedColor: '#FFF',
-                        itemColor: '#4226C4',
+                        itemSelectedBg: '#FFDE39',
+                        itemSelectedColor: '#0E082B',
+                        itemColor: '#FFF',
                         itemBorderRadius: 0,
-                        itemHoverBg: '#4226C4',
-                        itemHoverColor: '#FFF'
+                        itemHoverBg: '#FFDE39',
+                        itemHoverColor: '#0E082B'
                     }
                 }
             }}>
@@ -162,14 +197,14 @@ const DashboardLayout = () => {
                     collapsible
                     // onCollapse={(value) => setCollapsed(value)}
                     breakpoint="xl"
-                    className="font-sans border-r border-[#F0F3F4] bg-[#F0F3F4]"
+                    className="font-sans border-r border-darkblue bg-darkblue"
                     collapsedWidth={150}>
                     <Link
                         to="/dashboard/overview"
                         className="font-sans h-8 2xl:h-16 py-4 2xl:pt-5 my-4 pb-3 2xl:pb-8 flex justify-center items-center ">
                         <img
                             src={Logo}
-                            className="w-[120px]"
+                            className="w-full px-10"
                         />
                     </Link>
                     <Menu
@@ -177,24 +212,33 @@ const DashboardLayout = () => {
                         theme="light"
                         items={renderMenuItems(adminItems)}
                         mode="inline"
-                        selectedKeys={[current]}
-                        className="font-sans px-2 2xl:px-6 mt-6 text-sm 2xl:text-[20px] space-y-2 font-medium 2xl:leading-[22px] bg-[#F0F3F4] !border-none"
+                        selectedKeys={[current]} // highlight the actual page
+                        openKeys={openKeys} // expand parent when needed
+                        onOpenChange={(keys) => setOpenKeys(keys)} // handle open/close manually
+                        className="font-sans px-2 2xl:px-6 mt-6 text-sm 2xl:text-[20px] space-y-2 font-medium 2xl:leading-[22px] bg-[#0E082B] !border-none"
                     />
                 </Sider>
                 <Layout>
                     <Header className="font-sans p-0 flex items-center flex-row justify-between h-14 2xl:h-16 bg-[#F0F3F4] bg-cover bg-center bg-no-repeat w-full  border-primary">
                         <div className="lg:flex w-full hidden  justify-between items-center px-6">
                             <div className="">
-                                <h3 className=" font-sans text-primary text-base 2xl:text-lg font-semibold capitalize">{getHeaderText()}</h3>
+                                <h3 className=" font-sans text-primary text-base 2xl:text-lg font-semibold capitalize">Welcome {profileName}</h3>
                                 <div className="xl:flex hidden font-sans items-center justify-start text-grayText text-base">
                                     {current !== 'overview' && <AppBreadcrumb />}
                                 </div>
                             </div>
                             <div className="">
-                                <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                                <ButtonThemeConfig buttonType={EConfigButtonType.THIRD}>
                                     <Button
-                                        className="font-sans text-lg w-[120px] h-[48px] rounded-[100px] bg-primary  2xl:h-12 text-white  m-2 2xl:m-6  border-primary"
+                                        className="font-sans text-lg w-[120px] h-[48px] rounded-[100px] bg-darkblue  2xl:h-12 text-white  m-2 2xl:m-6  border-primary"
                                         type="default"
+                                        icon={
+                                            <img
+                                                src={logoutIcon}
+                                                alt="logout"
+                                                className="w-3 h-3 "
+                                            />
+                                        }
                                         onClick={(e) => {
                                             e.preventDefault()
                                             logoutHandler()

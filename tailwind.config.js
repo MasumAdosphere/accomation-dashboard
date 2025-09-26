@@ -26,13 +26,17 @@ export default {
             },
             colors: {
                 primary: '#4226C4',
+                darkblue: '#0E082B',
                 secondary: '#634d39',
                 textBlack: '#232323',
                 grayText: '#757575',
-                grayBg: '#F6F8FD'
+                grayBg: '#F6F8FD',
+                gray4d: '#4D4D4D',
+                gray44: '#444444'
             },
             fontFamily: {
-                sans: ['Inter', 'sans-serif']
+                sans: ['Metropolis', 'sans-serif'],
+                Metropolis: ['Metropolis', 'sans-serif']
             },
             fontSize: {
                 font10: '10px',

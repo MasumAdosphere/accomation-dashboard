@@ -3,7 +3,7 @@ import { store } from '../store'
 import execError from '../execError'
 import { responseSuccess } from '../common/common.slice'
 
-export const createCategory = async (payload: { title: string; feature: string }) => {
+export const createCategory = async (payload: { title: string }) => {
     try {
         const res = await Api.Category.createCategory(payload)
         const { message } = res

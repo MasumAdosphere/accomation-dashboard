@@ -1,9 +1,9 @@
-import { Button, ConfigProvider, Drawer, Form, Image, Input, message, Select } from 'antd'
+import { Button, ConfigProvider, Drawer, Form, Image, Input, message, RadioChangeEvent, Select } from 'antd'
 import { Dispatch, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EConfigButtonType, ICareer, ICareerCreate, ICategory } from '../../types/state.types'
 import { createTestimonials, editTestimonials, getTestimonialById } from '../../redux/testimonials/testimonial.thunk'
-import { getAllCategories } from '../../redux/category/category.thunk'
+import { createCategory, getAllCategories } from '../../redux/category/category.thunk'
 import { TextEditor, TextItem, UploadImgFile } from './form.components'
 import { ButtonThemeConfig } from './configs.components'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -879,6 +879,111 @@ export const CreateArticleDrawer = ({
         </Drawer>
     )
 }
+
+//
+export const CreateCategoryDrawer = ({
+    isCreateCategoryDrawerOpen,
+    SetIsCreateCategoryDrawerOpen
+}: {
+    isCreateCategoryDrawerOpen: boolean
+    SetIsCreateCategoryDrawerOpen: Dispatch<boolean>
+}) => {
+    const dispatch = useDispatch()
+    const [form] = Form.useForm()
+    const [dataValues, setDataValues] = useState({
+        title: ''
+    })
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
+    const { title } = dataValues
+
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const inputChangeHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value
+
+        if (name === 'title') {
+            const categoryTitle = value
+            setDataValues({
+                ...dataValues,
+                title: categoryTitle
+            })
+        } else {
+            setDataValues({ ...dataValues, [name]: value })
+        }
+    }
+
+    const createCategoryHandler = async () => {
+        setIsSubmitting(true)
+        try {
+            const data = await createCategory(dataValues)
+            if (data.success) {
+                SetIsCreateCategoryDrawerOpen(false)
+                dispatch(setIsDataRefreshed(!isDataRefreshed))
+            }
+        } catch (error) {
+            //@ts-ignore
+            message.error(error.message)
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    return (
+        <Drawer
+            open={isCreateCategoryDrawerOpen}
+            onClose={() => SetIsCreateCategoryDrawerOpen(false)}
+            footer={null}
+            width={500}>
+            <Form
+                form={form}
+                className="font-sans  flex justify-between h-full flex-col w-full"
+                onFinish={createCategoryHandler}
+                fields={[
+                    {
+                        name: 'title',
+                        value: title
+                    }
+                ]}>
+                <div className="font-sans space-y-1 md:space-y-1">
+                    <label className="font-sans  text-font18 font-medium text-gray44">
+                        Category Title
+                        <span className="font-sans text-red-500 pl-1">*</span>
+                    </label>
+                    <TextItem
+                        name="name"
+                        type="text"
+                        placeholder="Enter Category Title"
+                        required={true}
+                        onChange={inputChangeHandler('title')}
+                    />
+                </div>
+
+                <div className="font-sans flex space-x-3  justify-end items-center">
+                    <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                        <Button
+                            type="default"
+                            onClick={() => SetIsCreateCategoryDrawerOpen(false)}
+                            className="font-sans h-auto rounded-[100px] bg-white text-primary border-primary text-sm 2xl:text-base shadow-none flex justify-center items-center px-3 2xl:px-6 py-1 2xl:py-2">
+                            Cancel
+                        </Button>
+                    </ButtonThemeConfig>
+                    <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                        <Button
+                            type="default"
+                            htmlType="submit"
+                            icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
+                            disabled={isSubmitting}
+                            className="font-sans h-auto rounded-[100px] bg-primary text-white border-none text-sm 2xl:text-base shadow-none flex justify-center items-center px-3 2xl:px-6 py-1 2xl:py-2">
+                            {isSubmitting ? 'Adding...' : 'Add'}
+                        </Button>
+                    </ButtonThemeConfig>
+                </div>
+            </Form>
+        </Drawer>
+    )
+}
+
+//
 
 export const EditArticleDrawer = ({
     isEditArticleDrawerOpen,

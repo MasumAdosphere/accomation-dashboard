@@ -19,6 +19,7 @@ type Path =
     | '/dashboard/testimonials/edit'
     | '/dashboard/faq/edit'
     | '/dashboard/users'
+    | '/dashboard/career'
 
 // Define a type for the pathTitleMap object
 type PathTitleMap = {
@@ -36,7 +37,8 @@ const AppBreadcrumb = () => {
         '/dashboard/categories',
         '/dashboard/articles/add',
         '/dashboard/logos/add',
-        '/dashboard/users'
+        '/dashboard/users',
+        '/dashboard/career'
     ]
 
     // Return null if the current path is not allowed
@@ -58,7 +60,8 @@ const AppBreadcrumb = () => {
         '/dashboard/faq/add': 'Add Faq',
         '/dashboard/faq/edit': 'Edit Faq',
         '/dashboard/logos': 'Logos',
-        '/dashboard/logos/add': 'Add Logos'
+        '/dashboard/logos/add': 'Add Logos',
+        '/dashboard/career': 'Career'
     }
 
     const items = [
@@ -102,7 +105,7 @@ const AppBreadcrumb = () => {
             itemRender={itemRender}
             items={items}
             separator={<img src={Separator} />}
-            className="text-sm 2xl:text-base font-sans items-end flex !text-primary"
+            className=" text-font16 font-medium font-Metropolis text-gray44"
         />
     )
 }

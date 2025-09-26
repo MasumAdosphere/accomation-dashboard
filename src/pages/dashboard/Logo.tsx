@@ -60,7 +60,7 @@ const Logo = () => {
             width: '5%',
             key: 'index',
             render: (_text: string, _record: any, index: number) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">{(page - 1) * pageSize + index + 1}</span>
+                <span className="font-sans text-darkblue font-semibold text-font16">{(page - 1) * pageSize + index + 1}</span>
             )
         },
         {
@@ -69,7 +69,7 @@ const Logo = () => {
             width: '30%',
             key: 'name',
             render: (_, record) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">
+                <span className="font-sans text-darkblue font-semibold text-font16">
                     {record?.companyName?.length > 40 ? `${record.companyName.slice(0, 40)}...` : record?.companyName}
                 </span>
             )
@@ -97,7 +97,7 @@ const Logo = () => {
             width: '15%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-semibold">{moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-sans text-darkblue font-semibold text-font16">{moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
             )
         },
         {
@@ -126,6 +126,7 @@ const Logo = () => {
                             <img
                                 src={deleteIcon}
                                 alt=""
+                                className="w-10 h-8"
                             />
                         </div>
                         {/* <DeleteFilled
@@ -191,14 +192,14 @@ const Logo = () => {
             <ConfigProvider
                 theme={{
                     token: {
-                        fontFamily: 'Inter, sans-serif',
-                        fontWeightStrong: 500,
+                        fontFamily: 'Metropolis, sans-serif',
+                        fontWeightStrong: 600,
                         colorPrimary: '#4226C4',
                         fontSize: 16
                     },
                     components: {
                         Table: {
-                            headerBg: '#F0F3F4',
+                            headerBg: '#FFEBFB',
                             headerColor: '#000'
                         }
                     }

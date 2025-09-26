@@ -8,8 +8,69 @@ body {
     height: 100vh;
 }
 
+@font-face {
+    font-family: 'Metropolis';
+    src:
+        url('/fonts/Metropolis-Light.woff2') format('woff2'),
+        url('/fonts/Metropolis-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Metropolis';
+    src:
+        url('/fonts/Metropolis-Regular.woff2') format('woff2'),
+        url('/fonts/Metropolis-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Metropolis';
+    src:
+        url('/fonts/Metropolis-Medium.woff2') format('woff2'),
+        url('/fonts/Metropolis-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Metropolis';
+    src:
+        url('/fonts/Metropolis-SeBold.woff2') format('woff2'),
+        url('/fonts/Metropolis-SeBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Metropolis';
+    src:
+        url('/fonts/Metropolis-Bold.woff2') format('woff2'),
+        url('/fonts/Metropolis-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Metropolis';
+    src:
+        url('/fonts/Metropolis-Black.woff2') format('woff2'),
+        url('/fonts/Metropolis-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 * {
-    font-family: 'Inter', sans-serif !important;
+    /* font-family: 'Metropolis' !important; */
+    font-family: 'Metropolis', sans-serif !important;
     scrollbar-width: thin !important;
 }
 
@@ -97,7 +158,7 @@ body {
 }
 
 .ant-breadcrumb span {
-    color: #4226c4 !important;
+    color: #444444 !important;
 }
 
 .ant-breadcrumb-separator {
@@ -121,7 +182,7 @@ body {
 }
 
 .contentContainer * {
-    font-family: 'Inter', sans-serif !important;
+    font-family: 'Metropolis', sans-serif !important;
     font-size: 14px !important;
     color: #757575 !important;
 }
@@ -144,7 +205,7 @@ body {
 }
 
 .apexcharts-datalabel-label {
-    font-family: 'Inter', sans-serif !important;
+    font-family: 'Metropolis', sans-serif !important;
     fill: #757575 !important;
     transform: translate(0, -16px);
 }
@@ -152,7 +213,7 @@ body {
 .apexcharts-datalabel-value {
     margin-top: 16px !important;
     font-size: 42px;
-    font-family: 'Inter', sans-serif !important;
+    font-family: 'Metropolis', sans-serif !important;
     font-weight: 800 !important;
     color: #232323 !important;
 }
@@ -184,14 +245,14 @@ body {
     color: white;
     background: #083050;
     border-radius: 0px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Metropolis', sans-serif;
     font-size: 16px;
     font-weight: 500;
     border: none;
 }
 
 .articleStyle1 .ant-input::placeholder {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Metropolis', sans-serif;
     font-size: 16px;
     font-weight: 500;
     color: #1a598b;
@@ -203,20 +264,20 @@ body {
     color: #757575;
     background: #f1f2f8;
     border-radius: 0px 0px 5px 5px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Metropolis', sans-serif;
     font-size: 16px;
     font-weight: 500;
     border: none;
 }
 .react-tel-input .form-control {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Metropolis', sans-serif;
     font-size: 1.125rem;
     border-radius: 0.5rem;
     transition: all 0.5s ease-in;
     color: #083050;
 }
 .articleStyle2 .ant-input::placeholder {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Metropolis', sans-serif;
     font-size: 16px;
     font-weight: 500;
     color: #757575;
@@ -226,7 +287,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Metropolis', sans-serif;
 }
 
 .slide-text::before {
@@ -297,14 +358,14 @@ body {
 }
 .ant-select-selection-item,
 .ant-select-selection-placeholder {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Metropolis', sans-serif;
     font-size: 1.125rem;
     border-radius: 0.5rem;
     transition: all 0.5s ease-in;
     color: #083050;
 }
 .jodit-container {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Metropolis', sans-serif;
     font-size: 1.125rem;
     border-radius: 0.5rem;
     transition: all 0.5s ease-in;
@@ -315,11 +376,11 @@ body {
     background-color: transparent !important;
 }
 .custom-danger-button {
-    font-family: 'Inter', sans-serif !important;
+    font-family: 'Metropolis', sans-serif !important;
     font-weight: 600;
 }
 .custom-danger-button:hover {
     color: white !important;
-    font-family: 'Inter', sans-serif !important;
+    font-family: 'Metropolis', sans-serif !important;
     background-color: #ff4d4f !important;
 }

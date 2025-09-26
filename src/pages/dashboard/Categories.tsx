@@ -10,6 +10,8 @@ import { CreateNewCategoryModal, DeleteCategoryModal } from '../../components/an
 import deleteIcon from '../../assets/delete.svg'
 
 import plusicon from '../../assets/plus.svg'
+import { CreateCategoryDrawer } from '../../components/antdesign/drawer.components'
+import moment from 'moment'
 
 const Categories = () => {
     const pageSize = 20
@@ -21,6 +23,7 @@ const Categories = () => {
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
     const [isNewCategoryModalOpen, setIsNewCategoryModalOpen] = useState<boolean>(false)
+    const [isCreateCategoryDrawerOpen, SetIsCreateCategoryDrawerOpen] = useState<boolean>(false)
     // const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState<boolean>(false)
     const [isDeleteCategoryModalOpen, setIsDeleteCategoryModalOpen] = useState<boolean>(false)
 
@@ -32,7 +35,7 @@ const Categories = () => {
             dataIndex: 'index',
             key: 'index',
             render: (_text: string, _record: any, index: number) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">{(page - 1) * pageSize + index + 1}</span>
+                <span className=" font-Metropolis font-medium text-font16 text-[#515151]">{(page - 1) * pageSize + index + 1}</span>
             )
         },
         {
@@ -40,15 +43,26 @@ const Categories = () => {
             dataIndex: 'title',
             key: 'title',
             width: '35%',
-            render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium">{record?.title}</span>
+            render: (_, record) => <span className="font-sans text-darkblue font-semibold text-font16">{record?.title}</span>
         },
         {
-            title: 'Feature',
-            dataIndex: 'feature',
-            key: 'feature',
-            width: '35%',
-            render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium">{record.feature}</span>
+            title: 'Created At',
+            key: 'createdAt',
+            width: '20%',
+            dataIndex: 'createdAt',
+            render: (_text: string, record: any) => (
+                <span className=" font-Metropolis font-medium text-font16 text-[#515151]">
+                    {moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}
+                </span>
+            )
         },
+        // {
+        //     title: 'Feature',
+        //     dataIndex: 'feature',
+        //     key: 'feature',
+        //     width: '35%',
+        //     render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium">{record.feature}</span>
+        // },
 
         {
             title: 'Action',
@@ -70,7 +84,7 @@ const Categories = () => {
                     </ButtonThemeConfig> */}
                     <Tooltip title="Delete">
                         <div
-                            className=""
+                            className="w-10 h-8 cursor-pointer"
                             onClick={() => {
                                 setIsDeleteCategoryModalOpen(true)
                                 setSelectedCategoryId(record.id)
@@ -78,6 +92,7 @@ const Categories = () => {
                             <img
                                 src={deleteIcon}
                                 alt=""
+                                className="w-10 h-8"
                             />
                         </div>
                         {/* <DeleteFilled
@@ -126,7 +141,7 @@ const Categories = () => {
                 <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                     <Button
                         onClick={() => {
-                            setIsNewCategoryModalOpen(true)
+                            SetIsCreateCategoryDrawerOpen(true)
                         }}
                         type="default"
                         className="font-sans rounded-[40px]  text-sm 2xl:text-lg rounded- h-8 2xl:h-[46px] bg-primary text-white border-primary">
@@ -143,15 +158,16 @@ const Categories = () => {
                 <ConfigProvider
                     theme={{
                         token: {
-                            fontFamily: 'Inter, sans-serif',
-                            fontWeightStrong: 500,
+                            fontFamily: 'Metropolis, sans-serif',
+                            fontWeightStrong: 600,
                             colorPrimary: '#4226C4',
                             fontSize: 16
                         },
                         components: {
                             Table: {
-                                headerBg: '#F0F3F4',
-                                headerColor: '#000'
+                                headerBg: '#FFEBFB',
+                                headerColor: '#000',
+                                fontWeightStrong: 600
                             }
                         }
                     }}>
@@ -180,11 +196,18 @@ const Categories = () => {
                     setIsNewCategoryModalOpen={setIsNewCategoryModalOpen}
                 />
             )}
+
             {isDeleteCategoryModalOpen && (
                 <DeleteCategoryModal
                     selectedCategoryId={selectedCategoryId || ''}
                     isDeleteCategoryModalOpen={isDeleteCategoryModalOpen}
                     setIsDeleteCategoryModalOpen={setIsDeleteCategoryModalOpen}
+                />
+            )}
+            {isCreateCategoryDrawerOpen && (
+                <CreateCategoryDrawer
+                    isCreateCategoryDrawerOpen={isCreateCategoryDrawerOpen}
+                    SetIsCreateCategoryDrawerOpen={SetIsCreateCategoryDrawerOpen}
                 />
             )}
         </div>

@@ -25,6 +25,15 @@ export const ButtonThemeConfig = ({ buttonType, children }: { buttonType: EConfi
                 defaultHoverColor: '#FFFFFF'
             }
             break
+        case 'third':
+            buttonTheme = {
+                defaultHoverBg: '#0E082B',
+                defaultActiveBg: '#0E082B',
+                defaultHoverColor: '#FFFFFF',
+                defaultActiveColor: '#FFFFFF',
+                defaultHoverBorderColor: '#0E082B'
+            }
+            break
 
         case 'transparent':
             buttonTheme = {

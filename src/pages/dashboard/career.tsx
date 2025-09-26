@@ -3,12 +3,10 @@
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
-import { DeleteFilled, EditFilled, EyeOutlined } from '@ant-design/icons'
-import { Button, ConfigProvider, Form, Input, message, Select, Switch, Table, Tooltip } from 'antd'
+import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
 import { DeleteCareerModal } from '../../components/antdesign/modal.components'
 import { EConfigButtonType, ICareer } from '../../types/state.types'
 import { getAllCareers, publishCareerById } from '../../redux/career/career.thunk'
@@ -67,7 +65,7 @@ const Career = () => {
             width: '5%',
             key: 'index',
             render: (_text: string, _record: any, index: number) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">{(page - 1) * pageSize + index + 1}</span>
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">{(page - 1) * pageSize + index + 1}</span>
             )
         },
         {
@@ -76,7 +74,7 @@ const Career = () => {
             width: '15%',
             key: 'jobRole',
             render: (_, record) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">
+                <span className="font-sans text-darkblue font-semibold text-font16">
                     {record?.jobrole.length > 40 ? `${record.jobrole.slice(0, 40)}...` : record?.jobrole}
                 </span>
             )
@@ -84,9 +82,9 @@ const Career = () => {
         {
             title: 'Employment Type',
             dataIndex: 'employmentType',
-            width: '10%',
+            width: '20%',
             key: 'employmentType',
-            render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium capitalize">{record.employmentType}</span>
+            render: (_, record) => <span className="font-Metropolis font-medium text-font16 text-[#515151] capitalize">{record.employmentType}</span>
         },
         {
             title: 'Location',
@@ -94,7 +92,7 @@ const Career = () => {
             width: '15%',
             key: 'location',
             render: (_, record) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">
                     {record.location.length > 40 ? `${record.location.slice(0, 40)}...` : record.location}
                 </span>
             )
@@ -104,15 +102,17 @@ const Career = () => {
             dataIndex: 'experience',
             width: '12%',
             key: 'experience',
-            render: (_, record) => <span className="font-sans text-sm 2xl:text-base font-medium">{record.experience}</span>
+            render: (_, record) => <span className="font-Metropolis font-medium text-font16 text-[#515151]">{record.experience}</span>
         },
         {
             title: 'Created At',
             key: 'createdAt',
-            width: '20%',
+            width: '18%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-bold">{moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">
+                    {moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}
+                </span>
             )
         },
         {
@@ -131,9 +131,30 @@ const Career = () => {
                         />
                     </Tooltip>
 
+                    <Tooltip title="Delete">
+                        <div
+                            className="w-10 h-8 cursor-pointer "
+                            onClick={() => {
+                                setIsDeleteCareerModalOpen(true)
+                                setSelectedCareerId(record.id)
+                            }}>
+                            <img
+                                src={deleteIcon}
+                                alt=""
+                                className="w-10 h-8"
+                            />
+                        </div>
+                        {/* <DeleteFilled
+                            onClick={() => {
+                                setIsDeleteCareerModalOpen(true)
+                                setSelectedCareerId(record.id)
+                            }}
+                            className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
+                        /> */}
+                    </Tooltip>
                     <Tooltip title="Edit">
                         <div
-                            className="flex cursor-pointer gap-2 bg-primary py-3 px-6 font-medium text-white rounded-[50px] item-center justify-center"
+                            className="flex cursor-pointer gap-2 bg-primary py-2 px-4 font-medium text-white rounded-[50px] item-center justify-center"
                             onClick={() => {
                                 setIsEditCareerDrawerOpen(true)
                                 setSelectedCareerId(record.id)
@@ -150,26 +171,6 @@ const Career = () => {
                                 setSelectedCareerId(record.id)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        /> */}
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                        <div
-                            className="w-6 cursor-pointer h-6"
-                            onClick={() => {
-                                setIsDeleteCareerModalOpen(true)
-                                setSelectedCareerId(record.id)
-                            }}>
-                            <img
-                                src={deleteIcon}
-                                alt=""
-                            />
-                        </div>
-                        {/* <DeleteFilled
-                            onClick={() => {
-                                setIsDeleteCareerModalOpen(true)
-                                setSelectedCareerId(record.id)
-                            }}
-                            className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         /> */}
                     </Tooltip>
                 </div>
@@ -232,14 +233,14 @@ const Career = () => {
             <ConfigProvider
                 theme={{
                     token: {
-                        fontFamily: 'Inter, sans-serif',
-                        fontWeightStrong: 500,
+                        fontFamily: 'Metropolis, sans-serif',
+                        fontWeightStrong: 600,
                         colorPrimary: '#4226C4',
                         fontSize: 16
                     },
                     components: {
                         Table: {
-                            headerBg: '#F0F3F4',
+                            headerBg: '#FFEBFB',
                             headerColor: '#000'
                         }
                     }

@@ -6,6 +6,8 @@ export interface PasswordInputProps {
     required: boolean
     placeholder: string
     icon?: ReactNode
+    className?: string
+
     onChange: ChangeEventHandler<HTMLInputElement>
     regex?: RegExp
     newPwd?: string | null

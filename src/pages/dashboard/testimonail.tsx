@@ -64,7 +64,7 @@ const Testimonial = () => {
             width: '5%',
             key: 'index',
             render: (_text: string, _record: any, index: number) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">{(page - 1) * pageSize + index + 1}</span>
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">{(page - 1) * pageSize + index + 1}</span>
             )
         },
         {
@@ -73,7 +73,7 @@ const Testimonial = () => {
             width: '10%',
             key: 'name',
             render: (_, record) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">
+                <span className="font-sans text-darkblue font-semibold text-font16">
                     {record?.name?.length > 40 ? `${record?.name?.slice(0, 40)}...` : record?.name}
                 </span>
             )
@@ -84,7 +84,7 @@ const Testimonial = () => {
             width: '20%',
             key: 'designation',
             render: (_, record) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">
                     {record?.designation?.length > 40 ? `${record?.designation?.slice(0, 40)}...` : record?.designation}
                 </span>
             )
@@ -95,7 +95,7 @@ const Testimonial = () => {
             width: '20%',
             key: 'description',
             render: (_, record) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">
                     {record?.description?.length > 30 ? `${record?.description.slice(0, 30)}...` : record?.description}
                 </span>
             )
@@ -106,7 +106,9 @@ const Testimonial = () => {
             width: '20%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-bold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">
+                    {moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}
+                </span>
             )
         },
         {
@@ -131,10 +133,31 @@ const Testimonial = () => {
                             <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl">Open</EyeOutlined>
                         </Link>
                     </Tooltip> */}
+                    <Tooltip title="Delete">
+                        <div
+                            className="h-8 w-10 cursor-pointer"
+                            onClick={() => {
+                                setIsDeleteTestimonialModalOpen(true)
+                                SetSelectedTestimonialId(record.id)
+                            }}>
+                            <img
+                                src={deleteIcon}
+                                alt=""
+                                className="w-10 h-8"
+                            />
+                        </div>
+                        {/* <DeleteFilled
+                            onClick={() => {
+                                setIsDeleteTestimonialModalOpen(true)
+                                SetSelectedTestimonialId(record.id)
+                            }}
+                            className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
+                        /> */}
+                    </Tooltip>
 
                     <Tooltip title="Edit">
                         <div
-                            className="flex cursor-pointer gap-2 bg-primary py-3 px-6 font-medium text-white rounded-[50px] item-center justify-center"
+                            className="flex cursor-pointer bg-primary gap-2 py-2 px-4 font-medium text-white rounded-[50px] item-center justify-center"
                             onClick={() => {
                                 SetIsEditTestimonialDrawerOpen(true)
                                 SetSelectedTestimonialId(record.id)
@@ -151,26 +174,6 @@ const Testimonial = () => {
                                 SetSelectedTestimonialId(record.id)
                             }}
                             className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
-                        /> */}
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                        <div
-                            className="h-6 w-6 cursor-pointer"
-                            onClick={() => {
-                                setIsDeleteTestimonialModalOpen(true)
-                                SetSelectedTestimonialId(record.id)
-                            }}>
-                            <img
-                                src={deleteIcon}
-                                alt=""
-                            />
-                        </div>
-                        {/* <DeleteFilled
-                            onClick={() => {
-                                setIsDeleteTestimonialModalOpen(true)
-                                SetSelectedTestimonialId(record.id)
-                            }}
-                            className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         /> */}
                     </Tooltip>
                 </div>
@@ -229,14 +232,14 @@ const Testimonial = () => {
             <ConfigProvider
                 theme={{
                     token: {
-                        fontFamily: 'Inter, sans-serif',
-                        fontWeightStrong: 500,
+                        fontFamily: 'Metropolis, sans-serif',
+                        fontWeightStrong: 600,
                         colorPrimary: '#4226C4',
                         fontSize: 16
                     },
                     components: {
                         Table: {
-                            headerBg: '#F0F3F4',
+                            headerBg: '#FFEBFB',
                             headerColor: '#000'
                         }
                     }

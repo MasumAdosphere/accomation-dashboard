@@ -92,14 +92,14 @@ const Users = () => {
                 <ConfigProvider
                     theme={{
                         token: {
-                            fontFamily: 'Inter, sans-serif',
-                            fontWeightStrong: 500,
+                            fontFamily: 'Metropolis, sans-serif',
+                            fontWeightStrong: 600,
                             colorPrimary: '#4226C4',
                             fontSize: 16
                         },
                         components: {
                             Table: {
-                                headerBg: '#F0F3F4',
+                                headerBg: '#FFEBFB',
                                 headerColor: '#000'
                             }
                         }

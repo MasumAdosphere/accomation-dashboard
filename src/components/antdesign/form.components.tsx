@@ -1,6 +1,6 @@
 import { Rule } from 'antd/es/form'
 import JoditReact from 'jodit-react-ts'
-import { Suspense, useMemo } from 'react'
+import { ReactNode, Suspense, useMemo } from 'react'
 import 'react-phone-input-2/lib/style.css'
 import Dragger from 'antd/es/upload/Dragger'
 import TextArea from 'antd/es/input/TextArea'
@@ -11,7 +11,7 @@ import { EConfigButtonType } from '../../types/state.types.ts'
 import { Button, Form, Input, Select, ConfigProvider, Upload, UploadProps } from 'antd'
 import { PasswordInputProps, PhoneProps, TextAreaItemProps, TextItemProps } from '../../types/form.components.types.ts'
 
-export const PasswordInput = ({ name, required = true, placeholder, icon, onChange, regex, newPwd = null }: PasswordInputProps) => {
+export const PasswordInput = ({ name, required = true, placeholder, icon, onChange, regex, className, newPwd = null }: PasswordInputProps) => {
     const rules: {
         required?: boolean
         message: string
@@ -35,10 +35,14 @@ export const PasswordInput = ({ name, required = true, placeholder, icon, onChan
     return (
         <Form.Item
             name={name}
-            className="w-full"
+            className={
+                className
+                    ? className
+                    : 'h-[52px]  w-full font-sans text-font16 rounded-[6px] text-[#444444] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500'
+            }
             rules={rules}>
             <Input.Password
-                className="h-10 2xl:h-12  text-sm 2xl:text-base rounded-lg font-dmSans border border-[#e5e5e6] focus-within:shadow-none focus:border-[#868E96] hover:border-[#868E96] focus-within:border-[#868E96]  transition ease-in duration-500"
+                className="h-[52px]  font-sans text-font16 rounded-[6px] text-[#444444] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
                 placeholder={placeholder}
                 autoComplete="off"
                 prefix={icon}
@@ -54,6 +58,7 @@ export const TextItem = ({
     min,
     max,
     value,
+
     icon,
     allowClear = false,
     type = 'text',
@@ -124,7 +129,7 @@ export const TextItem = ({
                     className={
                         className
                             ? className
-                            : 'h-10 2xl:h-12 font-sans text-lg rounded-lg font-dmSans border border-[#e5e5e6] focus-visible:shadow-none focus:border-[#868E96] hover:border-[#868E96] transition ease-in duration-500'
+                            : 'h-10 2xl:h-12 font-sans text-font16 rounded-[6px] text-[#919191] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500'
                     }
                     placeholder={placeholder}
                 />
@@ -174,12 +179,14 @@ export const TextAreaItem = ({ name, required = true, min, max, onChange, placeh
     )
 }
 
-export const SubmitButton = ({ text, className }: { text: string; className?: string }) => {
+export const SubmitButton = ({ text, className, icon, disabled }: { text: string; className?: string; icon?: ReactNode; disabled: boolean }) => {
     return (
         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
             <Button
+                icon={icon}
                 type="default"
                 htmlType="submit"
+                disabled={disabled}
                 className={
                     className
                         ? className

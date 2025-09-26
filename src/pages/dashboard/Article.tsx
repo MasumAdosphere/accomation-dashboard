@@ -62,7 +62,7 @@ const Article = () => {
             width: '5%',
             key: 'index',
             render: (_text: string, _record: any, index: number) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">{(page - 1) * pageSize + index + 1}</span>
+                <span className=" font-Metropolis font-medium text-font16 text-[#515151]">{(page - 1) * pageSize + index + 1}</span>
             )
         },
         {
@@ -71,7 +71,7 @@ const Article = () => {
             width: '25%',
             key: 'title',
             render: (_, record) => (
-                <span className="font-sans text-sm 2xl:text-base font-medium">
+                <span className="font-sans text-darkblue font-semibold text-font16">
                     {record.title.length > 40 ? `${record.title.slice(0, 40)}...` : `${record.title}`}
                 </span>
             )
@@ -82,7 +82,11 @@ const Article = () => {
             key: 'category',
             width: '10%',
             dataIndex: 'category',
-            render: (_text: string, record: any) => <span className="font-sans text-sm 2xl:text-base font-semibold">{record?.category?.title}</span>
+            render: (_text: string, record: any) => (
+                <span className=" font-Metropolis font-semibold text-font16 text-darkblue px-3 py-[6px] rounded-[100px] bg-[#FFDE39]">
+                    {record?.category?.title}
+                </span>
+            )
         },
         {
             title: 'Created At',
@@ -90,7 +94,9 @@ const Article = () => {
             width: '10%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-semibold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className=" font-Metropolis font-medium text-font16 text-[#515151]">
+                    {moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}
+                </span>
             )
         },
 
@@ -117,9 +123,24 @@ const Article = () => {
                         </Link>
                     </Tooltip> */}
 
+                    <Tooltip title="Delete">
+                        <div
+                            className="cursor-pointer"
+                            onClick={() => {
+                                setIsDeleteArticleModalOpen(true)
+                                SetSelectedArticleId(record.id)
+                            }}>
+                            <img
+                                src={deleteIcon}
+                                alt=""
+                                className="w-10 h-8"
+                            />
+                        </div>
+                        {/* <DeleteFilled className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" /> */}
+                    </Tooltip>
                     <Tooltip title="Edit">
                         <div
-                            className="flex gap-2 cursor-pointer bg-primary py-3 px-6 font-medium text-white rounded-[50px] item-center justify-center"
+                            className="flex gap-2 cursor-pointer bg-primary py-2 px-4 font-medium text-white rounded-[50px] item-center justify-center"
                             onClick={() => {
                                 SetIsEditArticleDrawerOpen(true)
                                 SetSelectedArticleId(record.id)
@@ -131,20 +152,6 @@ const Article = () => {
                             <h6>Edit</h6>
                         </div>
                         {/* <EditFilled className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" /> */}
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                        <div
-                            className="cursor-pointer"
-                            onClick={() => {
-                                setIsDeleteArticleModalOpen(true)
-                                SetSelectedArticleId(record.id)
-                            }}>
-                            <img
-                                src={deleteIcon}
-                                alt=""
-                            />
-                        </div>
-                        {/* <DeleteFilled className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" /> */}
                     </Tooltip>
                 </div>
             )
@@ -202,15 +209,15 @@ const Article = () => {
             <ConfigProvider
                 theme={{
                     token: {
-                        fontFamily: 'Inter, sans-serif',
-                        fontWeightStrong: 500,
+                        fontFamily: 'Metropolis, sans-serif',
+                        fontWeightStrong: 600,
                         colorPrimary: '#4226C4',
                         fontSize: 16
                         // borderRadius: 0
                     },
                     components: {
                         Table: {
-                            headerBg: '#F0F3F4',
+                            headerBg: '#FFEBFB',
                             headerColor: '#000'
                         }
                     }

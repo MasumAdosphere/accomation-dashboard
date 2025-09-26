@@ -1,6 +1,7 @@
 export enum EConfigButtonType {
     PRIMARY = 'primary',
     SECONDARY = 'secondary',
+    THIRD = 'third',
     TRANSPARENT = 'transparent'
 }
 export interface ArticleData {
