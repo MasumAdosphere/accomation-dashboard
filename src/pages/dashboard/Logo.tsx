@@ -85,6 +85,7 @@ const Logo = () => {
                         <img
                             src={record.logo}
                             alt={record.companyName}
+                            crossOrigin="anonymous"
                             className="h-12 w-auto object-contain cursor-pointer rounded border border-gray-200 hover:scale-110 transition-transform duration-200"
                         />
                     </Tooltip>

@@ -2,18 +2,11 @@ import Users from './pages/dashboard/Users'
 import DashboardPages from './pages/dashboard'
 import Article from './pages/dashboard/Article'
 import { AppCheck } from './middleware/middleware'
-import EditArticle from './pages/dashboard/EditArticle'
 import DashboardLayout from './layouts/dashboard.layout'
 import { Navigate, RouteObject } from 'react-router-dom'
-import CreateArticle from './pages/dashboard/CreateArticle'
 import Testimonial from './pages/dashboard/testimonail'
-import CreateTestimonials from './pages/dashboard/CreateTestimonial'
-import EditTestimonials from './pages/dashboard/EditTestimonial'
-import CreateFaq from './pages/dashboard/CreateFaq'
-import EditFaq from './pages/dashboard/EditFaq'
 import Faq from './pages/dashboard/faq'
 import Logo from './pages/dashboard/Logo'
-import CreateLogo from './pages/dashboard/CreateLogo'
 import Career from './pages/dashboard/career'
 
 const { Categories, Overview } = DashboardPages
@@ -82,63 +75,6 @@ const generateRoutes = (): RouteObject[] => {
                     element: (
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
                         <Logo />
-                        // </ProtectedRoute>
-                    )
-                },
-                {
-                    path: 'logos/add',
-                    element: (
-                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <CreateLogo />
-                        // </ProtectedRoute>
-                    )
-                },
-                {
-                    path: 'articles/add',
-                    element: (
-                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <CreateArticle />
-                        // </ProtectedRoute>
-                    )
-                },
-                {
-                    path: 'testimonials/add',
-                    element: (
-                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <CreateTestimonials />
-                        // </ProtectedRoute>
-                    )
-                },
-                {
-                    path: 'faq/add',
-                    element: (
-                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <CreateFaq />
-                        // </ProtectedRoute>
-                    )
-                },
-                {
-                    path: 'articles/edit/:articleSlug',
-                    element: (
-                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <EditArticle />
-                        // </ProtectedRoute>
-                    )
-                },
-                {
-                    path: 'testimonials/edit/:testimonialId',
-                    element: (
-                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <EditTestimonials />
-                        // </ProtectedRoute>
-                    )
-                },
-
-                {
-                    path: 'faq/edit/:faqId',
-                    element: (
-                        // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <EditFaq />
                         // </ProtectedRoute>
                     )
                 },

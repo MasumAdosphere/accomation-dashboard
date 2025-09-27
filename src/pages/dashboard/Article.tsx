@@ -23,7 +23,7 @@ const Article = () => {
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
     const [article, setArticle] = useState<ArticleData[]>([])
-    const [selectedArticleId, SetSelectedArticleId] = useState<string | null>(null)
+    const [selectedArticle, SetSelectedArticle] = useState<ArticleData | null>(null)
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [isDeleteArticleModalOpen, setIsDeleteArticleModalOpen] = useState<boolean>(false)
     const [isCreateArticleDrawerOpen, SetIsCreateArticleDrawerOpen] = useState<boolean>(false)
@@ -54,7 +54,6 @@ const Article = () => {
             setLoading(false)
         }
     }
-
     const columns: ColumnsType<ArticleData> = [
         {
             title: 'Sr no.',
@@ -128,7 +127,7 @@ const Article = () => {
                             className="cursor-pointer"
                             onClick={() => {
                                 setIsDeleteArticleModalOpen(true)
-                                SetSelectedArticleId(record.id)
+                                SetSelectedArticle(record)
                             }}>
                             <img
                                 src={deleteIcon}
@@ -143,7 +142,7 @@ const Article = () => {
                             className="flex gap-2 cursor-pointer bg-primary py-2 px-4 font-medium text-white rounded-[50px] item-center justify-center"
                             onClick={() => {
                                 SetIsEditArticleDrawerOpen(true)
-                                SetSelectedArticleId(record.id)
+                                SetSelectedArticle(record)
                             }}>
                             <img
                                 src={editIcon}
@@ -244,7 +243,7 @@ const Article = () => {
                 <DeleteArticleModal
                     isDeleteArticleModalOpen={isDeleteArticleModalOpen}
                     setIsDeleteArticleModalOpen={setIsDeleteArticleModalOpen}
-                    selectedArticleId={selectedArticleId || ''}
+                    selectedArticleId={selectedArticle ? selectedArticle.id : ''}
                 />
             )}
             {isCreateArticleDrawerOpen && (
@@ -257,7 +256,7 @@ const Article = () => {
             <EditArticleDrawer
                 isEditArticleDrawerOpen={isEditArticleDrawerOpen}
                 SetIsEditArticleDrawerOpen={SetIsEditArticleDrawerOpen}
-                selectedArticleId={selectedArticleId || ''}
+                articleDetails={selectedArticle}
             />
         </div>
     )

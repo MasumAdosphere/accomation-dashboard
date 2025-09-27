@@ -457,5 +457,29 @@ export default {
             const { data } = await apiInstance.delete(`/admin/career/${CareerId}`)
             return data
         }
+    },
+    Gallery: {
+        fetchGallery: async (pageSize = 10, page = 1, fileName: string | null, mediaType: string, signal: AbortSignal) => {
+            const queryParams = {
+                pageSize,
+                page,
+                fileName,
+                mediaType
+            }
+            const { data } = await apiInstance.get(`/admin/gallery`, {
+                params: queryParams,
+                signal
+            })
+
+            return data
+        },
+        fileUpload: async (payload = {}) => {
+            const { data } = await apiInstance.post('/admin/gallery', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            return data
+        }
     }
 }

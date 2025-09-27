@@ -18,6 +18,15 @@
         "@dnd-kit/sortable": "^10.0.0",
         "@dnd-kit/utilities": "^3.2.2",
         "@reduxjs/toolkit": "^2.8.2",
+        "@tiptap/extension-image": "^3.6.1",
+        "@tiptap/extension-table": "^3.6.1",
+        "@tiptap/extension-table-cell": "^3.6.1",
+        "@tiptap/extension-table-header": "^3.6.1",
+        "@tiptap/extension-table-row": "^3.6.1",
+        "@tiptap/extension-youtube": "^3.6.1",
+        "@tiptap/pm": "^3.6.1",
+        "@tiptap/react": "^3.6.1",
+        "@tiptap/starter-kit": "^3.6.1",
         "antd": "^5.25.2",
         "axios": "^1.9.0",
         "dotenv": "^16.5.0",
@@ -32,7 +41,8 @@
         "react-error-boundary": "^6.0.0",
         "react-phone-input-2": "^2.15.1",
         "react-redux": "^9.2.0",
-        "react-router-dom": "^7.6.0"
+        "react-router-dom": "^7.6.0",
+        "react-tweet": "^3.2.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.27.0",

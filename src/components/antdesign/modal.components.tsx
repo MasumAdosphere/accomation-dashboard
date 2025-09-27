@@ -365,11 +365,11 @@ export const DeleteTestimonialModal = ({
                 <button
                     disabled={isDisabled}
                     onClick={() => deleteContent()}
-                    className={`font-sans h-autorounded bg-primary text-white border-primary text-lg shadow-none flexjustify-centeritem-center px-4 py-2 ${isDisabled ? 'opacity-40cursor-not-allowed' : ''}`}>
+                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center item-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed b' : ''}`}>
                     {loading && (
                         <img
                             src={loadingSvg}
-                            className="h-6 w-autoanimate-spin"
+                            className="h-6 w-auto animate-spin"
                             alt=""
                         />
                     )}{' '}

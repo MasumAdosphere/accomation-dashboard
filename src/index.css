@@ -220,13 +220,12 @@ body {
 
 .webStoryThumbnail .ant-upload-list-item-container,
 .webStoryThumbnail .ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select {
-    height: 260px !important;
-    width: 200px !important;
+    /* height: 260px !important;
+    width: 200px !important; */
 }
 
 .webStoryThumbnail .ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select {
     border: 1.5px dashed #c7c7c7 !important;
-    background: #f6f8fd !important;
 }
 
 .webStorySlide .ant-upload-list-item-container,
@@ -383,4 +382,42 @@ body {
     color: white !important;
     font-family: 'Metropolis', sans-serif !important;
     background-color: #ff4d4f !important;
+}
+
+.ant-menu-submenu-selected {
+    background-color: #ffde39 !important;
+    color: #0e082b !important;
+}
+.ant-menu-submenu-selected .ant-menu-title-content span {
+    font-family: 'Metropolis', sans-serif !important;
+    color: #0e082b !important;
+}
+.ant-menu-submenu-selected .ant-menu-submenu-arrow {
+    color: #0e082b !important;
+}
+.ant-menu-submenu-selected .ant-menu-item-selected {
+    color: #fff !important;
+    background-color: transparent !important;
+}
+
+.ant-upload {
+    width: 100% !important;
+}
+
+.ant-select-selection-item {
+    font-family: 'Metropolis', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #444444;
+}
+.ant-select-selector:focus,
+.ant-select-selector:hover {
+    box-shadow: none !important;
+    border-color: #e7e7e7 !important;
+}
+.ant-select-selector {
+    border-color: #e7e7e7 !important;
+}
+.ant-upload {
+    background-color: transparent !important;
 }

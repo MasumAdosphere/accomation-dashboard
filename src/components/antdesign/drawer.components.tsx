@@ -1,10 +1,10 @@
-import { Button, ConfigProvider, Drawer, Form, Image, Input, message, RadioChangeEvent, Select } from 'antd'
+import { Button, ConfigProvider, Drawer, Form, Image, Input, message, RadioChangeEvent, Select, Upload } from 'antd'
 import { Dispatch, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { EConfigButtonType, ICareer, ICareerCreate, ICategory } from '../../types/state.types'
+import { ArticleData, EConfigButtonType, ICareer, ICareerCreate, ICategory } from '../../types/state.types'
 import { createTestimonials, editTestimonials, getTestimonialById } from '../../redux/testimonials/testimonial.thunk'
 import { createCategory, getAllCategories } from '../../redux/category/category.thunk'
-import { TextEditor, TextItem, UploadImgFile } from './form.components'
+import { TextAreaItem, TextEditor, TextItem, UploadImgFile } from './form.components'
 import { ButtonThemeConfig } from './configs.components'
 import { LoadingOutlined } from '@ant-design/icons'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
@@ -16,6 +16,7 @@ import { audioBoxRegex, urlRegex, videoRegex } from '../../quicker/quicker'
 import { createArticle, editArticle, getArticleById } from '../../redux/article/article.thunk'
 import LoadingComponent from '../custom/loadingComponent'
 import { createCareer, editCareer, getCareerById } from '../../redux/career/career.thunk'
+import Editor from '../custom/Editor'
 
 export const CreateTestimonialDrawer = ({
     isCreateTestimonialDrawerOpen,
@@ -101,111 +102,116 @@ export const CreateTestimonialDrawer = ({
                 form={form}
                 className="font-sans w-full flex justify-between flex-col h-full mt-4"
                 onFinish={submitBtnHandler}>
-                <div className="font-sans">
+                <div className="font-sans flex flex-col justify-between h-full">
                     {/* Name */}
-                    <div className="font-sans mb-4 space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Name<span className="font-sans text-red-500pl-1">*</span>
-                        </label>
-                        <TextItem
-                            name="name"
-                            type="text"
-                            max={512}
-                            min={2}
-                            placeholder="Enter name"
-                            required={true}
-                            onChange={inputChangeHandler('name')}
-                        />
-                    </div>
-
-                    {/*Designation*/}
-                    <div className="font-sans mb-4 space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Designation<span className="font-sans text-red-500pl-1">*</span>
-                        </label>
-                        <TextItem
-                            name="designation"
-                            type="text"
-                            max={512}
-                            min={2}
-                            placeholder="Enter designation"
-                            required={true}
-                            onChange={inputChangeHandler('designation')}
-                        />
-                    </div>
-
-                    {/*Description*/}
-                    <div className="font-sans mb-4 space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Description<span className="font-sans text-red-500pl-1">*</span>
-                        </label>
-                        <Form.Item
-                            name="description"
-                            rules={[{ required: true, message: 'Please enter description' }]}>
-                            <textarea
-                                name="description"
-                                rows={4}
-                                placeholder="Enter description"
-                                className="w-full h-32 border border-gray-300 rounded-lg p-3 focus:border-primary focus:shadow-none transition"
-                                onChange={(e) => {
-                                    const value = e.target.value
-                                    form.setFieldsValue({ description: value })
-                                }}
-                            />
-                        </Form.Item>
-                    </div>
-
-                    {/*Image*/}
-                    <div className="font-sanscol-span-2 h-auto">
-                        <div className="font-sans w-full">
-                            <label className="font-sans text-sm font-semibold text-primary mb-2">
-                                Image<span className="font-sans text-red-500pl-1">*</span>
+                    <div className="">
+                        <div className="font-sans mb-4 space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Name<span className="font-sans text-red-500pl-1">*</span>
                             </label>
-                            <div className="mt-2">
-                                <Form.Item
-                                    name="image"
-                                    rules={[{ required: true, message: 'Please select image' }]}>
-                                    <UploadImgFile
-                                        accept="image/png,image/jpeg"
-                                        isUploading={isUploading}
-                                        onFileSelect={(file) => {
-                                            setImageFile(file)
-                                            form.setFieldsValue({ image: 'uploaded' })
-                                        }}
-                                        handleFileUpload={function (): boolean | Promise<boolean> {
-                                            throw new Error('Function not implemented.')
-                                        }}
-                                    />
-                                </Form.Item>
+                            <TextItem
+                                name="name"
+                                type="text"
+                                max={512}
+                                min={2}
+                                placeholder="Enter name"
+                                required={true}
+                                onChange={inputChangeHandler('name')}
+                                className=""
+                            />
+                        </div>
+
+                        {/*Designation*/}
+                        <div className="font-sans mb-4 space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Designation<span className="font-sans text-red-500pl-1">*</span>
+                            </label>
+                            <TextItem
+                                name="designation"
+                                type="text"
+                                max={512}
+                                min={2}
+                                placeholder="Enter designation"
+                                required={true}
+                                onChange={inputChangeHandler('designation')}
+                            />
+                        </div>
+
+                        {/*Description*/}
+                        <div className="font-sans mb-4 space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Description<span className="font-sans text-red-500pl-1">*</span>
+                            </label>
+                            <Form.Item name="description">
+                                <TextAreaItem
+                                    name="description"
+                                    placeholder="Enter description"
+                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    onChange={(e) => {
+                                        const value = e.target.value
+                                        form.setFieldsValue({ description: value })
+                                    }}
+                                    required={true}
+                                />
+                            </Form.Item>
+                        </div>
+
+                        {/*Image*/}
+                        <div className="font-sans col-span-2 h-auto">
+                            <div className="font-sans w-full">
+                                <label className="font-sans text-font16 font-semibold text-gray44 mb-2">
+                                    Upload Image<span className="font-sans text-red-500pl-1">*</span>
+                                </label>
+                                <div className="mt-2 grid grid-cols-1 !border-[#000] p-1 !w-full rounded-lg ">
+                                    <Form.Item
+                                        name="image"
+                                        rules={[{ required: true, message: 'Please select image' }]}>
+                                        <UploadImgFile
+                                            onFileSelect={(file) => {
+                                                setImageFile(file)
+                                            }}
+                                            onChange={(fileName) => {
+                                                form.setFieldsValue({ image: fileName || '' })
+                                            }}
+                                            handleFileUpload={async (file) => {
+                                                setImageFile(file)
+                                                // Your upload logic here if needed
+                                                return true
+                                            }}
+                                            className="w-full"
+                                            accept="image/png,image/jpeg"
+                                            isUploading={isUploading}
+                                        />
+                                    </Form.Item>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     {/*Buttons*/}
-                    <div className="font-sanspt-3 w-full justify-end flex gap-2">
+                    <div className="font-sans grid grid-cols-2 w-full pt-3 justify-end  gap-2">
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={() => {
                                     navigate('/dashboard/testimonials')
                                 }}
                                 type="default"
-                                className="font-sans h-autobg-white text-primary border-primary text-base shadow-none flexjustify-center item-center px-4 py-2">
+                                className="font-sans h-auto bg-white text-primary border-primary text-base shadow-none flexjustify-center item-center px-4 py-2">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
-                        <div>
-                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                                <Button
-                                    htmlType="submit"
-                                    type="primary"
-                                    icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
-                                    disabled={isSubmitting}
-                                    className="font-sans h-autorounded-lgbg-primary text-white border-primary text-base 2xl:text-[20px] shadow-none flexjustify-center item-center px-6 py-2"
-                                    style={{ width: 'auto' }}>
-                                    {isSubmitting ? 'Adding...' : 'Add'}
-                                </Button>
-                            </ButtonThemeConfig>
-                        </div>
+
+                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                            <Button
+                                htmlType="submit"
+                                type="primary"
+                                icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
+                                disabled={isSubmitting}
+                                className="font-sans h-auto w-full rounded-lg bg-primary hover:bg-primary text-white border-primary text-base 2xl:text-[20px] shadow-none flexjustify-center item-center px-6 py-2"
+                                style={{ width: 'auto' }}>
+                                {isSubmitting ? 'Adding...' : 'Add'}
+                            </Button>
+                        </ButtonThemeConfig>
                     </div>
                 </div>
             </Form>
@@ -268,89 +274,91 @@ export const CreateFaqDrawer = ({
             open={isCreateFaqDrawerOpen}
             onClose={() => SetIsCreateFaqDrawerOpen(false)}
             footer={null}
-            width={500}>
+            width={800}>
             <Form
                 form={form}
                 className="font-sans w-full flex justify-between flex-col h-full mt-4"
                 onFinish={submitBtnHandler}>
                 <div className="font-sans space-y-6">
                     {/* Question Field */}
-                    <div className="space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Question<span className="font-sans text-red-500 pl-1">*</span>
-                        </label>
-                        <TextItem
-                            name="question"
-                            type="text"
-                            max={512}
-                            min={4}
-                            placeholder="Enter the question..."
-                            required={true}
-                            className="h-10 2xl:h-12"
-                            onChange={inputChangeHandler('question')}
-                        />
-                    </div>
-
-                    {/* Answer Field */}
-                    <div className="space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Answer<span className="font-sans text-red-500 pl-1">*</span>
-                        </label>
-                        <Form.Item
-                            name="answer"
-                            rules={[{ required: true, message: 'Please enter the answer' }]}>
-                            <textarea
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary font-sans text-base leading-relaxed resize-y"
-                                rows={8}
-                                placeholder="Write the detailed answer here..."
-                                maxLength={2000}
+                    <div className="flex flex-col h-full justify-between">
+                        <div className="space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Question<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <TextItem
+                                name="question"
+                                type="text"
+                                max={512}
+                                min={4}
+                                placeholder="Enter the question..."
+                                required={true}
+                                className="h-10 2xl:h-12"
+                                onChange={inputChangeHandler('question')}
                             />
-                        </Form.Item>
-                    </div>
+                        </div>
 
-                    {/* Page Dropdown */}
-                    <div className="space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Page<span className="font-sans text-red-500 pl-1">*</span>
-                        </label>
-                        <ConfigProvider
-                            theme={{
-                                token: {
-                                    controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
-                                    colorPrimary: '#083050'
-                                },
-                                components: {
-                                    Select: {
-                                        activeOutlineColor: 'transparent'
-                                    }
-                                }
-                            }}>
+                        {/* Answer Field */}
+                        <div className="space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Answer<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
                             <Form.Item
-                                name="page"
-                                rules={[{ required: true, message: 'Please select a page' }]}>
-                                <Select
-                                    allowClear
-                                    style={{ width: '100%', height: '48px' }}
-                                    className="h-10 2xl:h-12 text-primary font-sans text-lg font-dmSans focus-visible:shadow-none focus:border-[#868E96] transition ease-in duration-500 rounded"
-                                    placeholder="Select page (e.g., Overview, Blog, Testimonial)"
-                                    options={[
-                                        { value: 'Overview', label: 'Overview' },
-                                        { value: 'Blog', label: 'Blog' },
-                                        { value: 'Testimonial', label: 'Testimonial' }
-                                    ]}
-                                    filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                                    onChange={(value) => form.setFieldsValue({ pageName: value })}
+                                name="answer"
+                                rules={[{ required: true, message: 'Please enter the answer' }]}>
+                                <TextAreaItem
+                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    placeholder="Write the detailed answer here..."
+                                    onChange={(e) => {}}
+                                    name={''}
+                                    required={false}
                                 />
                             </Form.Item>
-                        </ConfigProvider>
+                        </div>
+
+                        {/* Page Dropdown */}
+                        <div className="space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Page<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
+                                        colorPrimary: '#083050'
+                                    },
+                                    components: {
+                                        Select: {
+                                            activeOutlineColor: 'transparent'
+                                        }
+                                    }
+                                }}>
+                                <Form.Item
+                                    name="page"
+                                    rules={[{ required: true, message: 'Please select a page' }]}>
+                                    <Select
+                                        allowClear
+                                        className="h-10 2xl:h-12 !font-sans !text-font16 !rounded-[6px] !focus:border-[#e7e7e7] !hover:border-[#e7e7e7] !border-[#e7e7e7] !text-[#919191]  !border !transition !ease-in !duration-500"
+                                        placeholder="Select page (e.g., Overview, Blog, Testimonial)"
+                                        options={[
+                                            { value: 'Overview', label: 'Overview' },
+                                            { value: 'Blog', label: 'Blog' },
+                                            { value: 'Testimonial', label: 'Testimonial' }
+                                        ]}
+                                        filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                                        onChange={(value) => form.setFieldsValue({ pageName: value })}
+                                    />
+                                </Form.Item>
+                            </ConfigProvider>
+                        </div>
                     </div>
                 </div>
 
                 {/* Submit & Cancel Buttons */}
-                <div className="font-sans pt-6 w-full justify-end flex gap-4">
+                <div className="font-sans grid grid-cols-2  pt-6 w-full justify-end  gap-4">
                     <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                         <Button
-                            onClick={() => navigate('/dashboard/faqs')}
+                            onClick={() => SetIsCreateFaqDrawerOpen(false)}
                             type="default"
                             className="font-sans bg-white text-primary border-primary text-base shadow-none flex justify-center items-center px-6 py-2 h-auto">
                             Cancel
@@ -363,7 +371,7 @@ export const CreateFaqDrawer = ({
                             type="primary"
                             icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                             disabled={isSubmitting}
-                            className="font-sans h-auto rounded-lg bg-primary text-white border-primary text-base 2xl:text-[20px] shadow-none flex justify-center items-center px-6 py-2"
+                            className="font-sans h-auto rounded-lg bg-primary hover:bg-primary text-white border-primary text-base 2xl:text-[20px] shadow-none flex justify-center items-center px-6 py-2"
                             style={{ width: 'auto' }}>
                             {isSubmitting ? 'Creating...' : 'Create FAQ'}
                         </Button>
@@ -441,7 +449,7 @@ export const CreateLogoDrawer = ({
                 <div className="font-sans space-y-6">
                     {/* Logo Name Field */}
                     <div className="space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
+                        <label className="font-sans text-font16 font-semibold text-gray44">
                             Name<span className="font-sans text-red-500 pl-1">*</span>
                         </label>
                         <TextItem
@@ -458,7 +466,7 @@ export const CreateLogoDrawer = ({
 
                     {/* Logo Upload Field */}
                     <div className="space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
+                        <label className="font-sans text-font16 font-semibold text-gray44">
                             Logo Image<span className="font-sans text-red-500 pl-1">*</span>
                         </label>
                         <div className="mt-2">
@@ -468,7 +476,9 @@ export const CreateLogoDrawer = ({
                                 <UploadImgFile
                                     accept="image/png,image/jpeg"
                                     isUploading={isUploading}
-                                    onFileSelect={handleLogoUpload}
+                                    onFileSelect={(file) => {
+                                        setLogoFile(file)
+                                    }}
                                     // 👇 We're not using handleFileUpload — it's not needed
                                     handleFileUpload={() => false}
                                 />
@@ -540,7 +550,6 @@ export const CreateArticleDrawer = ({
 
     // Store the actual File objects
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
-    const [imageFile, setImageFile] = useState<File | null>(null)
 
     const combinedRegex = new RegExp(`${audioBoxRegex.source}|${videoRegex.source}`, 'i')
 
@@ -553,30 +562,22 @@ export const CreateArticleDrawer = ({
         try {
             setIsSubmitting(true)
             const values = await form.validateFields()
-
             // Create FormData with File objects (not URLs)
             const formData = new FormData()
             formData.append('title', values.title)
             formData.append('category', values.category)
-            formData.append('author', values.author)
-            formData.append('content', values.content || '')
+            formData.append('content', form.getFieldValue('content'))
 
             // Append actual File objects
-            if (thumbnailFile) {
-                formData.append('thumbnail', thumbnailFile)
+            if (!thumbnailFile) {
+                return message.error('Please select a thumbnail image.')
             }
-            if (imageFile) {
-                formData.append('image', imageFile)
-            }
-
-            console.log('FormData:', Object.fromEntries(formData.entries()))
+            formData.append('thumbnail', thumbnailFile)
 
             const success = await createArticle(formData)
             if (success) {
                 setThumbnailFile(null)
-                setImageFile(null)
                 form.resetFields()
-                form.setFieldsValue({ audioCards: [] })
                 SetIsCreateArticleDrawerOpen(false)
                 dispatch(setIsDataRefreshed(!isDataRefreshed))
             }
@@ -674,61 +675,23 @@ export const CreateArticleDrawer = ({
                         </ConfigProvider>
                     </div>
 
-                    {/* <div className="font-sans mb-4 space-y-2">
-                                  <label className="font-sans  text-sm font-semibold text-primary">
-                                      Author<span className="font-sans text-red-500 pl-1">*</span>
-                                  </label>
-                                  <TextItem
-                                      name="author"
-                                      type="text"
-                                      max={512}
-                                      min={4}
-                                      placeholder="Enter author"
-                                      required={true}
-                                      onChange={inputChangeHandler('author')}
-                                  />
-                              </div> */}
-
-                    {/* <div className="font-sans mb-4 space-y-2">
-                                  <div className="font-sans  w-full">
-                                      <label className="font-sans  text-sm font-semibold text-primary mb-2">
-                                          Thumbnail
-                                          <span className="font-sans text-red-500 pl-1">*</span>
-                                      </label>
-                                      <div className="mt-2">
-                                          <Form.Item
-                                              name="thumbnail"
-                                              rules={[{ required: true, message: 'Please select thumbnail' }]}>
-                                              <UploadImgFile
-                                                  accept="image/png,image/jpeg"
-                                                  isUploading={isUploading}
-                                                  onFileSelect={(file) => {
-                                                      setImageFile(file)
-                                                      const previewUrl = URL.createObjectURL(file)
-                                                      setUploadImage(previewUrl)
-                                                      form.setFieldsValue({ image: 'uploaded' })
-                                                  }}
-                                                  handleFileUpload={function (): boolean | Promise<boolean> {
-                                                      throw new Error('Function not implemented.')
-                                                  }}
-                                              />
-                                          </Form.Item>
-                                      </div>
-                                  </div>
-                              </div> */}
-
                     <div className="font-sans col-span-2 mb-4 h-auto">
                         <label className="font-sans  text-sm font-semibold text-primary mb-2">
                             Article Content
                             <span className="font-sans text-red-500 pl-1">*</span>
                         </label>
                         <div className="mt-2">
-                            <TextEditor
+                            <Editor
+                                name="content"
+                                onChange={(value) => form.setFieldsValue({ content: value })}
+                            />
+
+                            {/* <TextEditor
                                 name="content"
                                 required={true}
                                 onChange={(value) => form.setFieldsValue({ content: value })}
                                 value={form.getFieldValue('content')}
-                            />
+                            /> */}
                         </div>
                     </div>
 
@@ -740,115 +703,25 @@ export const CreateArticleDrawer = ({
                             </label>
                             <div className="mt-2">
                                 <Form.Item
-                                    name="image"
+                                    name="thumbnail"
                                     rules={[{ required: true, message: 'Please select image' }]}>
                                     <UploadImgFile
                                         accept="image/png,image/jpeg"
                                         isUploading={isUploading}
-                                        onFileSelect={(file) => {
-                                            setThumbnailFile(file)
-
-                                            form.setFieldsValue({ thumbnail: 'uploaded' })
+                                        onChange={(fileName) => {
+                                            form.setFieldsValue({ thumbnail: fileName || '' })
                                         }}
-                                        handleFileUpload={function (): boolean | Promise<boolean> {
-                                            throw new Error('Function not implemented.')
+                                        handleFileUpload={() => {
+                                            return true
+                                        }}
+                                        onFileSelect={(file: File) => {
+                                            setThumbnailFile(file)
                                         }}
                                     />
                                 </Form.Item>
                             </div>
                         </div>
                     </div>
-
-                    {/* Audio Cards and Link Cards remain the same */}
-                    <Form.List name="audioCards">
-                        {(fields, { remove }) => (
-                            <>
-                                {fields.map(({ key, name }, index) => (
-                                    <div
-                                        key={key}
-                                        className="my-4 p-4 border border-gray-300 rounded space-y-3">
-                                        <h4 className="text-primary font-semibold">Audio Card {index + 1}</h4>
-
-                                        <TextItem
-                                            name={[name, 'title']}
-                                            type="text"
-                                            max={512}
-                                            min={2}
-                                            placeholder="Enter title"
-                                            required={true}
-                                            onChange={inputChangeHandler(`audioCards[${index}].title`)}
-                                        />
-
-                                        <TextItem
-                                            name={[name, 'link']}
-                                            type="text"
-                                            required={true}
-                                            max={512}
-                                            placeholder="Enter audio link"
-                                            regex={combinedRegex}
-                                            onChange={inputChangeHandler(`audioCards[${index}].link`)}
-                                        />
-
-                                        <div className="flex justify-end">
-                                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                                                <Button
-                                                    className="custom-danger-button"
-                                                    danger
-                                                    onClick={() => remove(name)}>
-                                                    Remove Audio Card
-                                                </Button>
-                                            </ButtonThemeConfig>
-                                        </div>
-                                    </div>
-                                ))}
-                            </>
-                        )}
-                    </Form.List>
-
-                    <Form.List name="linkCards">
-                        {(fields, { remove }) => (
-                            <>
-                                {fields.map(({ key, name }, index) => (
-                                    <div
-                                        key={key}
-                                        className="my-4 p-4 border border-gray-300 rounded space-y-3">
-                                        <h4 className="text-primary font-semibold">Link Card {index + 1}</h4>
-
-                                        <TextItem
-                                            name={[name, 'title']}
-                                            type="text"
-                                            max={512}
-                                            min={2}
-                                            placeholder="Enter title"
-                                            required={true}
-                                            onChange={inputChangeHandler(`linkCards[${index}].title`)}
-                                        />
-
-                                        <TextItem
-                                            name={[name, 'link']}
-                                            type="text"
-                                            required={true}
-                                            max={512}
-                                            placeholder="Enter link"
-                                            regex={urlRegex}
-                                            onChange={inputChangeHandler(`linkCards[${index}].link`)}
-                                        />
-
-                                        <div className="flex justify-end">
-                                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                                                <Button
-                                                    className="custom-danger-button"
-                                                    danger
-                                                    onClick={() => remove(name)}>
-                                                    Remove Link Card
-                                                </Button>
-                                            </ButtonThemeConfig>
-                                        </div>
-                                    </div>
-                                ))}
-                            </>
-                        )}
-                    </Form.List>
                 </div>
                 <div className="font-sans pt-3 w-full justify-end flex gap-2">
                     <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
@@ -958,7 +831,7 @@ export const CreateCategoryDrawer = ({
                     />
                 </div>
 
-                <div className="font-sans flex space-x-3  justify-end items-center">
+                <div className="font-sans grid grid-cols-2 w-full space-x-3  justify-end items-center">
                     <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                         <Button
                             type="default"
@@ -988,9 +861,9 @@ export const CreateCategoryDrawer = ({
 export const EditArticleDrawer = ({
     isEditArticleDrawerOpen,
     SetIsEditArticleDrawerOpen,
-    selectedArticleId
+    articleDetails
 }: {
-    selectedArticleId: string
+    articleDetails: ArticleData | null
     isEditArticleDrawerOpen: boolean
     SetIsEditArticleDrawerOpen: Dispatch<boolean>
 }) => {
@@ -998,11 +871,9 @@ export const EditArticleDrawer = ({
     const dispatch = useDispatch()
 
     const [form] = Form.useForm()
-    const navigate = useNavigate()
-    const articleSlug = selectedArticleId
-    const [loading, setLoading] = useState(true)
+    const articleSlug = articleDetails?.id
     const [isUploading, setIsUploading] = useState(false)
-    const [uploadThumbnail, setUploadThumbnail] = useState<string | null>(null)
+    const [uploadThumbnail, setUploadThumbnail] = useState<File | null>(null)
     const [categories, setCategories] = useState<Array<{ label: string; value: string }>>([])
 
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -1020,6 +891,7 @@ export const EditArticleDrawer = ({
         thumbnail: '',
         content: ''
     })
+
     // Fetch categories
     const fetchCategories = async (signal: AbortSignal) => {
         try {
@@ -1037,41 +909,35 @@ export const EditArticleDrawer = ({
         }
     }
 
-    const fetchArticleDetails = async () => {
-        try {
-            setLoading(true)
-            const data = await getArticleById(articleSlug!)
-
-            if (data) {
-                const updatedValues = {
-                    title: data.title || '',
-
-                    category: data.category?.id || null,
-
-                    thumbnail: data.thumbnail || '',
-                    content: data.content || ''
-                }
-                setLoading(false)
-                setUploadThumbnail(data.thumbnail || '')
-                setFormValues(updatedValues)
-
-                form.setFieldsValue(updatedValues)
-            }
-        } catch (error: any) {
-            setLoading(false)
-            message.error(error.message || 'Failed to fetch article details')
-        }
-    }
-
     useEffect(() => {
+        if (!articleDetails) return // Guard clause
+
         const controller = new AbortController()
         const signal = controller.signal
 
         fetchCategories(signal)
-        fetchArticleDetails()
 
         return () => controller.abort()
-    }, [articleSlug])
+    }, [articleDetails]) // Use selectedArticleId instead of articleSlug
+
+    useEffect(() => {
+        if (articleDetails) {
+            setFormValues({
+                title: articleDetails.title || '',
+                category: articleDetails.category?.id || null,
+                thumbnail: articleDetails.thumbnail || '',
+                content: articleDetails.content || ''
+            })
+
+            // Update AntD form values directly
+            form.setFieldsValue({
+                title: articleDetails.title || '',
+                category: articleDetails.category?.title || null,
+                thumbnail: articleDetails.thumbnail || '',
+                content: articleDetails.content || ''
+            })
+        }
+    }, [articleDetails, form])
 
     const inputChangeHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value
@@ -1086,9 +952,8 @@ export const EditArticleDrawer = ({
         form.setFieldsValue({ category: value })
     }
 
-    const onContentChange = (value: string) => {
-        setFormValues((prev) => ({ ...prev, content: value }))
-        form.setFieldsValue({ content: value })
+    const resetForm = () => {
+        form.resetFields()
     }
 
     const submitBtnHandler = async () => {
@@ -1098,21 +963,21 @@ export const EditArticleDrawer = ({
             const payload = {
                 title: values.title,
 
-                category: values.category,
+                category: categories.find((cat) => cat.value === values.category)?.value,
 
-                content: values.content || '',
+                content: form.getFieldValue('content'),
 
-                thumbnail: uploadThumbnail
+                thumbnail: uploadThumbnail || formValues.thumbnail
             }
 
             const success = await editArticle(articleSlug!, payload)
 
-            SetIsEditArticleDrawerOpen(false)
-            dispatch(setIsDataRefreshed(!isDataRefreshed))
             // SetIsEditArticleDrawerOpen(false)
             if (success) {
                 message.success('Article updated successfully')
-                // SetIsEditArticleDrawerOpen(false)
+                resetForm()
+                SetIsEditArticleDrawerOpen(false)
+                dispatch(setIsDataRefreshed(!isDataRefreshed))
             }
         } catch (error: any) {
             message.error(error.message || 'Failed to update article')
@@ -1122,38 +987,6 @@ export const EditArticleDrawer = ({
     }
 
     const filterOption = (input: any, option: any) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-    if (loading) {
-        return <LoadingComponent />
-    }
-    const handleFileUpload = (file: File, type: 'thumbnail'): boolean => {
-        const uploadFile = async () => {
-            try {
-                const formData = new FormData()
-                formData.append('image', file)
-                formData.append('type', type)
-
-                // Start the upload process
-                const response = await uploadFileUrl(formData)
-                if (response.success) {
-                    const { url } = response.data
-
-                    setUploadThumbnail(url)
-                    form.setFieldsValue({ thumbnail: url })
-                    setFormValues((prev) => ({ ...prev, thumbnail: url }))
-                }
-            } catch (error) {
-                //@ts-ignore
-                message.error(error.message || 'Upload failed')
-            } finally {
-                setIsUploading(false)
-            }
-        }
-
-        setIsUploading(true)
-        uploadFile()
-
-        return false
-    }
 
     return (
         <Drawer
@@ -1189,19 +1022,6 @@ export const EditArticleDrawer = ({
                         />
                     </div>
 
-                    {/* <div className="mb-4 space-y-2">
-                        <label className="text-sm font-semibold text-primary">Slug</label>
-                        <TextItem
-                            name="slug"
-                            type="text"
-                            max={512}
-                            min={4}
-                            placeholder="Enter slug"
-                            required={true}
-                            onChange={inputChangeHandler('slug')}
-                        />
-                    </div> */}
-
                     <div className="mb-4 space-y-2">
                         <label className="text-sm font-semibold text-primary">
                             Category<span className="text-red-500 pl-1">*</span>
@@ -1235,19 +1055,21 @@ export const EditArticleDrawer = ({
                                     name="thumbnail"
                                     rules={[{ required: false, message: 'Please select thumbnail' }]}>
                                     <UploadImgFile
-                                        handleFileUpload={(file) => handleFileUpload(file, 'thumbnail')}
                                         accept="image/png,image/jpeg"
                                         isUploading={isUploading}
-                                        onFileSelect={function (): void {
-                                            throw new Error('Function not implemented.')
+                                        handleFileUpload={() => {
+                                            return true
+                                        }}
+                                        onFileSelect={(file: File) => {
+                                            setUploadThumbnail(file)
                                         }}
                                     />
 
-                                    {uploadThumbnail && (
+                                    {formValues.thumbnail && (
                                         <div className="mt-2">
                                             <Image
                                                 width={200}
-                                                src={uploadThumbnail.startsWith('http') ? uploadThumbnail : `/${uploadThumbnail}`}
+                                                src={formValues.thumbnail.startsWith('http') ? formValues.thumbnail : `/${uploadThumbnail}`}
                                                 preview={false}
                                                 // fallback="https://via.placeholder.com/200x150?text=No+Image"
                                             />
@@ -1262,161 +1084,25 @@ export const EditArticleDrawer = ({
                             Article Content<span className="text-red-500 pl-1">*</span>
                         </label>
                         <div className="mt-2">
-                            <TextEditor
+                            <Editor
+                                name="content"
+                                initialContent={formValues.content}
+                                onChange={(value) => form.setFieldsValue({ content: value })}
+                            />
+                            {/* <TextEditor
                                 name="content"
                                 required={true}
                                 onChange={onContentChange}
                                 value={formValues.content || ''}
-                            />
+                            /> */}
                         </div>
                     </div>
-
-                    {/* For Audio Link */}
-                    {/* <Form.List name="audioCards">
-                        {(fields, { remove }) => (
-                            <>
-                                {fields.map(({ key, name }, index) => (
-                                    <div
-                                        key={key}
-                                        className="my-4 p-4 border border-gray-300 rounded space-y-3">
-                                        <h4 className="text-primary font-semibold">Audio Card {index + 1}</h4>
-
-                                        <TextItem
-                                            name={[name, 'title']}
-                                            type="text"
-                                            max={512}
-                                            min={2}
-                                            placeholder="Enter title"
-                                            required={true}
-                                            onChange={(e) => {
-                                                const value = e.target.value
-                                                const audioCards = [...(form.getFieldValue('audioCards') || [])]
-                                                audioCards[index] = {
-                                                    ...audioCards[index],
-                                                    title: value
-                                                }
-                                                setFormValues((prev) => ({
-                                                    ...prev,
-                                                    audioCards
-                                                }))
-                                                form.setFieldsValue({ audioCards })
-                                            }}
-                                        />
-
-                                        <TextItem
-                                            name={[name, 'link']}
-                                            type="text"
-                                            required={true}
-                                            max={512}
-                                            placeholder="Enter audio link"
-                                            regex={combinedRegex}
-                                            onChange={(e) => {
-                                                const value = e.target.value
-                                                const audioCards = [...(form.getFieldValue('audioCards') || [])]
-                                                audioCards[index] = {
-                                                    ...audioCards[index],
-                                                    link: value
-                                                }
-                                                setFormValues((prev) => ({
-                                                    ...prev,
-                                                    audioCards
-                                                }))
-                                                form.setFieldsValue({ audioCards })
-                                            }}
-                                        />
-
-                                        <div className="flex justify-end">
-                                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                                                <Button
-                                                    className="custom-danger-button"
-                                                    danger
-                                                    onClick={() => remove(name)}>
-                                                    Remove Audio Card
-                                                </Button>
-                                            </ButtonThemeConfig>
-                                        </div>
-                                    </div>
-                                ))}
-                            </>
-                        )}
-                    </Form.List> */}
-                    {/* For External Link */}
-                    {/* <Form.List name="externalLink">
-                        {(fields, { remove }) => (
-                            <>
-                                {fields.map(({ key, name }, index) => (
-                                    <div
-                                        key={key}
-                                        className="my-4 p-4 border border-gray-300 rounded space-y-3">
-                                        <h4 className="text-primary font-semibold">Link Card {index + 1}</h4>
-
-                                        <TextItem
-                                            name={[name, 'title']}
-                                            type="text"
-                                            max={512}
-                                            min={2}
-                                            placeholder="Enter title"
-                                            required={true}
-                                            value={formValues.externalLink[index]?.title || ''}
-                                            onChange={(e) => {
-                                                const value = e.target.value
-                                                const externalLinks = [...(form.getFieldValue('externalLink') || [])]
-                                                externalLinks[index] = {
-                                                    ...externalLinks[index],
-                                                    title: value
-                                                }
-                                                setFormValues((prev) => ({
-                                                    ...prev,
-                                                    externalLink: externalLinks
-                                                }))
-                                                form.setFieldsValue({ externalLink: externalLinks })
-                                            }}
-                                        />
-
-                                        <TextItem
-                                            name={[name, 'link']}
-                                            type="text"
-                                            required={true}
-                                            max={512}
-                                            placeholder="Enter link"
-                                            regex={urlRegex}
-                                            value={formValues.externalLink[index]?.link || ''}
-                                            onChange={(e) => {
-                                                const value = e.target.value
-                                                const externalLinks = [...(form.getFieldValue('externalLink') || [])]
-                                                externalLinks[index] = {
-                                                    ...externalLinks[index],
-                                                    link: value
-                                                }
-                                                setFormValues((prev) => ({
-                                                    ...prev,
-                                                    externalLink: externalLinks
-                                                }))
-                                                form.setFieldsValue({ externalLink: externalLinks })
-                                            }}
-                                        />
-
-                                        <div className="flex justify-end">
-                                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                                                <Button
-                                                    className="custom-danger-button"
-                                                    danger
-                                                    onClick={() => remove(name)}>
-                                                    Remove Link Card
-                                                </Button>
-                                            </ButtonThemeConfig>
-                                        </div>
-                                    </div>
-                                ))}
-                            </>
-                        )}
-                    </Form.List> */}
                 </div>
 
                 <div className="pt-3 justify-end flex gap-2">
                     <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                         <Button
-                            onClick={() => navigate('/dashboard/articles')}
+                            onClick={() => SetIsEditArticleDrawerOpen(false)}
                             type="default"
                             className="h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2">
                             Cancel
@@ -1542,9 +1228,9 @@ export const EditTestimonialDrawer = ({
         }
     }
 
-    if (loading) {
-        return <LoadingComponent />
-    }
+    // if (loading) {
+    //     return <LoadingComponent />
+    // }
 
     return (
         <Drawer
@@ -1565,8 +1251,8 @@ export const EditTestimonialDrawer = ({
                 layout="vertical">
                 <div className="font-sans">
                     <div className="mb-4 space-y-2">
-                        <label className="text-sm font-semibold text-primary">
-                            Name<span className="text-red-500pl-1">*</span>
+                        <label className="font-sans text-font16 font-semibold text-gray44">
+                            Name<span className="font-sans text-red-500pl-1">*</span>{' '}
                         </label>
                         <TextItem
                             name="name"
@@ -1581,7 +1267,7 @@ export const EditTestimonialDrawer = ({
                     </div>
 
                     <div className="mb-4 space-y-2">
-                        <label className="text-sm font-semibold text-primary">
+                        <label className="font-sans text-font16 font-semibold text-gray44">
                             Designation<span className="text-red-500pl-1">*</span>
                         </label>
                         <TextItem
@@ -1597,28 +1283,28 @@ export const EditTestimonialDrawer = ({
                     </div>
 
                     <div className="mb-4 space-y-2">
-                        <label className="text-sm font-semibold text-primary">
+                        <label className="font-sans text-font16 font-semibold text-gray44">
                             Description<span className="text-red-500pl-1">*</span>
                         </label>
                         <Form.Item
                             name="description"
                             rules={[{ required: true, message: 'Please enter description' }]}>
-                            <textarea
+                            <TextAreaItem
                                 name="description"
-                                rows={4}
                                 placeholder="Enter description"
-                                className="w-full h-32 border border-gray-300rounded-lg p-3 focus:border-primary focus:shadow-none transition"
+                                className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
                                 onChange={(e) => {
                                     const value = e.target.value
                                     form.setFieldsValue({ description: value })
                                 }}
+                                required={true}
                             />
                         </Form.Item>
                     </div>
 
                     <div className="font-sans col-span-2 h-auto">
                         <div className="font-sans w-full">
-                            <label className="font-sans text-sm font-semibold text-primary mb-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44 mb-2">
                                 Image<span className="font-sans text-red-500pl-1">*</span>
                             </label>
                             <div className="mt-2">
@@ -1628,28 +1314,15 @@ export const EditTestimonialDrawer = ({
                                     <UploadImgFile
                                         accept="image/png,image/jpeg"
                                         isUploading={isUploading}
-                                        onFileSelect={(file) => {
-                                            // 1. Start upload → show loading
-                                            setIsUploading(true)
-
-                                            // 2. Simulate upload (or call API)
-                                            const uploadFile = async () => {
-                                                try {
-                                                    await new Promise((resolve) => setTimeout(resolve, 1000))
-                                                    const previewUrl = URL.createObjectURL(file)
-                                                    setUploadImage(previewUrl)
-                                                    setImageFile(file)
-                                                    form.setFieldsValue({ image: 'uploaded' })
-                                                } catch (error) {
-                                                    message.error('Upload failed')
-                                                } finally {
-                                                    setIsUploading(false)
-                                                }
-                                            }
-
-                                            uploadFile()
+                                        onChange={(fileName) => {
+                                            form.setFieldsValue({ image: fileName || '' })
                                         }}
-                                        handleFileUpload={function (): boolean | Promise<boolean> {
+                                        handleFileUpload={async (file) => {
+                                            setImageFile(file)
+                                            // Your upload logic here if needed
+                                            return true
+                                        }}
+                                        onFileSelect={function (file: File): void {
                                             throw new Error('Function not implemented.')
                                         }}
                                     />
@@ -1718,10 +1391,6 @@ export const EditFaqDrawer = ({
             setLoading(true)
             const data = await getFaqById(faqId as string)
 
-            console.log('id', faqId)
-
-            console.log('api response', data)
-
             if (data) {
                 const initialValues = {
                     question: data.question || '',
@@ -1788,83 +1457,85 @@ export const EditFaqDrawer = ({
                 className="font-sans w-full flex justify-between flex-col h-full mt-4"
                 onFinish={submitBtnHandler}>
                 <div className="font-sans space-y-6">
-                    {/* Question Field */}
-                    <div className="space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Question<span className="font-sans text-red-500 pl-1">*</span>
-                        </label>
-                        <TextItem
-                            name="question"
-                            type="text"
-                            max={512}
-                            min={4}
-                            placeholder="Enter the question..."
-                            required={true}
-                            className="h-10 2xl:h-12"
-                            onChange={inputChangeHandler('question')}
-                        />
-                    </div>
-
-                    {/* Answer Field */}
-                    <div className="space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Answer<span className="font-sans text-red-500 pl-1">*</span>
-                        </label>
-                        <Form.Item
-                            name="answer"
-                            rules={[{ required: true, message: 'Please enter the answer' }]}>
-                            <textarea
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary font-sans text-base leading-relaxed resize-y"
-                                rows={8}
-                                placeholder="Write the detailed answer here..."
-                                maxLength={2000}
+                    <div className="">
+                        {/* Question Field */}
+                        <div className="space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Question<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <TextItem
+                                name="question"
+                                type="text"
+                                max={512}
+                                min={4}
+                                placeholder="Enter the question..."
+                                required={true}
+                                className="h-10 2xl:h-12"
+                                onChange={inputChangeHandler('question')}
                             />
-                        </Form.Item>
-                    </div>
+                        </div>
 
-                    {/* Page Dropdown */}
-                    <div className="space-y-2">
-                        <label className="font-sans text-sm font-semibold text-primary">
-                            Page<span className="font-sans text-red-500 pl-1">*</span>
-                        </label>
-                        <ConfigProvider
-                            theme={{
-                                token: {
-                                    controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
-                                    colorPrimary: '#083050'
-                                },
-                                components: {
-                                    Select: {
-                                        activeOutlineColor: 'transparent'
-                                    }
-                                }
-                            }}>
+                        {/* Answer Field */}
+                        <div className="space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Answer<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
                             <Form.Item
-                                name="pageName"
-                                rules={[{ required: true, message: 'Please select a page' }]}>
-                                <Select
-                                    allowClear
-                                    style={{ width: '100%', height: '48px' }}
-                                    className="h-10 2xl:h-12 text-primary font-sans text-lg font-dmSans focus-visible:shadow-none focus:border-[#868E96] transition ease-in duration-500 rounded"
-                                    placeholder="Select page (e.g., Overview, Blog, Testimonial)"
-                                    options={[
-                                        { value: 'Overview', label: 'Overview' },
-                                        { value: 'Blog', label: 'Blog' },
-                                        { value: 'Testimonial', label: 'Testimonial' }
-                                    ]}
-                                    filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                                    onChange={(value) => form.setFieldsValue({ pageName: value })}
+                                name="answer"
+                                rules={[{ required: true, message: 'Please enter the answer' }]}>
+                                <textarea
+                                    className="w-full p-3 border border-[#e7e7e7] hover:border-[#e7e7e7] rounded-lg focus:outline-none  font-sans text-base leading-relaxed resize-y"
+                                    rows={8}
+                                    placeholder="Write the detailed answer here..."
+                                    maxLength={2000}
                                 />
                             </Form.Item>
-                        </ConfigProvider>
+                        </div>
+
+                        {/* Page Dropdown */}
+                        <div className="space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Page<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
+                                        colorPrimary: '#083050'
+                                    },
+                                    components: {
+                                        Select: {
+                                            activeOutlineColor: 'transparent'
+                                        }
+                                    }
+                                }}>
+                                <Form.Item
+                                    name="pageName"
+                                    rules={[{ required: true, message: 'Please select a page' }]}>
+                                    <Select
+                                        allowClear
+                                        style={{ width: '100%', height: '48px' }}
+                                        className="h-10 2xl:h-12 !font-sans !text-font16 !rounded-[6px] !focus:border-[#e7e7e7] !hover:border-[#e7e7e7] !border-[#e7e7e7] !text-[#919191]  !border !transition !ease-in !duration-500"
+                                        placeholder="Select page (e.g., Overview, Blog, Testimonial)"
+                                        options={[
+                                            { value: 'Overview', label: 'Overview' },
+                                            { value: 'Blog', label: 'Blog' },
+                                            { value: 'Testimonial', label: 'Testimonial' }
+                                        ]}
+                                        filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                                        onChange={(value) => form.setFieldsValue({ pageName: value })}
+                                    />
+                                </Form.Item>
+                            </ConfigProvider>
+                        </div>
                     </div>
                 </div>
 
                 {/* Submit & Cancel Buttons */}
-                <div className="font-sans pt-6 w-full justify-end flex gap-4">
+                <div className="font-sans pt-6 w-full justify-end grid grid-cols-2 gap-4">
                     <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                         <Button
-                            onClick={() => navigate('/dashboard/faqs')}
+                            onClick={() => SetIsEditFaqDrawerOpen(false)}
                             type="default"
                             className="font-sans bg-white text-primary border-primary text-base shadow-none flex justify-center items-center px-6 py-2 h-auto">
                             Cancel
@@ -1877,7 +1548,7 @@ export const EditFaqDrawer = ({
                             type="primary"
                             icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                             disabled={isSubmitting}
-                            className="font-sans h-auto rounded-lg bg-primary text-white border-primary text-base 2xl:text-[20px] shadow-none flex justify-center items-center px-6 py-2"
+                            className="font-sans h-auto rounded-lg bg-primary text-white hover:bg-primary text-base 2xl:text-[20px] shadow-none flex justify-center items-center px-6 py-2"
                             style={{ width: 'auto' }}>
                             {isSubmitting ? 'Updating...' : 'Update FAQ'}
                         </Button>
@@ -2028,8 +1699,6 @@ export const EditCareerDrawer = ({
             if (!selectedCareerId) return
 
             const data = await getCareerById(selectedCareerId)
-
-            console.log('✅ Career data fetched:', data)
 
             if (data && typeof data === 'object') {
                 const initialValues: ICareerCreate = {

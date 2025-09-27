@@ -4,8 +4,13 @@ export enum EConfigButtonType {
     THIRD = 'third',
     TRANSPARENT = 'transparent'
 }
+export enum EMediaType {
+    IMAGE = 'image',
+    VIDEO = 'video'
+}
 export interface ArticleData {
     body: string
+    content: string
     category: {
         id: string
         title: string
@@ -53,6 +58,20 @@ export interface ICareerCreate {
     experience: string
     jobDescription: string
 }
+export interface IGallery {
+    _id: string
+    fileName: string
+    mediaType: EMediaType
+    currentUrl: string
+    uploadedBy: {
+        _id: string
+        name: string
+        emailAddress: string
+    }
+    createdAt: string
+    updatedAt: string | null
+}
+
 // types/state.types.ts
 export interface ICareer {
     id: string

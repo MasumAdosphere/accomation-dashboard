@@ -42,6 +42,7 @@ export interface TextAreaItemProps {
     onChange: ChangeEventHandler<HTMLTextAreaElement>
     readOnly?: boolean
     regex?: RegExp
+    className?: string
 }
 
 export interface PhoneProps {

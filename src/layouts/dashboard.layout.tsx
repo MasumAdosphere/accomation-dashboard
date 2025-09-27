@@ -1,12 +1,12 @@
 import Logo from '../assets/white-logo.png'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { Header } from 'antd/es/layout/layout'
 import { logout } from '../redux/auth/auth.thunk'
 import { RootState } from '../types/selector.types'
 import { EConfigButtonType } from '../types/state.types'
 import AppBreadcrumb from '../components/antdesign/appBreadcrumb'
-import { Layout, Menu, Button, ConfigProvider, message, MenuProps } from 'antd'
+import { Layout, Menu, Button, ConfigProvider, message } from 'antd'
 import { ButtonThemeConfig } from '../components/antdesign/configs.components'
 import { useLocation, Outlet, useNavigate, Link, Navigate } from 'react-router-dom'
 import logoutIcon from '../assets/logout.png'
@@ -22,8 +22,6 @@ const DashboardLayout = () => {
 
     const [current, setCurrent] = useState(location.pathname.slice(11).split('/')[0])
 
-    const [openKeys, setOpenKeys] = useState<string[]>([])
-
     const path = location.pathname
 
     const [profileName, setProfileName] = useState<string>('')
@@ -33,6 +31,7 @@ const DashboardLayout = () => {
             try {
                 const data = await getProfile()
                 setProfileName(data?.name || '')
+                console.log(data)
             } catch (error) {
                 setProfileName('')
             }
@@ -63,19 +62,13 @@ const DashboardLayout = () => {
         {
             key: 'blogs',
             label: 'Blogs',
+            to: 'blogs',
             children: [
-                {
-                    key: 'categories',
-                    label: 'Categories',
-                    to: 'categories'
-                },
-                {
-                    key: 'articles',
-                    label: 'Articles',
-                    to: 'articles'
-                }
+                { key: 'categories', label: 'Categories', to: 'categories' },
+                { key: 'articles', label: 'Articles', to: 'articles' }
             ]
         },
+
         {
             key: 'testimonials',
             label: 'Testimonials',
@@ -140,29 +133,19 @@ const DashboardLayout = () => {
         }
     }
 
-    const renderMenuItems = (menuItems: any[]): MenuProps['items'] =>
-        menuItems.map((item) =>
-            item.children
-                ? {
-                      key: item.key,
-                      label: item.label,
-                      children: renderMenuItems(item.children)
-                  }
-                : {
-                      key: item.to,
-                      label: <span>{item.label}</span>
-                  }
-        )
+    const renderMenuItems = (
+        menuItems: {
+            key: string
+            label: string
+            to: string
+        }[]
+    ) =>
+        menuItems.map((item) => ({
+            ...item,
+            label: <span>{item.label}</span>
+        }))
     useEffect(() => {
-        const page = location.pathname.slice(11).split('/')[0]
-
-        if (page === 'categories' || page === 'articles') {
-            setCurrent(page)
-            setOpenKeys(['blogs'])
-        } else {
-            setCurrent(page)
-            setOpenKeys([])
-        }
+        setCurrent(location.pathname.slice(11).split('/')[0])
     }, [location.pathname])
 
     if (Object.keys(user).length === 0) {
@@ -184,6 +167,7 @@ const DashboardLayout = () => {
                         itemSelectedBg: '#FFDE39',
                         itemSelectedColor: '#0E082B',
                         itemColor: '#FFF',
+                        subMenuItemBg: '#0E082B',
                         itemBorderRadius: 0,
                         itemHoverBg: '#FFDE39',
                         itemHoverColor: '#0E082B'
@@ -212,9 +196,7 @@ const DashboardLayout = () => {
                         theme="light"
                         items={renderMenuItems(adminItems)}
                         mode="inline"
-                        selectedKeys={[current]} // highlight the actual page
-                        openKeys={openKeys} // expand parent when needed
-                        onOpenChange={(keys) => setOpenKeys(keys)} // handle open/close manually
+                        selectedKeys={[current]}
                         className="font-sans px-2 2xl:px-6 mt-6 text-sm 2xl:text-[20px] space-y-2 font-medium 2xl:leading-[22px] bg-[#0E082B] !border-none"
                     />
                 </Sider>

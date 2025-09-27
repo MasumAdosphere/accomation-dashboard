@@ -9,7 +9,7 @@ export default defineConfig({
         allowedHosts: true,
         proxy: {
             '/v1': {
-                target: 'https://kashish.botsetgo.com',
+                target: 'https://jenilb.botsetgo.com',
                 changeOrigin: true,
                 configure: (proxy) => {
                     proxy.on('proxyReq', (proxyReq, req) => {

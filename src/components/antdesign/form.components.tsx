@@ -1,15 +1,16 @@
 import { Rule } from 'antd/es/form'
 import JoditReact from 'jodit-react-ts'
-import { ReactNode, Suspense, useMemo } from 'react'
+import { Dispatch, ReactNode, Suspense, useMemo, useState } from 'react'
 import 'react-phone-input-2/lib/style.css'
 import Dragger from 'antd/es/upload/Dragger'
 import TextArea from 'antd/es/input/TextArea'
-import { UploadOutlined } from '@ant-design/icons'
+import { LoadingOutlined, UploadOutlined } from '@ant-design/icons'
 import { ButtonThemeConfig } from './configs.components.js'
 import PhoneInput, { CountryData } from 'react-phone-input-2'
-import { EConfigButtonType } from '../../types/state.types.ts'
-import { Button, Form, Input, Select, ConfigProvider, Upload, UploadProps } from 'antd'
+import { EConfigButtonType, EMediaType, IGallery } from '../../types/state.types.ts'
+import { Button, Form, Input, Select, ConfigProvider, Upload, UploadProps, message } from 'antd'
 import { PasswordInputProps, PhoneProps, TextAreaItemProps, TextItemProps } from '../../types/form.components.types.ts'
+import { fetchGallery, fileUpload } from '../../redux/gallery/gallery.thunk.ts'
 
 export const PasswordInput = ({ name, required = true, placeholder, icon, onChange, regex, className, newPwd = null }: PasswordInputProps) => {
     const rules: {
@@ -138,7 +139,7 @@ export const TextItem = ({
     )
 }
 
-export const TextAreaItem = ({ name, required = true, min, max, onChange, placeholder }: TextAreaItemProps) => {
+export const TextAreaItem = ({ name, required = true, min, max, onChange, placeholder, className }: TextAreaItemProps) => {
     const fieldLabel = Array.isArray(name) ? String(name[name.length - 1]) : name
 
     const capitalizedLabel = fieldLabel.charAt(0) + fieldLabel.slice(1)
@@ -172,8 +173,12 @@ export const TextAreaItem = ({ name, required = true, min, max, onChange, placeh
             <TextArea
                 placeholder={placeholder}
                 rows={3}
-                className="h-8 2xl:h-12 text-base"
                 onChange={onChange}
+                className={
+                    className
+                        ? className
+                        : 'h-10 2xl:h-12 font-sans text-font16 rounded-[6px] text-[#919191] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500'
+                }
             />
         </Form.Item>
     )
@@ -279,6 +284,99 @@ export const DropdownSelector = ({
     )
 }
 
+interface UploadImgFileProps {
+    handleFileUpload: (file: File) => boolean | Promise<boolean>
+    accept: string
+    isUploading: boolean
+    value?: string
+    className?: string
+    onChange?: (value: string | null) => void // Add onChange prop
+    onFileSelect: (file: File) => void // Simple callback - no return value needed
+
+    // fileList?: UploadFile[]
+}
+export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploading, onFileSelect, handleFileUpload, onChange, className, value }) => {
+    const props: UploadProps = {
+        listType: 'picture',
+        accept,
+        showUploadList: true,
+        maxCount: 1,
+        beforeUpload: async (file) => {
+            try {
+                if (handleFileUpload) {
+                    await handleFileUpload(file)
+                }
+                if (onFileSelect) {
+                    onFileSelect(file)
+                }
+                if (onChange) {
+                    onChange(file.name) // This will update the parent and remove validation error
+                }
+            } catch (error) {
+                console.error('Upload failed:', error)
+            }
+            return false // Prevent automatic upload
+        },
+        previewFile: async (file) => {
+            const blob = new Blob([file])
+            return URL.createObjectURL(blob)
+        },
+        onRemove(file) {
+            if (onChange) {
+                onChange(null)
+            }
+        }
+    }
+
+    const fileName = value
+
+    return (
+        <Upload {...props}>
+            <div
+                className={`border-2 border-[#e7e7e7] w-full rounded-md p-3 flex items-center justify-between cursor-pointer ${className}`}
+                style={{
+                    minHeight: '40px',
+                    background: 'white'
+                }}>
+                <span className="text-gray-500 text-sm">{fileName ? fileName : 'Select Image'}</span>
+                <Button
+                    type="default"
+                    size="small"
+                    loading={isUploading}
+                    disabled={isUploading}>
+                    {isUploading ? 'Uploading...' : 'Choose File'}
+                </Button>
+            </div>
+        </Upload>
+    )
+}
+export const MediaGallery = ({ handleFileUpload, accept, isUploading }: UploadImgFileProps) => {
+    const props: UploadProps = {
+        name: 'file',
+        multiple: true,
+        accept,
+        showUploadList: true,
+        beforeUpload: async (file) => {
+            await handleFileUpload(file)
+            return false // prevent auto-upload
+        },
+        previewFile: async (file) => {
+            const blob = new Blob([file])
+            return URL.createObjectURL(blob)
+        }
+    }
+
+    return (
+        <Dragger {...props}>
+            <p className="ant-upload-drag-icon">
+                <UploadOutlined />
+            </p>
+            <p className="ant-upload-text">{isUploading ? 'Uploading...' : 'Click or drag files to upload'}</p>
+            <p className="ant-upload-hint">Supports files (.jpeg,.jpg,.png.)</p>
+        </Dragger>
+    )
+}
+
 export const TextEditor = ({
     value = '',
     onChange,
@@ -310,13 +408,13 @@ export const TextEditor = ({
 
     const rules = required
         ? [
-              { required: true, message: `Please enter article content` },
+              { required: true, message: `Please enter news content` },
               {
                   validator: (_: any, textValue: string) => {
-                      if (textValue && textValue.length >= 1) {
+                      if (textValue && textValue.length >= 12) {
                           return Promise.resolve()
                       }
-                      return Promise.reject(new Error('Content must be at least 1 characters long!'))
+                      return Promise.reject(new Error('News content must be at least 12 characters long!'))
                   }
               }
           ]
@@ -338,77 +436,137 @@ export const TextEditor = ({
     )
 }
 
-interface UploadImgFileProps {
-    handleFileUpload: (file: File) => boolean | Promise<boolean>
-    accept: string
-    isUploading: boolean
-    value?: string
-    onChange?: (value: string | null) => void // Add onChange prop
-    onFileSelect: (file: File) => void // Simple callback - no return value needed
+const beforeUpload = (file: File) => {
+    const isMp4 = file.type === 'video/mp4'
+    const isJpgOrJpeg =
+        file.type === 'image/jpeg' ||
+        file.type === 'image/gif' ||
+        file.type === 'image/webp' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/png'
 
-    // fileList?: UploadFile[]
+    let isValidType = false
+    let isValidSize = false
+
+    // Check for MP4 file type and size
+    if (isMp4) {
+        isValidType = true
+        isValidSize = file.size / (1024 * 1024) < 20 // 20MB for MP4
+        if (!isValidSize) {
+            message.error('Video must be smaller than 20 MB!')
+        }
+    }
+    // Check for JPG/JPEG file type and size
+    else if (isJpgOrJpeg) {
+        isValidType = true
+        isValidSize = file.size / (1024 * 1024) < 5 // 5MB for JPG/JPEG
+        if (!isValidSize) {
+            message.error('Image must be smaller than 1 MB!')
+        }
+    }
+    // File type is invalid
+    else {
+        message.error('You can only upload MP4, JPG, or JPEG files!')
+    }
+
+    return isValidType && isValidSize
 }
-export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploading, onFileSelect, handleFileUpload, onChange }) => {
-    const props: UploadProps = {
-        listType: 'picture',
-        accept,
 
-        showUploadList: true,
-        maxCount: 1,
-        beforeUpload: async (file) => {
-            try {
-                // Use the new onFileSelect approach (preferred)
-                if (onFileSelect) {
-                    onFileSelect(file)
-                    if (onChange) {
-                        onChange(file.name)
-                    }
+export const ImageUpload = ({
+    setFiles,
+    setTotalPages,
+    setImage,
+    modalType
+}: {
+    setFiles: Dispatch<IGallery[]>
+    setTotalPages: Dispatch<number>
+    setImage: Dispatch<string>
+    modalType: EMediaType | ''
+}) => {
+    const [loading, setLoading] = useState(false)
+
+    const handleUpload = async (file: File) => {
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await fileUpload(formData)
+            const controller = new AbortController()
+            const signal = controller.signal
+
+            if (response) {
+                message.success('Upload successful!')
+                const data = await fetchGallery(50, 1, null, modalType, signal)
+                if (data) {
+                    setTotalPages(data.totalPages)
+                    setFiles(data.medias)
                 }
-            } catch (error) {
-                console.error('Upload failed:', error)
+                setImage(response.data)
             }
-            return false // prevent Ant Design's auto-upload
-        },
-        previewFile: async (file) => {
-            const blob = new Blob([file])
-            return URL.createObjectURL(blob)
+            return () => {
+                controller.abort()
+            }
+        } catch (error) {
+            //@ts-ignore
+            message.error(error.message)
+        } finally {
+            setLoading(false)
         }
     }
 
-    return (
-        <Upload {...props}>
-            <Button
-                icon={<UploadOutlined />}
-                loading={isUploading}
-                disabled={isUploading}>
-                {isUploading ? 'Uploading...' : 'Upload'}
-            </Button>
-        </Upload>
+    const handleChange = (info: any) => {
+        if (info.file.status === 'uploading') {
+            setLoading(true)
+            return
+        }
+        if (info.file.status === 'done') {
+            handleUpload(info.file.originFileObj)
+        }
+    }
+
+    const uploadButton = (
+        <button
+            className="border-none bg-darkblue text-white bg-none h-12 w-[150px] rounded-[40px] flex items-center justify-center gap-5"
+            type="button">
+            {loading ? <LoadingOutlined /> : <></>}
+            <div>Upload</div>
+        </button>
     )
-}
-export const MediaGallery = ({ handleFileUpload, accept, isUploading }: UploadImgFileProps) => {
-    const props: UploadProps = {
-        name: 'file',
-        multiple: true,
-        accept,
-        showUploadList: true,
-        beforeUpload: async (file) => {
-            await handleFileUpload(file)
-            return false // prevent auto-upload
-        },
-        previewFile: async (file) => {
-            const blob = new Blob([file])
-            return URL.createObjectURL(blob)
-        }
-    }
 
     return (
-        <Dragger {...props}>
-            <p className="ant-upload-drag-icon">
-                <UploadOutlined />
-            </p>
-            <p className="ant-upload-text">{isUploading ? 'Uploading...' : 'Click or drag files to upload'}</p>
-            <p className="ant-upload-hint">Supports files (.jpeg,.jpg,.png.)</p>
-        </Dragger>
+        <div className="file-uploader">
+            <ConfigProvider
+                theme={{
+                    token: {
+                        colorPrimary: '#F37167',
+                        borderRadius: 40,
+                        colorText: '#112D93',
+                        colorBorder: 'none',
+                        fontFamily: 'Noto Sans Gujarati, sans-serif'
+                        // colorFillAlter: '#F6F8FD'
+                    },
+                    components: {
+                        Upload: {
+                            // actionsColor: "#F6F8FD",
+                        }
+                    }
+                }}>
+                <Upload
+                    name="file"
+                    accept={`${modalType === EMediaType.VIDEO ? '.mp4' : modalType === EMediaType.IMAGE ? '.jpg, .png, .gif, .webp' : ''} `}
+                    listType="picture-card"
+                    className="font-sans text-lg"
+                    showUploadList={false}
+                    beforeUpload={beforeUpload}
+                    onChange={handleChange}
+                    customRequest={({ onSuccess }) => {
+                        setTimeout(() => {
+                            onSuccess?.('ok')
+                        }, 0)
+                    }}>
+                    {uploadButton}
+                </Upload>
+            </ConfigProvider>
+        </div>
     )
 }
