@@ -12,6 +12,18 @@ import { useLocation, Outlet, useNavigate, Link, Navigate } from 'react-router-d
 import logoutIcon from '../assets/logout.png'
 import { getProfile } from '../redux/user/user.thunk'
 
+import blogActive from '../assets/blogActive.svg'
+import blogInActive from '../assets/blogInactive.svg'
+import careerActive from '../assets/careerActive.svg'
+import careerInActive from '../assets/CareerInactive.svg'
+import categoryInActive from '../assets/categoryInactive.svg'
+import categoryActive from '../assets/categoryActive.svg'
+import testimonialActive from '../assets/testimonialsActive.svg'
+import testimonialInactive from '../assets/testimonialsInactive.svg'
+import faqInactive from '../assets/faqInactive.svg'
+import faqActive from '../assets/faqActive.svg'
+import clientInactive from '../assets/clientInactive.svg'
+
 const { Sider, Content } = Layout
 
 const DashboardLayout = () => {
@@ -57,42 +69,59 @@ const DashboardLayout = () => {
         {
             key: 'overview',
             label: 'Overview',
+            icon: current === 'overview' ? <img src={blogActive} /> : <img src={blogInActive} />,
             to: 'overview'
         },
         {
             key: 'blogs',
             label: 'Blogs',
+            icon: current === 'categories' || current === 'articles' ? <img src={blogActive} /> : <img src={blogInActive} />,
             to: 'blogs',
             children: [
-                { key: 'categories', label: 'Categories', to: 'categories' },
-                { key: 'articles', label: 'Blogs', to: 'articles' }
+                {
+                    key: 'categories',
+                    label: 'Categories',
+                    to: 'categories',
+                    icon: current === 'categories' ? <img src={categoryInActive} /> : <img src={categoryInActive} />
+                },
+                {
+                    key: 'articles',
+                    label: 'Blogs',
+                    to: 'articles',
+                    icon: current === 'blogs' ? <img src={blogInActive} /> : <img src={blogInActive} />
+                }
             ]
         },
 
         {
             key: 'testimonials',
             label: 'Testimonials',
-            to: 'testimonials'
+            to: 'testimonials',
+            icon: current === 'testimonials' ? <img src={testimonialActive} /> : <img src={testimonialInactive} />
         },
         {
             key: 'faq',
             label: 'Faqs',
-            to: 'faq'
+            to: 'faq',
+            icon: current === 'faq' ? <img src={faqActive} /> : <img src={faqInactive} />
         },
         {
             key: 'logos',
             label: 'Logos',
-            to: 'logos'
+            to: 'logos',
+            icon: current === 'logos' ? <img src={clientInactive} /> : <img src={clientInactive} />
         },
         {
             key: 'career',
             label: 'Career',
-            to: 'career'
+            to: 'career',
+            icon: current === 'career' ? <img src={careerActive} /> : <img src={careerInActive} />
         },
         {
             key: 'users',
             label: 'Users',
-            to: 'users'
+            to: 'users',
+            icon: current === 'users' ? <img src={careerActive} /> : <img src={careerInActive} />
         }
     ]
 

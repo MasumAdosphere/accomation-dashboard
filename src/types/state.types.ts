@@ -40,6 +40,12 @@ export interface IfaqPayload {
     answer: String
     pageName: string
 }
+export interface ICreateUser {
+    name: string
+    email: String
+    password: string
+}
+
 export interface ILogo {
     id: string
     companyName: string
@@ -159,17 +165,12 @@ export interface IGetAudio {
 }
 //users
 export interface IUsers {
-    consent: boolean
-    createdAt: Date
-    emailAddress: string
-    gender: string
-    lastLoginAt: Date
-    name: string
-    updatedAt: Date
-    username: string
-    verification: { status: boolean }
-    whatsAppNumber: string
     id: string
+    name: string
+    username: string
+    email: string
+    password: string
+    lastLoginAt: Date | null
 }
 
 // Insights

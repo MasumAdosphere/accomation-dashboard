@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArticleData, EConfigButtonType, ICareer, ICareerCreate, ICategory } from '../../types/state.types'
 import { createTestimonials, editTestimonials, getTestimonialById } from '../../redux/testimonials/testimonial.thunk'
 import { createCategory, editCategory, getAllCategories } from '../../redux/category/category.thunk'
-import { TextAreaItem, TextItem, UploadImgFile } from './form.components'
+import { PasswordInput, TextAreaItem, TextItem, UploadImgFile } from './form.components'
 import { ButtonThemeConfig } from './configs.components'
 import { LoadingOutlined } from '@ant-design/icons'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
@@ -16,6 +16,7 @@ import { audioBoxRegex, videoRegex } from '../../quicker/quicker'
 import { createArticle, editArticle } from '../../redux/article/article.thunk'
 import { createCareer, editCareer, getCareerById } from '../../redux/career/career.thunk'
 import Editor from '../custom/Editor'
+import { createUsers } from '../../redux/user/user.thunk'
 
 export const CreateTestimonialDrawer = ({
     isCreateTestimonialDrawerOpen,
@@ -2087,6 +2088,135 @@ export const EditCategoryDrawer = ({
                             {isSubmitting ? 'Updating...' : 'Update'}
                         </Button>
                     </ButtonThemeConfig>
+                </div>
+            </Form>
+        </Drawer>
+    )
+}
+
+export const CreateUserDrawer = ({
+    isCreateUserDrawerOpen,
+    SetIsCreateUserDrawerOpen
+}: {
+    isCreateUserDrawerOpen: boolean
+    SetIsCreateUserDrawerOpen: Dispatch<boolean>
+}) => {
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
+    const dispatch = useDispatch()
+
+    const navigate = useNavigate()
+    const [form] = Form.useForm()
+
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const inputChangeHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        let value = event.target.value
+        form.setFieldsValue({ [name]: value })
+    }
+
+    const submitBtnHandler = async () => {
+        try {
+            setIsSubmitting(true)
+            const values = await form.validateFields()
+
+            const payload = {
+                name: values.name.trim(),
+                email: values.email.trim(),
+                password: values.password
+            }
+
+            const result = await createUsers(payload)
+            if (result?.success) {
+                form.resetFields()
+                dispatch(setIsDataRefreshed(!isDataRefreshed))
+                SetIsCreateUserDrawerOpen(false)
+            }
+        } catch (error: any) {
+            console.error('Submission error:', error)
+            message.error(error?.message || 'Failed to create user. Please try again.')
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    return (
+        <Drawer
+            title="Add Users"
+            open={isCreateUserDrawerOpen}
+            onClose={() => SetIsCreateUserDrawerOpen(false)}
+            footer={null}
+            width={644}>
+            <Form
+                form={form}
+                className="font-sans w-full flex justify-between flex-col h-full"
+                onFinish={submitBtnHandler}>
+                <div className="h-full flex flex-col justify-between">
+                    <div className="font-sans">
+                        <div className="font-sans mb-4 space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Name<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <TextItem
+                                name="name"
+                                type="text"
+                                max={512}
+                                min={4}
+                                placeholder="Enter name"
+                                required={true}
+                                onChange={inputChangeHandler('name')}
+                            />
+                        </div>
+
+                        <div className="font-sans mb-4 space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Email<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <TextItem
+                                name="email"
+                                type="email"
+                                max={512}
+                                min={4}
+                                placeholder="Enter email"
+                                required={true}
+                                onChange={inputChangeHandler('email')}
+                            />
+                        </div>
+                        <div className="font-sans mb-4 space-y-2">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
+                                Password<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <PasswordInput
+                                name="password"
+                                placeholder="Enter Password"
+                                required={true}
+                                onChange={inputChangeHandler('password')}
+                            />
+                        </div>
+                    </div>
+                    <div className="font-sans grid grid-cols-2 pt-3 w-full justify-end gap-3">
+                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                            <Button
+                                onClick={() => {
+                                    navigate('/dashboard/articles')
+                                }}
+                                type="default"
+                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center items-center px-4 py-2">
+                                Cancel
+                            </Button>
+                        </ButtonThemeConfig>
+
+                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                            <Button
+                                htmlType="submit"
+                                type="primary"
+                                icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
+                                disabled={isSubmitting}
+                                className="font-sans h-auto !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base 2xl:text-[20px] shadow-none flex justify-center items-center px-6 py-2"
+                                style={{ width: 'auto' }}>
+                                {isSubmitting ? 'Adding...' : 'Add'}
+                            </Button>
+                        </ButtonThemeConfig>
+                    </div>
                 </div>
             </Form>
         </Drawer>

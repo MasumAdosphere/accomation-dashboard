@@ -3,8 +3,7 @@ import { store } from './store'
 import configs from '../configs'
 import { resetState } from './resetSlice'
 import { refreshTokenFail, refreshTokenSuccess } from './common/common.slice'
-import { getAllFaqs } from './faq/faq.thunk'
-import { ICareer, ICareerCreate, IFaq, IfaqPayload } from '../types/state.types'
+import { ICareerCreate, ICreateUser, IfaqPayload } from '../types/state.types'
 
 const { server } = configs
 const { SERVER_URL } = server
@@ -140,6 +139,14 @@ export default {
                 params: queryParams,
                 signal
             })
+            return data
+        },
+        createUser: async (payload: ICreateUser) => {
+            const { data } = await apiInstance.post('/admin/user', payload)
+            return data
+        },
+        deleteUser: async (id: string) => {
+            const { data } = await apiInstance.delete(`/admin/user/${id}`)
             return data
         }
     },

@@ -14,6 +14,7 @@ import { deleteTestimonialById } from '../../redux/testimonials/testimonial.thun
 import { deleteFaqById } from '../../redux/faq/faq.thunk'
 import { deleteLogoById } from '../../redux/logo/logo.thunk'
 import { deleteCareer } from '../../redux/career/career.thunk'
+import { deleteUser } from '../../redux/user/user.thunk'
 
 //Category Modal
 export const CreateNewCategoryModal = ({
@@ -604,6 +605,83 @@ export const DeleteCareerModal = ({
                         />
                     )}
                     Yes, Delete Career
+                </button>
+            </div>
+        </Modal>
+    )
+}
+
+export const DeleteUserModal = ({
+    selectedUserId,
+    isDeleteUserModalOpen,
+    setIsDeleteUserModalOpen
+}: {
+    selectedUserId: string | null
+    isDeleteUserModalOpen: boolean
+    setIsDeleteUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(false)
+    const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
+
+    const deleteContent = async () => {
+        if (!selectedUserId) return
+
+        try {
+            setLoading(true)
+            setIsDisabled(true)
+            const res = await deleteUser(selectedUserId)
+
+            if (res.success) {
+                setIsDeleteUserModalOpen(false)
+                dispatch(setIsDataRefreshed(!isDataRefreshed))
+            }
+        } catch (error) {
+            console.error('Delete failed:', error)
+            setIsDeleteUserModalOpen(false)
+        } finally {
+            setIsDisabled(false)
+            setLoading(false)
+        }
+    }
+
+    return (
+        <Modal
+            open={isDeleteUserModalOpen}
+            onCancel={() => setIsDeleteUserModalOpen(false)}
+            footer={null}
+            centered
+            width={500}
+            className="rounded-xl">
+            <div className="flex items-center mt-5 gap-[12px]">
+                <img
+                    src={Exclaim}
+                    alt="Warning"
+                    width={24}
+                    height={24}
+                />
+                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this User?</h6>
+            </div>
+            <div className="flex w-full justify-end mt-6 gap-[17px]">
+                <button
+                    className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
+                    onClick={() => setIsDeleteUserModalOpen(false)}>
+                    No
+                </button>
+
+                <button
+                    disabled={isDisabled}
+                    onClick={deleteContent}
+                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    {loading && (
+                        <img
+                            src={loadingSvg}
+                            className="h-6 w-auto animate-spin"
+                            alt="Loading"
+                        />
+                    )}
+                    Yes, Delete User
                 </button>
             </div>
         </Modal>

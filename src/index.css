@@ -400,6 +400,9 @@ body {
     color: #ffde39 !important;
     background-color: transparent !important;
 }
+.ant-menu-submenu-selected > .ant-menu-submenu-title {
+    color: #0e082b !important;
+}
 
 .ant-upload {
     width: 100% !important;
