@@ -120,7 +120,7 @@ export default {
     },
     Insights: {
         getInsights: async (signal: AbortSignal) => {
-            const { data } = await apiInstance.get(`/admin/insight`, {
+            const { data } = await apiInstance.get(`/admin/dashboard`, {
                 signal
             })
             return data
@@ -146,6 +146,14 @@ export default {
     Category: {
         createCategory: async (payload = {}) => {
             const { data } = await apiInstance.post('/admin/category', payload)
+            return data
+        },
+        getCategoryById: async (categoryId: string) => {
+            const { data } = await apiInstance.get(`/admin/category/${categoryId}`)
+            return data
+        },
+        editArticleById: async (categoryId: string, payload = {}) => {
+            const { data } = await apiInstance.put(`/admin/category/${categoryId}`, payload)
             return data
         },
 

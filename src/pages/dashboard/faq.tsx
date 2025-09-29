@@ -140,22 +140,22 @@ const Faq = () => {
             )
         },
         {
-            title: 'Created At',
+            title: 'Created Date & Time',
             key: 'createdAt',
             width: '20%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
                 <span className="font-Metropolis font-medium text-font16 text-[#515151]">
-                    {moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}
+                    {moment.utc(record?.createdAt).utcOffset(330).format('DD-MM-YYYY | hh:mm A')}
                 </span>
             )
         },
         {
-            title: 'Action',
+            title: 'Actions',
             key: 'action',
             width: '10%',
             render: (record) => (
-                <div className="flex justify-start items-center gap-5">
+                <div className="flex justify-start items-center gap-2">
                     <Tooltip title={record?.isPublished ? 'Unpublish' : 'Publish'}>
                         <Switch
                             checked={record?.isPublished}
@@ -196,7 +196,7 @@ const Faq = () => {
                     </Tooltip>
                     <Tooltip title="Edit">
                         <div
-                            className="flex cursor-pointer w-[82px] gap-2 bg-primary py-2 px-4 font-medium text-white rounded-[50px] item-center justify-center"
+                            className="flex  cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary  justify-center items-center rounded-[50px] "
                             onClick={() => {
                                 SetIsEditFaqDrawerOpen(true)
                                 setSelectedFaqId(record.id)
@@ -205,7 +205,7 @@ const Faq = () => {
                                 src={editIcon}
                                 alt=""
                             />
-                            <h6>Edit</h6>
+                            <h6 className="text-font15 leading-[100%] font-Metropolis font-semibold text-white">Edit</h6>{' '}
                         </div>
                         {/* <EditFilled
                             onClick={() => {
@@ -304,18 +304,18 @@ const Faq = () => {
                             value={pageName}
                             onChange={handlePageNameChange}
                             options={pageNameOptions}
-                            style={{ width: '200px' }}
-                            className="font-sans text-sm"
+                            style={{ width: '256px', height: '48px', borderRadius: '8px', border: '1px solid #DDDDDD' }}
+                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-full"
                             allowClear
                         />
                     </div>
 
                     {/* Add Button */}
-                    <div className="w-full sm:w-auto">
+                    <div className="w-full flex gap-2 sm:w-auto">
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={handleSaveChanges}
-                                className="font-sans mr-2 text-sm 2xl:text-lg rounded w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
                                 type="default">
                                 Save Changes
                             </Button>
@@ -323,12 +323,8 @@ const Faq = () => {
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={() => SetIsCreateFaqDrawerOpen(true)}
-                                className="font-sans text-sm 2xl:text-lg rounded-[40px] w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
                                 type="default">
-                                <img
-                                    src={plusicon}
-                                    alt=""
-                                />
                                 Add FAQ
                             </Button>
                         </ButtonThemeConfig>
@@ -347,7 +343,7 @@ const Faq = () => {
                     components: {
                         Table: {
                             headerBg: '#FFEBFB',
-                            headerColor: '#000'
+                            headerColor: '#0E082B'
                         }
                     }
                 }}>

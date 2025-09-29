@@ -4,7 +4,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Image from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Table } from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
 import TableCell from '@tiptap/extension-table-cell'
@@ -18,9 +18,10 @@ import { EMediaType } from '../../types/state.types'
 interface EditorProps {
     name?: string
     onChange?: (html: string, json: any) => void
-    initialContent?: string
+    initialContent: string
 }
-export default function Editor({ onChange, initialContent = '' }: EditorProps) {
+export default function Editor({ onChange, initialContent }: EditorProps) {
+    console.log('init', initialContent)
     const [embedType, setEmbedType] = useState('youtube')
     const [url, setUrl] = useState('')
     const [hyperLink, setHyperLink] = useState('')
@@ -61,13 +62,26 @@ export default function Editor({ onChange, initialContent = '' }: EditorProps) {
             TableCell,
             TableHeader
         ],
-        content: initialContent, // Use the prop for initial content
+        content: initialContent,
+
         onUpdate({ editor }) {
             const html = editor.getHTML()
             const json = editor.getJSON() // Get JSON content
             onChange?.(html, json) // Pass both HTML and JSON
         }
     })
+
+    useEffect(() => {
+        if (editor && initialContent !== undefined && initialContent !== null) {
+            const current = editor.getHTML()
+            // Avoid resetting if content is the same (prevents cursor jump)
+            if (current !== initialContent) {
+                editor.commands.setContent(initialContent)
+            }
+        }
+    }, [editor, initialContent])
+
+    if (!editor) return null
 
     if (!editor) return null
     const handleEmbed = () => {

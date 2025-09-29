@@ -1,7 +1,7 @@
 import Api from '../httpAPI'
 import { store } from '../store'
 import execError from '../execError'
-import { responseSuccess } from '../common/common.slice'
+import { responseRequest, responseSuccess } from '../common/common.slice'
 
 export const createCategory = async (payload: { title: string }) => {
     try {
@@ -10,6 +10,17 @@ export const createCategory = async (payload: { title: string }) => {
         store.dispatch(responseSuccess({ message }))
 
         return res
+    } catch (error) {
+        return execError(error)
+    }
+}
+
+export const editCategory = async (categoryId: string, payload: any) => {
+    try {
+        store.dispatch(responseRequest())
+        const { data, message } = await Api.Category.editArticleById(categoryId, payload)
+        store.dispatch(responseSuccess({ message }))
+        return data
     } catch (error) {
         return execError(error)
     }

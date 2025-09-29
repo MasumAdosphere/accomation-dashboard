@@ -34,6 +34,7 @@
         "jodit-react": "^5.2.19",
         "jodit-react-ts": "^0.9.0",
         "moment": "^2.30.1",
+        "moment-timezone": "^0.6.0",
         "react": "^19.1.0",
         "react-dnd": "^16.0.1",
         "react-dnd-html5-backend": "^16.0.1",

@@ -37,7 +37,7 @@ const Overview = () => {
         <div className="flex flex-col gap-6 w-full p-4 font-sans">
             <h2 className="font-sans text-2xl font-semibold text-primary mb-4">Summary</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
                 {/* Total Categories */}
                 <div className="bg-white rounded-lg shadow p-6 flex items-center gap-4">
                     <div className="bg-blue-100 p-3 rounded-full">
@@ -45,7 +45,7 @@ const Overview = () => {
                     </div>
                     <div>
                         <h3 className="font-sans text-xl font-semibold text-primary">Total Categories</h3>
-                        <p className="font-sans text-gray-500 text-2xl font-bold">{insights?.categories ?? 0}</p>
+                        <p className="font-sans text-gray-500 text-2xl font-bold">{insights?.totalAdmins ?? 0}</p>
                     </div>
                 </div>
 
@@ -56,7 +56,7 @@ const Overview = () => {
                     </div>
                     <div>
                         <h3 className="font-sans text-xl font-semibold text-primary">Total Articles</h3>
-                        <p className="font-sans text-gray-500 text-2xl font-bold">{insights?.articles ?? 0}</p>
+                        <p className="font-sans text-gray-500 text-2xl font-bold">{insights?.totalLiveJobPosts ?? 0}</p>
                     </div>
                 </div>
 
@@ -67,7 +67,17 @@ const Overview = () => {
                     </div>
                     <div>
                         <h3 className="font-sans text-xl font-semibold text-primary">Total Users</h3>
-                        <p className="font-sans text-gray-500 text-2xl font-bold">{insights?.users ?? 0}</p>
+                        <p className="font-sans text-gray-500 text-2xl font-bold">{insights?.totalPublishedBlogs ?? 0}</p>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow p-6 flex items-center gap-4">
+                    <div className="bg-purple-100 p-3 rounded-full">
+                        <UserOutlined className="text-purple-600 text-2xl" />
+                    </div>
+                    <div>
+                        <h3 className="font-sans text-xl font-semibold text-primary">Total Users</h3>
+                        <p className="font-sans text-gray-500 text-2xl font-bold">{insights?.totalTestimonials ?? 0}</p>
                     </div>
                 </div>
             </div>

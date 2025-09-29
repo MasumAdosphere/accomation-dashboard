@@ -338,10 +338,11 @@ export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploadin
                     minHeight: '40px',
                     background: 'white'
                 }}>
-                <span className="text-gray-500 text-sm">{fileName ? fileName : 'Select Image'}</span>
+                <span className="text-font15 font-medium text-[#cccccc] font-Metropolis">{fileName ? fileName : 'Select Image'}</span>
                 <Button
                     type="default"
                     size="small"
+                    className="!bg-[#EBEBEB] !rounded-[5px] !text-font14 !text-[#515151] !font-semibold"
                     loading={isUploading}
                     disabled={isUploading}>
                     {isUploading ? 'Uploading...' : 'Choose File'}

@@ -106,7 +106,7 @@ const Logo = () => {
             key: 'action',
             width: '15%',
             render: (record) => (
-                <div className="flex justify-start items-center gap-5">
+                <div className="flex justify-start items-center gap-2">
                     <Tooltip title={record?.isLive ? 'Unpublish' : 'Publish'}>
                         <Switch
                             checked={record?.isLive}
@@ -177,12 +177,8 @@ const Logo = () => {
                                 onClick={() => {
                                     SetIsCreateLogoDrawerOpen(true)
                                 }}
-                                className="font-sans text-sm 2xl:text-lg rounded-[40px] w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
                                 type="default">
-                                <img
-                                    src={plusicon}
-                                    alt=""
-                                />
                                 Add Logo
                             </Button>
                         </ButtonThemeConfig>
@@ -201,7 +197,7 @@ const Logo = () => {
                     components: {
                         Table: {
                             headerBg: '#FFEBFB',
-                            headerColor: '#000'
+                            headerColor: '#0E082B'
                         }
                     }
                 }}>

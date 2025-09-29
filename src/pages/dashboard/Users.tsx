@@ -58,7 +58,10 @@ const Users = () => {
             width: 200,
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-sm 2xl:text-base font-semibold">{moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-sans text-sm 2xl:text-base font-semibold">
+                    {' '}
+                    {moment.utc(record?.createdAt).utcOffset(330).format('DD-MM-YYYY | hh:mm A')}
+                </span>
             )
         }
     ]
@@ -100,7 +103,7 @@ const Users = () => {
                         components: {
                             Table: {
                                 headerBg: '#FFEBFB',
-                                headerColor: '#000'
+                                headerColor: '#0E082B'
                             }
                         }
                     }}>

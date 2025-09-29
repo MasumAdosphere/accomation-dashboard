@@ -65,7 +65,7 @@ const Article = () => {
             )
         },
         {
-            title: 'Title',
+            title: 'Blog Title',
             dataIndex: 'title',
             width: '25%',
             key: 'title',
@@ -83,18 +83,18 @@ const Article = () => {
             dataIndex: 'category',
             render: (_text: string, record: any) => (
                 <span className=" font-Metropolis font-semibold text-font16 text-darkblue px-3 py-[6px] rounded-[100px] bg-[#FFDE39]">
-                    {record?.category?.title}
+                    {record?.category?.title || 'N/A'}
                 </span>
             )
         },
         {
-            title: 'Created At',
+            title: 'Last Updated',
             key: 'createdAt',
             width: '10%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
                 <span className=" font-Metropolis font-medium text-font16 text-[#515151]">
-                    {moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}
+                    {moment.utc(record?.createdAt).utcOffset(330).format('DD-MM-YYYY | hh:mm A')}
                 </span>
             )
         },
@@ -104,7 +104,7 @@ const Article = () => {
             key: 'action',
             width: '10%',
             render: (record) => (
-                <div className="flex justify-start items-center gap-5">
+                <div className="flex justify-start items-center gap-2">
                     <Tooltip title={record?.isFeatured ? 'Unpublish' : 'Publish'}>
                         <Switch
                             checked={record?.isFeatured}
@@ -139,7 +139,7 @@ const Article = () => {
                     </Tooltip>
                     <Tooltip title="Edit">
                         <div
-                            className="flex gap-2 cursor-pointer bg-primary py-2 px-4 font-medium text-white rounded-[50px] item-center justify-center"
+                            className="flex  cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary  justify-center items-center rounded-[50px] "
                             onClick={() => {
                                 SetIsEditArticleDrawerOpen(true)
                                 SetSelectedArticle(record)
@@ -148,7 +148,7 @@ const Article = () => {
                                 src={editIcon}
                                 alt=""
                             />
-                            <h6>Edit</h6>
+                            <h6 className="text-font15 leading-[100%] font-Metropolis font-semibold text-white">Edit</h6>{' '}
                         </div>
                         {/* <EditFilled className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" /> */}
                     </Tooltip>
@@ -193,13 +193,9 @@ const Article = () => {
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={() => SetIsCreateArticleDrawerOpen(true)}
-                                className="font-sans rounded-[40px] text-sm 2xl:text-lg  w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
                                 type="default">
-                                <img
-                                    src={plusicon}
-                                    alt=""
-                                />
-                                Add Article
+                                Add Blog
                             </Button>
                         </ButtonThemeConfig>
                     </div>
@@ -217,7 +213,7 @@ const Article = () => {
                     components: {
                         Table: {
                             headerBg: '#FFEBFB',
-                            headerColor: '#000'
+                            headerColor: '#0E082B'
                         }
                     }
                 }}>

@@ -174,9 +174,10 @@ export interface IUsers {
 
 // Insights
 export interface IInsights {
-    articles: number
-    categories: number
-    users: number
+    totalAdmins: number
+    totalTestimonials: number
+    totalLiveJobPosts: number
+    totalPublishedBlogs: number
 }
 
 export interface ArticlePayload {

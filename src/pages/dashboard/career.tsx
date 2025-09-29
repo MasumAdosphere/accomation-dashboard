@@ -30,7 +30,7 @@ const Career = () => {
     const [isDeleteCareerModalOpen, setIsDeleteCareerModalOpen] = useState<boolean>(false)
     const [isCreateCareerDrawerOpen, setIsCreateCareerDrawerOpen] = useState<boolean>(false)
     const [isEditCareerDrawerOpen, setIsEditCareerDrawerOpen] = useState<boolean>(false)
-    const [filter, setFilter] = useState<string>('') // Filter by job role or location
+    const [filter, setFilter] = useState<string>('')
     const controllerRef = useRef<AbortController | null>(null)
 
     const handleSwitchChange = async (id: string, checked: boolean) => {
@@ -105,7 +105,7 @@ const Career = () => {
             render: (_, record) => <span className="font-Metropolis font-medium text-font16 text-[#515151]">{record.experience}</span>
         },
         {
-            title: 'Created At',
+            title: 'Created Date & Time',
             key: 'createdAt',
             width: '18%',
             dataIndex: 'createdAt',
@@ -120,7 +120,7 @@ const Career = () => {
             key: 'action',
             width: '20%',
             render: (record) => (
-                <div className="flex justify-start items-center gap-5">
+                <div className="flex justify-start items-center gap-2">
                     <Tooltip title={record?.isLive ? 'Unpublish' : 'Publish'}>
                         <Switch
                             checked={record?.isLive}
@@ -154,7 +154,7 @@ const Career = () => {
                     </Tooltip>
                     <Tooltip title="Edit">
                         <div
-                            className="flex cursor-pointer gap-2 bg-primary py-2 px-4 font-medium text-white rounded-[50px] item-center justify-center"
+                            className="flex  cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary  justify-center items-center rounded-[50px] "
                             onClick={() => {
                                 setIsEditCareerDrawerOpen(true)
                                 setSelectedCareerId(record.id)
@@ -162,8 +162,9 @@ const Career = () => {
                             <img
                                 src={editIcon}
                                 alt=""
+                                className="h-3 w-3"
                             />
-                            <h6>Edit</h6>
+                            <h6 className="text-font15 leading-[100%] font-Metropolis font-semibold text-white">Edit</h6>{' '}
                         </div>
                         {/* <EditFilled
                             onClick={() => {
@@ -217,12 +218,8 @@ const Career = () => {
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={() => setIsCreateCareerDrawerOpen(true)}
-                                className="font-sans text-sm 2xl:text-lg rounded-[40px] w-full sm:w-28 2xl:w-[153px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                                className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
                                 type="default">
-                                <img
-                                    src={plusicon}
-                                    alt=""
-                                />
                                 Add Career
                             </Button>
                         </ButtonThemeConfig>
@@ -241,7 +238,7 @@ const Career = () => {
                     components: {
                         Table: {
                             headerBg: '#FFEBFB',
-                            headerColor: '#000'
+                            headerColor: '#0E082B'
                         }
                     }
                 }}>

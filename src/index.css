@@ -357,11 +357,9 @@ body {
 }
 .ant-select-selection-item,
 .ant-select-selection-placeholder {
-    font-family: 'Metropolis', sans-serif;
-    font-size: 1.125rem;
-    border-radius: 0.5rem;
-    transition: all 0.5s ease-in;
-    color: #083050;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #1c1c1c !important;
 }
 .jodit-container {
     font-family: 'Metropolis', sans-serif;
@@ -372,7 +370,9 @@ body {
 }
 
 .ant-layout-header {
-    background-color: transparent !important;
+    background-color: white !important;
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
 }
 .custom-danger-button {
     font-family: 'Metropolis', sans-serif !important;
@@ -387,6 +387,7 @@ body {
 .ant-menu-submenu-selected {
     background-color: #ffde39 !important;
     color: #0e082b !important;
+    border-radius: 8px !important;
 }
 .ant-menu-submenu-selected .ant-menu-title-content span {
     font-family: 'Metropolis', sans-serif !important;
@@ -396,7 +397,7 @@ body {
     color: #0e082b !important;
 }
 .ant-menu-submenu-selected .ant-menu-item-selected {
-    color: #fff !important;
+    color: #ffde39 !important;
     background-color: transparent !important;
 }
 
@@ -420,4 +421,29 @@ body {
 }
 .ant-upload {
     background-color: transparent !important;
+}
+.ant-drawer-header-title {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    flex-direction: row-reverse !important;
+}
+
+.ant-drawer-title {
+    font-family: 'Metropolis', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #0e082b !important;
+}
+.ant-drawer-content-wrapper {
+    border-radius: 20px 0 0 20px !important;
+    overflow: hidden !important;
+}
+
+.ant-breadcrumb nav ol li a {
+    font-family: 'Metropolis', sans-serif !important;
+    font-size: 16px !important;
+    color: #444444 !important;
+    font-weight: 500 !important;
 }

@@ -97,7 +97,7 @@ export const CreateNewCategoryModal = ({
                     </div>
                     {/* <div className="font-sans space-y-1 md:space-y-1">
                         <div className="">
-                            <label className="font-sans  text-sm font-semibold text-primary">
+                            <label className="font-sans text-font16 font-semibold text-gray44">
                                 Blog
                                 <span className="font-sans text-red-500 pl-1">*</span>
                             </label>

@@ -8,10 +8,9 @@ import { EConfigButtonType, ICategory } from '../../types/state.types'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
 import { CreateNewCategoryModal, DeleteCategoryModal } from '../../components/antdesign/modal.components'
 import deleteIcon from '../../assets/delete.svg'
-
-import plusicon from '../../assets/plus.svg'
-import { CreateCategoryDrawer } from '../../components/antdesign/drawer.components'
-import moment from 'moment'
+import editIcon from '../../assets/edit.svg'
+import { CreateCategoryDrawer, EditCategoryDrawer } from '../../components/antdesign/drawer.components'
+import moment from 'moment-timezone'
 
 const Categories = () => {
     const pageSize = 20
@@ -20,11 +19,17 @@ const Categories = () => {
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
     const [categories, setCategories] = useState<Array<ICategory>>([])
+
+    const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null)
+
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
     const [isNewCategoryModalOpen, setIsNewCategoryModalOpen] = useState<boolean>(false)
     const [isCreateCategoryDrawerOpen, SetIsCreateCategoryDrawerOpen] = useState<boolean>(false)
     // const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState<boolean>(false)
+
+    const [isEditCategoryDrawerOpen, SetIsEditCategoryDrawerOpen] = useState<boolean>(false)
+
     const [isDeleteCategoryModalOpen, setIsDeleteCategoryModalOpen] = useState<boolean>(false)
 
     // columns for table
@@ -39,20 +44,20 @@ const Categories = () => {
             )
         },
         {
-            title: 'Title',
+            title: 'Category Title',
             dataIndex: 'title',
             key: 'title',
             width: '35%',
             render: (_, record) => <span className="font-sans text-darkblue font-semibold text-font16">{record?.title}</span>
         },
         {
-            title: 'Created At',
+            title: 'Created Date & Time',
             key: 'createdAt',
             width: '20%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
                 <span className=" font-Metropolis font-medium text-font16 text-[#515151]">
-                    {moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}
+                    {moment.utc(record?.createdAt).utcOffset(330).format('DD-MM-YYYY | hh:mm A')}
                 </span>
             )
         },
@@ -65,23 +70,11 @@ const Categories = () => {
         // },
 
         {
-            title: 'Action',
+            title: 'Actions',
             key: 'action',
             width: '20%',
             render: (_text: string, record) => (
-                <div className="flex justify-start items-center gap-5">
-                    {/* <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                        <Button
-                            disabled={true}
-                            type="default"
-                            className="font-sans text-sm 2xl:text-base font-medium flex items-center"
-                            icon={<EditOutlined />}
-                            onClick={() => {
-                                setIsEditCategoryModalOpen(true)
-                            }}>
-                            Edit
-                        </Button>
-                    </ButtonThemeConfig> */}
+                <div className="flex justify-start items-center gap-2">
                     <Tooltip title="Delete">
                         <div
                             className="w-10 h-8 cursor-pointer"
@@ -102,6 +95,29 @@ const Categories = () => {
                             }}
                             className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
                         /> */}
+                    </Tooltip>
+                    <Tooltip title="Edit">
+                        <div
+                            className="flex  cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary  justify-center items-center rounded-[50px] "
+                            onClick={() => {
+                                setSelectedCategory(record)
+                                SetIsEditCategoryDrawerOpen(true)
+                                console.log('Record', record.id)
+                            }}>
+                            <img
+                                src={editIcon}
+                                alt=""
+                                className="h-3 w-3"
+                            />
+                            <h6 className="text-font15 leading-[100%] font-Metropolis font-semibold text-white">Edit</h6>{' '}
+                        </div>
+                        {/* <EditFilled
+                                           onClick={() => {
+                                               setIsEditCareerDrawerOpen(true)
+                                               setSelectedCareerId(record.id)
+                                           }}
+                                           className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl"
+                                       /> */}
                     </Tooltip>
                 </div>
             )
@@ -144,11 +160,7 @@ const Categories = () => {
                             SetIsCreateCategoryDrawerOpen(true)
                         }}
                         type="default"
-                        className="font-sans rounded-[40px]  text-sm 2xl:text-lg rounded- h-8 2xl:h-[46px] bg-primary text-white border-primary">
-                        <img
-                            src={plusicon}
-                            alt=""
-                        />
+                        className=" rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary">
                         Add Category
                     </Button>
                 </ButtonThemeConfig>
@@ -166,7 +178,7 @@ const Categories = () => {
                         components: {
                             Table: {
                                 headerBg: '#FFEBFB',
-                                headerColor: '#000',
+                                headerColor: '#0E082B',
                                 fontWeightStrong: 600
                             }
                         }
@@ -208,6 +220,13 @@ const Categories = () => {
                 <CreateCategoryDrawer
                     isCreateCategoryDrawerOpen={isCreateCategoryDrawerOpen}
                     SetIsCreateCategoryDrawerOpen={SetIsCreateCategoryDrawerOpen}
+                />
+            )}
+            {isEditCategoryDrawerOpen && (
+                <EditCategoryDrawer
+                    categoryDetails={selectedCategory}
+                    isEditCategoryDrawerOpen={isEditCategoryDrawerOpen}
+                    SetIsEditCategoryDrawerOpen={SetIsEditCategoryDrawerOpen}
                 />
             )}
         </div>

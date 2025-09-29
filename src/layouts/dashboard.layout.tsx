@@ -65,7 +65,7 @@ const DashboardLayout = () => {
             to: 'blogs',
             children: [
                 { key: 'categories', label: 'Categories', to: 'categories' },
-                { key: 'articles', label: 'Articles', to: 'articles' }
+                { key: 'articles', label: 'Blogs', to: 'articles' }
             ]
         },
 
@@ -168,15 +168,16 @@ const DashboardLayout = () => {
                         itemSelectedColor: '#0E082B',
                         itemColor: '#FFF',
                         subMenuItemBg: '#0E082B',
-                        itemBorderRadius: 0,
+                        itemBorderRadius: 8,
                         itemHoverBg: '#FFDE39',
-                        itemHoverColor: '#0E082B'
+                        itemHoverColor: '#0E082B',
+                        borderRadius: 8
                     }
                 }
             }}>
             <Layout className="font-sans h-screen font-regular">
                 <Sider
-                    width={308}
+                    width={320}
                     trigger={null}
                     collapsible
                     // onCollapse={(value) => setCollapsed(value)}
@@ -185,10 +186,10 @@ const DashboardLayout = () => {
                     collapsedWidth={150}>
                     <Link
                         to="/dashboard/overview"
-                        className="font-sans h-8 2xl:h-16 py-4 2xl:pt-5 my-4 pb-3 2xl:pb-8 flex justify-center items-center ">
+                        className="font-sans  py-4 2xl:pt-5 my-4 pb-3 2xl:pb-8 flex justify-center items-center ">
                         <img
                             src={Logo}
-                            className="w-full px-10"
+                            className="w-[240px] h-auto"
                         />
                     </Link>
                     <Menu
@@ -197,38 +198,37 @@ const DashboardLayout = () => {
                         items={renderMenuItems(adminItems)}
                         mode="inline"
                         selectedKeys={[current]}
-                        className="font-sans px-2 2xl:px-6 mt-6 text-sm 2xl:text-[20px] space-y-2 font-medium 2xl:leading-[22px] bg-[#0E082B] !border-none"
+                        className="font-sans 2xl:px-6 mt-6 text-font16 space-y-2 font-semibold 2xl:leading-[22px] bg-[#0E082B] !border-none"
                     />
                 </Sider>
                 <Layout>
-                    <Header className="font-sans p-0 flex items-center flex-row justify-between h-14 2xl:h-16 bg-[#F0F3F4] bg-cover bg-center bg-no-repeat w-full  border-primary">
-                        <div className="lg:flex w-full hidden  justify-between items-center px-6">
+                    <Header className="font-sans p-0 flex items-center flex-row justify-between h-[88px] !bg-transparent border-b-[1px] border-[#EEEEEE] bg-cover bg-center bg-no-repeat w-full  ">
+                        <div className="lg:flex w-full hidden  justify-between items-center bg-transparent py-5 px-6">
                             <div className="">
                                 <h3 className=" font-sans text-primary text-base 2xl:text-lg font-semibold capitalize">Welcome {profileName}</h3>
-                                <div className="xl:flex hidden font-sans items-center justify-start text-grayText text-base">
+                                <div className=" text-font16 font-medium font-Metropolis !text-gray44">
                                     {current !== 'overview' && <AppBreadcrumb />}
                                 </div>
                             </div>
-                            <div className="">
-                                <ButtonThemeConfig buttonType={EConfigButtonType.THIRD}>
-                                    <Button
-                                        className="font-sans text-lg w-[120px] h-[48px] rounded-[100px] bg-darkblue  2xl:h-12 text-white  m-2 2xl:m-6  border-primary"
-                                        type="default"
-                                        icon={
-                                            <img
-                                                src={logoutIcon}
-                                                alt="logout"
-                                                className="w-3 h-3 "
-                                            />
-                                        }
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            logoutHandler()
-                                        }}>
-                                        Logout
-                                    </Button>
-                                </ButtonThemeConfig>
-                            </div>
+
+                            <ButtonThemeConfig buttonType={EConfigButtonType.THIRD}>
+                                <Button
+                                    className="font-sans text-lg w-[160px] h-[48px] rounded-[100px] bg-darkblue  2xl:h-12 text-white "
+                                    type="default"
+                                    icon={
+                                        <img
+                                            src={logoutIcon}
+                                            alt="logout"
+                                            className="w-3 h-3 "
+                                        />
+                                    }
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        logoutHandler()
+                                    }}>
+                                    Logout
+                                </Button>
+                            </ButtonThemeConfig>
                         </div>
 
                         {/* <div className="px-6 flex items-center justify-center gap-2"></div> */}

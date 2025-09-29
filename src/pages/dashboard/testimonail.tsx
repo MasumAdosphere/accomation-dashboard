@@ -101,13 +101,13 @@ const Testimonial = () => {
             )
         },
         {
-            title: 'Created At',
+            title: 'Created Date & Time',
             key: 'createdAt',
             width: '20%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
                 <span className="font-Metropolis font-medium text-font16 text-[#515151]">
-                    {moment(record?.createdAt).format('DD-MM-YYYY HH:mm A')}
+                    {moment.utc(record?.createdAt).utcOffset(330).format('DD-MM-YYYY | hh:mm A')}
                 </span>
             )
         },
@@ -157,7 +157,7 @@ const Testimonial = () => {
 
                     <Tooltip title="Edit">
                         <div
-                            className="flex cursor-pointer bg-primary gap-2 py-2 px-4 font-medium text-white rounded-[50px] item-center justify-center"
+                            className="flex  cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary  justify-center items-center rounded-[50px] "
                             onClick={() => {
                                 SetIsEditTestimonialDrawerOpen(true)
                                 SetSelectedTestimonialId(record.id)
@@ -166,7 +166,7 @@ const Testimonial = () => {
                                 src={editIcon}
                                 alt=""
                             />
-                            <h6>Edit</h6>
+                            <h6 className="text-font15 leading-[100%] font-Metropolis font-semibold text-white">Edit</h6>{' '}
                         </div>
                         {/* <EditFilled
                             onClick={() => {
@@ -217,12 +217,8 @@ const Testimonial = () => {
                             onClick={() => {
                                 SetIsCreateTestimonialDrawerOpen(true)
                             }}
-                            className="font-sans rounded-[40px] text-sm 2xl:text-lg w-[180px] h-8 2xl:h-[46px] bg-primary text-white border-primary"
+                            className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
                             type="default">
-                            <img
-                                src={plusicon}
-                                alt=""
-                            />
                             Add Testimonial
                         </Button>
                     </ButtonThemeConfig>
@@ -240,7 +236,7 @@ const Testimonial = () => {
                     components: {
                         Table: {
                             headerBg: '#FFEBFB',
-                            headerColor: '#000'
+                            headerColor: '#0E082B'
                         }
                     }
                 }}>
