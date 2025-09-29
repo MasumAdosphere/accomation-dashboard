@@ -447,3 +447,7 @@ body {
     color: #444444 !important;
     font-weight: 500 !important;
 }
+
+:where(.css-dev-only-do-not-override-axy5xs).ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
+    background-color: #4226c4 !important;
+}

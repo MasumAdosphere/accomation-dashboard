@@ -217,11 +217,12 @@ export default {
             return response
         },
 
-        getAllArticles: async (pageSize: number, page: number, signal: AbortSignal, category?: string) => {
+        getAllArticles: async (pageSize: number, page: number, signal: AbortSignal, category?: string, title?: String) => {
             const queryParams = {
                 pageSize,
                 page,
-                category
+                category,
+                title
             }
             const { data } = await apiInstance.get('/admin/blog', {
                 params: queryParams,

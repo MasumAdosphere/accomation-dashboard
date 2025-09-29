@@ -3,9 +3,9 @@ import { store } from '../store'
 import execError from '../execError'
 import { responseRequest, responseSuccess } from '../common/common.slice'
 
-export const getAllArticles = async (pageSize: number, page: number, category: string, signal: AbortSignal) => {
+export const getAllArticles = async (pageSize: number, page: number, title: string, category: string, signal: AbortSignal) => {
     try {
-        const res = await Api.Article.getAllArticles(pageSize, page, signal, category)
+        const res = await Api.Article.getAllArticles(pageSize, page, signal, category, title)
         // const { data } = res
         return res
     } catch (error) {

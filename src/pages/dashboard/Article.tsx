@@ -1,5 +1,3 @@
-'use client'
-
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
@@ -9,13 +7,15 @@ import { setIsDataRefreshed } from '../../redux/common/common.slice'
 import { ArticleData, EConfigButtonType, ICategory } from '../../types/state.types'
 import { DeleteArticleModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
-import { Button, ConfigProvider, Form, message, Select, Switch, Table, Tooltip } from 'antd'
+import { Button, ConfigProvider, Form, Input, message, Select, Switch, Table, Tooltip } from 'antd'
 import { getAllArticles, publishActionById } from '../../redux/article/article.thunk'
 import { CreateArticleDrawer, EditArticleDrawer } from '../../components/antdesign/drawer.components'
 import { getAllCategories } from '../../redux/category/category.thunk' // 👈 Import the thunk
 
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
+import { TextItem } from '../../components/antdesign/form.components'
+import searchIcon from '../../assets/search.svg'
 
 const Article = () => {
     const pageSize = 20
@@ -31,7 +31,7 @@ const Article = () => {
     const [isDeleteArticleModalOpen, setIsDeleteArticleModalOpen] = useState<boolean>(false)
     const [isCreateArticleDrawerOpen, setIsCreateArticleDrawerOpen] = useState<boolean>(false)
     const [isEditArticleDrawerOpen, setIsEditArticleDrawerOpen] = useState<boolean>(false)
-    const [selectedCategory, setSelectedCategory] = useState<string>('') // 👈 for filtering
+    const [selectedCategory, setSelectedCategory] = useState<string>('')
     const [categories, setCategories] = useState<ICategory[]>([]) // 👈 store categories
     const controllerRef = useRef<AbortController | null>(null)
 
@@ -52,6 +52,7 @@ const Article = () => {
 
         fetchCategories()
     }, [])
+    const [searchQuery, setSearchQuery] = useState<string>('')
 
     const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
@@ -172,7 +173,7 @@ const Article = () => {
     const getArticles = async (signal: AbortSignal) => {
         try {
             setLoading(true)
-            const { data, meta } = await getAllArticles(pageSize, page, selectedCategory, signal) // 👈 pass selectedCategory as `feature`
+            const { data, meta } = await getAllArticles(pageSize, page, searchQuery, selectedCategory, signal) // 👈 pass selectedCategory as `feature`
             if (data) {
                 setTotalPages(meta?.page.pages || 1)
                 setArticles(data)
@@ -194,7 +195,7 @@ const Article = () => {
         return () => {
             controller.abort()
         }
-    }, [page, selectedCategory, isDataRefreshed]) // 👈 re-fetch when category changes
+    }, [page, selectedCategory, searchQuery, isDataRefreshed]) // 👈 re-fetch when category changes
 
     const handleCategoryChange = (value: string) => {
         setSelectedCategory(value)
@@ -212,7 +213,23 @@ const Article = () => {
             <Form>
                 <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     {/* Category Filter Dropdown */}
-                    <div className="w-full sm:w-auto">
+                    <div className="w-full flex gap-3 sm:w-auto">
+                        <TextItem
+                            placeholder="Search articles..."
+                            value={searchQuery}
+                            icon={
+                                <img
+                                    src={searchIcon}
+                                    alt="logout"
+                                    className="w-3 h-3 mr-2 "
+                                />
+                            }
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            allowClear
+                            className="font-sans h-12 w-full text-font16 text-[#1c1c1c] font-semibold"
+                            name={''}
+                            required={false}
+                        />
                         <Select
                             placeholder="Filter by Category"
                             value={selectedCategory || undefined}

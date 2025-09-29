@@ -1,5 +1,3 @@
-'use client'
-
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
