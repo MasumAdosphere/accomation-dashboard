@@ -1,34 +1,57 @@
+'use client'
+
 import moment from 'moment'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
-import { ArticleData, EConfigButtonType } from '../../types/state.types'
+import { ArticleData, EConfigButtonType, ICategory } from '../../types/state.types'
 import { DeleteArticleModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
-import { Button, ConfigProvider, Form, message, Switch, Table, Tooltip } from 'antd'
+import { Button, ConfigProvider, Form, message, Select, Switch, Table, Tooltip } from 'antd'
 import { getAllArticles, publishActionById } from '../../redux/article/article.thunk'
 import { CreateArticleDrawer, EditArticleDrawer } from '../../components/antdesign/drawer.components'
+import { getAllCategories } from '../../redux/category/category.thunk' // 👈 Import the thunk
 
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
-import plusicon from '../../assets/plus.svg'
 
 const Article = () => {
     const pageSize = 20
     const dispatch = useDispatch()
-    // states
+
+    // States
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
-    const [article, setArticle] = useState<ArticleData[]>([])
-    const [selectedArticle, SetSelectedArticle] = useState<ArticleData | null>(null)
+    const [articles, setArticles] = useState<ArticleData[]>([])
+    const [selectedArticle, setSelectedArticle] = useState<ArticleData | null>(null)
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const [isDeleteArticleModalOpen, setIsDeleteArticleModalOpen] = useState<boolean>(false)
-    const [isCreateArticleDrawerOpen, SetIsCreateArticleDrawerOpen] = useState<boolean>(false)
-    const [isEditArticleDrawerOpen, SetIsEditArticleDrawerOpen] = useState<boolean>(false)
+    const [isCreateArticleDrawerOpen, setIsCreateArticleDrawerOpen] = useState<boolean>(false)
+    const [isEditArticleDrawerOpen, setIsEditArticleDrawerOpen] = useState<boolean>(false)
+    const [selectedCategory, setSelectedCategory] = useState<string>('') // 👈 for filtering
+    const [categories, setCategories] = useState<ICategory[]>([]) // 👈 store categories
     const controllerRef = useRef<AbortController | null>(null)
+
+    // 🔁 Fetch categories on mount
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const controller = new AbortController()
+                const signal = controller.signal
+                const res = await getAllCategories(1000, 1, '', signal) // fetch all categories
+                if (res.data) {
+                    setCategories(res.data)
+                }
+            } catch (error) {
+                console.error('Failed to load categories:', error)
+            }
+        }
+
+        fetchCategories()
+    }, [])
 
     const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
@@ -54,6 +77,7 @@ const Article = () => {
             setLoading(false)
         }
     }
+
     const columns: ColumnsType<ArticleData> = [
         {
             title: 'Sr no.',
@@ -61,7 +85,7 @@ const Article = () => {
             width: '5%',
             key: 'index',
             render: (_text: string, _record: any, index: number) => (
-                <span className=" font-Metropolis font-medium text-font16 text-[#515151]">{(page - 1) * pageSize + index + 1}</span>
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">{(page - 1) * pageSize + index + 1}</span>
             )
         },
         {
@@ -71,18 +95,17 @@ const Article = () => {
             key: 'title',
             render: (_, record) => (
                 <span className="font-sans text-darkblue font-semibold text-font16">
-                    {record.title.length > 40 ? `${record.title.slice(0, 40)}...` : `${record.title}`}
+                    {record.title.length > 40 ? `${record.title.slice(0, 40)}...` : record.title}
                 </span>
             )
         },
-
         {
             title: 'Category',
             key: 'category',
             width: '10%',
             dataIndex: 'category',
             render: (_text: string, record: any) => (
-                <span className=" font-Metropolis font-semibold text-font16 text-darkblue px-3 py-[6px] rounded-[100px] bg-[#FFDE39]">
+                <span className="font-Metropolis font-semibold text-font16 text-darkblue px-3 py-[6px] rounded-[100px] bg-[#FFDE39]">
                     {record?.category?.title || 'N/A'}
                 </span>
             )
@@ -93,12 +116,11 @@ const Article = () => {
             width: '10%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className=" font-Metropolis font-medium text-font16 text-[#515151]">
+                <span className="font-Metropolis font-medium text-font16 text-[#515151]">
                     {moment.utc(record?.createdAt).utcOffset(330).format('DD-MM-YYYY | hh:mm A')}
                 </span>
             )
         },
-
         {
             title: 'Action',
             key: 'action',
@@ -114,43 +136,33 @@ const Article = () => {
                             }}
                         />
                     </Tooltip>
-                    {/* <Tooltip title="Preview">
-                        <Link
-                            to={`${websiteUrl}/article-preview/${record.slug}?accessToken=${accessToken}`}
-                            target="_blank">
-                            <EyeOutlined className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl">Open</EyeOutlined>
-                        </Link>
-                    </Tooltip> */}
-
                     <Tooltip title="Delete">
                         <div
                             className="cursor-pointer"
                             onClick={() => {
                                 setIsDeleteArticleModalOpen(true)
-                                SetSelectedArticle(record)
+                                setSelectedArticle(record)
                             }}>
                             <img
                                 src={deleteIcon}
-                                alt=""
+                                alt="Delete"
                                 className="w-10 h-8"
                             />
                         </div>
-                        {/* <DeleteFilled className="text-red-500 hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" /> */}
                     </Tooltip>
                     <Tooltip title="Edit">
                         <div
-                            className="flex  cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary  justify-center items-center rounded-[50px] "
+                            className="flex cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary justify-center items-center rounded-[50px]"
                             onClick={() => {
-                                SetIsEditArticleDrawerOpen(true)
-                                SetSelectedArticle(record)
+                                setIsEditArticleDrawerOpen(true)
+                                setSelectedArticle(record)
                             }}>
                             <img
                                 src={editIcon}
-                                alt=""
+                                alt="Edit"
                             />
-                            <h6 className="text-font15 leading-[100%] font-Metropolis font-semibold text-white">Edit</h6>{' '}
+                            <h6 className="text-font15 leading-[100%] font-Metropolis font-semibold text-white">Edit</h6>
                         </div>
-                        {/* <EditFilled className="text-primary hover:text-secondary cursor-pointer text-lg 2xl:text-2xl" /> */}
                     </Tooltip>
                 </div>
             )
@@ -160,15 +172,16 @@ const Article = () => {
     const getArticles = async (signal: AbortSignal) => {
         try {
             setLoading(true)
-
-            const { data, meta } = await getAllArticles(pageSize, page, signal)
+            const { data, meta } = await getAllArticles(pageSize, page, selectedCategory, signal) // 👈 pass selectedCategory as `feature`
             if (data) {
-                setTotalPages(meta?.page.pages)
-                setArticle(data)
+                setTotalPages(meta?.page.pages || 1)
+                setArticles(data)
             }
-        } catch (error) {
-            //@ts-ignore
-            message.error(error.message)
+        } catch (error: any) {
+            message.error({
+                content: error.message || 'Failed to load articles. Please try again.',
+                duration: 8
+            })
         } finally {
             setLoading(false)
         }
@@ -181,19 +194,42 @@ const Article = () => {
         return () => {
             controller.abort()
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, isDataRefreshed])
+    }, [page, selectedCategory, isDataRefreshed]) // 👈 re-fetch when category changes
+
+    const handleCategoryChange = (value: string) => {
+        setSelectedCategory(value)
+        setPage(1) // reset to first page
+    }
+
+    // Prepare category options for Select
+    const categoryOptions = categories.map((cat) => ({
+        value: cat.id,
+        label: cat.title
+    }))
 
     return (
         <div className="font-sans space-y-3">
             <Form>
-                <div className="mb-4 flex justify-end items-center text-lg">
-                    {/* <h2 className="text-primary font-sans text-lg 2xl:text-font22 font-semibold">Articles</h2> */}
-                    <div>
+                <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    {/* Category Filter Dropdown */}
+                    <div className="w-full sm:w-auto">
+                        <Select
+                            placeholder="Filter by Category"
+                            value={selectedCategory || undefined}
+                            onChange={handleCategoryChange}
+                            options={categoryOptions}
+                            style={{ width: '256px', height: '48px', borderRadius: '8px', border: '1px solid #DDDDDD' }}
+                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-full"
+                            allowClear
+                        />
+                    </div>
+
+                    {/* Add Button */}
+                    <div className="w-full flex gap-2 sm:w-auto">
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
-                                onClick={() => SetIsCreateArticleDrawerOpen(true)}
-                                className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
+                                onClick={() => setIsCreateArticleDrawerOpen(true)}
+                                className="rounded-[25px] text-font16 font-semibold font-Metropolis 2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
                                 type="default">
                                 Add Blog
                             </Button>
@@ -201,6 +237,7 @@ const Article = () => {
                     </div>
                 </div>
             </Form>
+
             <ConfigProvider
                 theme={{
                     token: {
@@ -208,7 +245,6 @@ const Article = () => {
                         fontWeightStrong: 600,
                         colorPrimary: '#4226C4',
                         fontSize: 16
-                        // borderRadius: 0
                     },
                     components: {
                         Table: {
@@ -218,7 +254,7 @@ const Article = () => {
                     }
                 }}>
                 <Table
-                    dataSource={article}
+                    dataSource={articles}
                     loading={loading}
                     scroll={{ x: '1100px' }}
                     columns={columns}
@@ -229,31 +265,31 @@ const Article = () => {
                         pageSize: pageSize,
                         showSizeChanger: false,
                         total: totalPages * pageSize,
-                        onChange: (page: number) => {
-                            setPage(page)
-                        }
+                        onChange: setPage
                     }}
                 />
             </ConfigProvider>
+
             {isDeleteArticleModalOpen && (
                 <DeleteArticleModal
                     isDeleteArticleModalOpen={isDeleteArticleModalOpen}
                     setIsDeleteArticleModalOpen={setIsDeleteArticleModalOpen}
-                    selectedArticleId={selectedArticle ? selectedArticle.id : ''}
+                    selectedArticleId={selectedArticle?.id || ''}
                 />
             )}
             {isCreateArticleDrawerOpen && (
                 <CreateArticleDrawer
                     isCreateArticleDrawerOpen={isCreateArticleDrawerOpen}
-                    SetIsCreateArticleDrawerOpen={SetIsCreateArticleDrawerOpen}
+                    SetIsCreateArticleDrawerOpen={setIsCreateArticleDrawerOpen}
                 />
             )}
-
-            <EditArticleDrawer
-                isEditArticleDrawerOpen={isEditArticleDrawerOpen}
-                SetIsEditArticleDrawerOpen={SetIsEditArticleDrawerOpen}
-                articleDetails={selectedArticle}
-            />
+            {isEditArticleDrawerOpen && (
+                <EditArticleDrawer
+                    isEditArticleDrawerOpen={isEditArticleDrawerOpen}
+                    SetIsEditArticleDrawerOpen={setIsEditArticleDrawerOpen}
+                    articleDetails={selectedArticle}
+                />
+            )}
         </div>
     )
 }
