@@ -116,7 +116,7 @@ const Testimonial = () => {
             key: 'action',
             width: '10%',
             render: (record) => (
-                <div className="flex justify-center items-center gap-5">
+                <div className="flex justify-center items-center gap-2">
                     <Tooltip title={record?.isPublished ? 'Unpublish' : 'Publish'}>
                         <Switch
                             checked={record?.isPublished}
