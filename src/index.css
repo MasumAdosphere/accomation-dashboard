@@ -383,6 +383,9 @@ body {
     font-family: 'Metropolis', sans-serif !important;
     background-color: #ff4d4f !important;
 }
+.ant-menu-submenu-title:hover {
+    color: #0e082b !important;
+}
 
 .ant-menu-submenu-selected {
     background-color: #ffde39 !important;
@@ -392,6 +395,7 @@ body {
 .ant-menu-submenu-selected .ant-menu-title-content span {
     font-family: 'Metropolis', sans-serif !important;
     color: #0e082b !important;
+    padding: 24px !important;
 }
 .ant-menu-submenu-selected .ant-menu-submenu-arrow {
     color: #0e082b !important;
@@ -399,9 +403,19 @@ body {
 .ant-menu-submenu-selected .ant-menu-item-selected {
     color: #ffde39 !important;
     background-color: transparent !important;
+    padding: 24px !important;
 }
+.ant-menu-title-content {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+.ant-menu-item {
+    padding: 24px !important;
+}
+
 .ant-menu-submenu-selected > .ant-menu-submenu-title {
     color: #0e082b !important;
+    padding: 24px !important;
 }
 
 .ant-upload {
@@ -453,4 +467,8 @@ body {
 
 :where(.css-dev-only-do-not-override-axy5xs).ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
     background-color: #4226c4 !important;
+}
+
+.ant-menu-submenu-title {
+    padding: 24px !important;
 }

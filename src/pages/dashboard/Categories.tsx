@@ -151,7 +151,7 @@ const Categories = () => {
     }, [page, isDataRefreshed])
     return (
         <div>
-            <div className="mb-4 flex justify-end items-center text-lg">
+            <div className="flex justify-end items-center text-lg">
                 {/* <h2 className="text-primary font-sans text-lg 2xl:text-font22 font-semibold">Categories</h2> */}
 
                 <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
@@ -160,7 +160,7 @@ const Categories = () => {
                             SetIsCreateCategoryDrawerOpen(true)
                         }}
                         type="default"
-                        className=" rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary">
+                        className="mb-3 rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary">
                         Add Category
                     </Button>
                 </ButtonThemeConfig>

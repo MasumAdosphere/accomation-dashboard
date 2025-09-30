@@ -9,7 +9,6 @@ import { CreateUserDrawer } from '../../components/antdesign/drawer.components'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import deleteIcon from '../../assets/delete.svg'
-import editIcon from '../../assets/edit.svg'
 import { DeleteUserModal } from '../../components/antdesign/modal.components'
 
 const Users = () => {

@@ -19,7 +19,8 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
-import plusicon from '../../assets/plus.svg'
+import dragIcon from '../../assets/drag_indicator.svg'
+import { LoadingOutlined } from '@ant-design/icons'
 
 const Row: React.FC<Readonly<RowProps>> = (props) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -70,6 +71,7 @@ const Faq = () => {
         { value: 'Blog', label: 'Blog' },
         { value: 'Testimonial', label: 'Testimonial' }
     ]
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const handleSwitchChange = async (id: string, checked: boolean) => {
         if (loading) return
@@ -97,6 +99,20 @@ const Faq = () => {
     }
 
     const columns: ColumnsType<IFaq> = [
+        {
+            title: '',
+            dataIndex: 'index',
+            width: '5%',
+            key: 'index',
+            render: (_text: string, _record: any) => (
+                <img
+                    src={dragIcon}
+                    alt="drag"
+                    className="w-6 h-6 cursor-move"
+                />
+            )
+        },
+
         {
             title: 'Sr.',
             dataIndex: 'index',
@@ -279,6 +295,7 @@ const Faq = () => {
 
     const handleSaveChanges = async () => {
         try {
+            setIsSubmitting(true)
             const payload = faqs.map((faq, index) => ({
                 id: faq.id,
                 sequenceId: index + 1
@@ -288,6 +305,8 @@ const Faq = () => {
             message.success('Sequence updated successfully!')
         } catch (err) {
             message.error('Failed to update sequence')
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -313,9 +332,10 @@ const Faq = () => {
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 onClick={handleSaveChanges}
+                                icon={isSubmitting ? <LoadingOutlined spin /> : undefined} // show loader
                                 className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
                                 type="default">
-                                Save Changes
+                                {isSubmitting ? 'Saving...' : 'Save Changes'}
                             </Button>
                         </ButtonThemeConfig>
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>

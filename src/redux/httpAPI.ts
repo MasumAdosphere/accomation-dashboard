@@ -285,12 +285,11 @@ export default {
                 pageSize,
                 page
             }
-            const { data } = await apiInstance.get('/admin/logo', {
+            const res = await apiInstance.get('/admin/logo', {
                 params: queryParams,
                 signal
             })
-
-            return data
+            return res
         },
         deleteLogo: async (logoId: string) => {
             const { data } = await apiInstance.delete(`/admin/logo/${logoId}`)

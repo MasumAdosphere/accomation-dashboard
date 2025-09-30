@@ -23,6 +23,10 @@ import testimonialInactive from '../assets/testimonialsInactive.svg'
 import faqInactive from '../assets/faqInactive.svg'
 import faqActive from '../assets/faqActive.svg'
 import clientInactive from '../assets/clientInactive.svg'
+import clientActive from '../assets/logoActive.svg'
+import userActive from '../assets/userActive.svg'
+import userInActive from '../assets/userInactive.svg'
+import { icons } from 'antd/es/image/PreviewGroup'
 
 const { Sider, Content } = Layout
 
@@ -37,6 +41,8 @@ const DashboardLayout = () => {
     const path = location.pathname
 
     const [profileName, setProfileName] = useState<string>('')
+
+    const [hoveredKey, setHoveredKey] = useState<string | null>(null)
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -74,21 +80,22 @@ const DashboardLayout = () => {
         },
         {
             key: 'blogs',
-            label: 'Blogs',
+            label: 'Blog Management',
             icon: current === 'categories' || current === 'articles' ? <img src={blogActive} /> : <img src={blogInActive} />,
             to: 'blogs',
             children: [
                 {
                     key: 'categories',
-                    label: 'Categories',
-                    to: 'categories',
-                    icon: current === 'categories' ? <img src={categoryInActive} /> : <img src={categoryInActive} />
+                    label: '· Categories',
+                    to: 'categories'
+
+                    // icon: current === 'categories' ? <img src={categoryActive} /> : <img src={categoryInActive} />
                 },
                 {
                     key: 'articles',
-                    label: 'Blogs',
-                    to: 'articles',
-                    icon: current === 'blogs' ? <img src={blogInActive} /> : <img src={blogInActive} />
+                    label: '· Published Blogs',
+                    to: 'articles'
+                    // icon: current === 'blogs' ? <img src={blogInActive} /> : <img src={blogInActive} />
                 }
             ]
         },
@@ -107,9 +114,9 @@ const DashboardLayout = () => {
         },
         {
             key: 'logos',
-            label: 'Logos',
+            label: 'Client Logos',
             to: 'logos',
-            icon: current === 'logos' ? <img src={clientInactive} /> : <img src={clientInactive} />
+            icon: current === 'logos' ? <img src={clientActive} /> : <img src={clientInactive} />
         },
         {
             key: 'career',
@@ -162,17 +169,143 @@ const DashboardLayout = () => {
         }
     }
 
-    const renderMenuItems = (
-        menuItems: {
-            key: string
-            label: string
-            to: string
-        }[]
-    ) =>
-        menuItems.map((item) => ({
-            ...item,
-            label: <span>{item.label}</span>
-        }))
+    const [openKeys, setOpenKeys] = useState<string[]>([])
+
+    const handleOpenChange = (keys: string[]) => {
+        setOpenKeys(keys)
+    }
+
+    const renderMenuItems = (items: typeof adminItems, openKeys: string[]) => {
+        return items.map((item) => {
+            const isActive = current === item.key
+            const isOpen = openKeys.includes(item.key)
+
+            let icon
+
+            if (item.key === 'articles') {
+                const isBlogSectionActive = location.pathname.startsWith('/dashboard/articles/')
+                icon =
+                    isBlogSectionActive || isOpen ? (
+                        <img
+                            src={blogActive}
+                            alt="Blogs"
+                        />
+                    ) : (
+                        <img
+                            src={blogInActive}
+                            alt="Blogs"
+                        />
+                    )
+            } else if (item.key === 'overview') {
+                icon = isActive ? (
+                    <img
+                        src={blogActive}
+                        alt="Overview"
+                    />
+                ) : (
+                    <img
+                        src={blogInActive}
+                        alt="Overview"
+                    />
+                )
+            } else if (item.key === 'testimonials') {
+                icon = isActive ? (
+                    <img
+                        src={testimonialActive}
+                        alt="Testimonials"
+                    />
+                ) : (
+                    <img
+                        src={testimonialInactive}
+                        alt="Testimonials"
+                    />
+                )
+            } else if (item.key === 'faq') {
+                icon = isActive ? (
+                    <img
+                        src={faqActive}
+                        alt="FAQs"
+                    />
+                ) : (
+                    <img
+                        src={faqInactive}
+                        alt="FAQs"
+                    />
+                )
+            } else if (item.key === 'logos') {
+                icon = isActive ? (
+                    <img
+                        src={clientActive}
+                        alt="Logos"
+                    />
+                ) : (
+                    <img
+                        src={clientInactive}
+                        alt="Logos"
+                    />
+                )
+            } else if (item.key === 'career') {
+                icon = isActive ? (
+                    <img
+                        src={careerActive}
+                        alt="Career"
+                    />
+                ) : (
+                    <img
+                        src={careerInActive}
+                        alt="Career"
+                    />
+                )
+            } else if (item.key === 'users') {
+                icon = isActive ? (
+                    <img
+                        src={userActive}
+                        alt="Users"
+                    />
+                ) : (
+                    <img
+                        src={userInActive}
+                        alt="Users"
+                    />
+                )
+            } else {
+                icon = item.icon // fallback
+            }
+
+            if (item.children) {
+                return {
+                    key: item.key,
+                    label: item.label,
+                    icon,
+                    children: item.children.map((child) => ({
+                        key: child.key,
+                        label: child.label,
+                        onClick: () => onClick({ key: child.key } as any)
+                    }))
+                }
+            }
+
+            return {
+                key: item.key,
+                label: item.label,
+                icon,
+                onClick: () => onClick({ key: item.key } as any)
+            }
+        })
+    }
+
+    // const renderMenuItems = (
+    //     menuItems: {
+    //         key: string
+    //         label: string
+    //         to: string
+    //     }[]
+    // ) =>
+    //     menuItems.map((item) => ({
+    //         ...item,
+    //         label: <span>{item.label}</span>
+    //     }))
+
     useEffect(() => {
         setCurrent(location.pathname.slice(11).split('/')[0])
     }, [location.pathname])
@@ -224,9 +357,11 @@ const DashboardLayout = () => {
                     <Menu
                         onClick={onClick}
                         theme="light"
-                        items={renderMenuItems(adminItems)}
+                        items={renderMenuItems(adminItems, openKeys)}
                         mode="inline"
                         selectedKeys={[current]}
+                        openKeys={openKeys}
+                        onOpenChange={handleOpenChange}
                         className="font-sans 2xl:px-6 mt-6 text-font16 space-y-2 font-semibold 2xl:leading-[22px] bg-[#0E082B] !border-none"
                     />
                 </Sider>
@@ -242,7 +377,7 @@ const DashboardLayout = () => {
 
                             <ButtonThemeConfig buttonType={EConfigButtonType.THIRD}>
                                 <Button
-                                    className="font-sans text-lg w-[160px] h-[48px] rounded-[100px] bg-darkblue  2xl:h-12 text-white "
+                                    className="font-sans text-lg w-[160px] h-[48px] rounded-[100px] bg-darkblue  2xl:h-12 text-font16 text-white "
                                     type="default"
                                     icon={
                                         <img
@@ -266,7 +401,7 @@ const DashboardLayout = () => {
                         style={{
                             minHeight: 280
                         }}
-                        className="font-sans bg-white bg-cover bg-center bg-no-repeat min-h-screen w-full p-3 2xl:p-6 overflow-auto ">
+                        className="font-sans bg-white bg-cover bg-center bg-no-repeat min-h-screen w-full p-3  overflow-auto ">
                         <Outlet />
                     </Content>
                 </Layout>

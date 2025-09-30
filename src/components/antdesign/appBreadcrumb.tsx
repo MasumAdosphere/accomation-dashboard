@@ -105,7 +105,7 @@ const AppBreadcrumb = () => {
             itemRender={itemRender}
             items={items}
             separator={<img src={Separator} />}
-            className=" text-font16 font-medium font-Metropolis !text-gray44"
+            className=" text-font16 font-medium font-Metropolis text-gray44"
         />
     )
 }

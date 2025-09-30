@@ -20,7 +20,6 @@ const Logo = () => {
     // States
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(false)
-    const [totalPages, setTotalPages] = useState(1)
     const [logos, setLogos] = useState<ILogo[]>([]) // 👈 Renamed from article
     const [selectedLogoId, setSelectedLogoId] = useState<string | null>(null) // 👈 Renamed
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
@@ -53,6 +52,21 @@ const Logo = () => {
         }
     }
 
+    const getLogos = async (signal: AbortSignal) => {
+        try {
+            setLoading(true)
+            const { data } = await getAllLogo(pageSize, page, signal)
+            if (data) {
+                setLogos(data)
+                console.log('Data', data)
+            }
+        } catch (error: any) {
+            message.error(error.message || 'Failed to load logos. Please try again.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const columns: ColumnsType<ILogo> = [
         {
             title: 'Sr no.',
@@ -80,15 +94,13 @@ const Logo = () => {
             width: '25%',
             key: 'logo',
             render: (_, record) => (
-                <div className="flex items-center justify-center">
-                    <Tooltip title="Preview Logo">
-                        <img
-                            src={record.logo}
-                            alt={record.companyName}
-                            crossOrigin="anonymous"
-                            className="h-12 w-auto object-contain cursor-pointer rounded border border-gray-200 hover:scale-110 transition-transform duration-200"
-                        />
-                    </Tooltip>
+                <div className="flex items-center justify-start">
+                    <img
+                        src={record.logo}
+                        alt={record.companyName}
+                        crossOrigin="anonymous"
+                        className="h-12 w-auto object-contain cursor-pointer rounded  transition-transform duration-200"
+                    />
                 </div>
             )
         },
@@ -143,21 +155,6 @@ const Logo = () => {
         }
     ]
 
-    const getLogos = async (signal: AbortSignal) => {
-        try {
-            setLoading(true)
-            const { data, meta } = await getAllLogo(pageSize, page, signal)
-            if (data) {
-                setTotalPages(meta?.page.pages || 1)
-                setLogos(data)
-            }
-        } catch (error: any) {
-            message.error(error.message || 'Failed to load logos. Please try again.')
-        } finally {
-            setLoading(false)
-        }
-    }
-
     useEffect(() => {
         const controller = new AbortController()
         const signal = controller.signal
@@ -170,7 +167,7 @@ const Logo = () => {
     return (
         <div className="font-sans space-y-3">
             <Form>
-                <div className="mb-4 flex justify-end items-center text-lg">
+                <div className="flex justify-end items-center text-lg">
                     <div>
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
@@ -212,7 +209,7 @@ const Logo = () => {
                         current: page,
                         pageSize: pageSize,
                         showSizeChanger: false,
-                        total: totalPages * pageSize,
+
                         onChange: (page: number) => {
                             setPage(page)
                         }

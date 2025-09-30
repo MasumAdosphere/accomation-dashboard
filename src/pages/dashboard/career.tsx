@@ -12,7 +12,6 @@ import { CreateCareerDrawer, EditCareerDrawer } from '../../components/antdesign
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
-import plusicon from '../../assets/plus.svg'
 
 const Career = () => {
     const pageSize = 20
@@ -181,8 +180,7 @@ const Career = () => {
         try {
             setLoading(true)
             const res = await getAllCareers(filter, signal)
-
-            console.log('✅ Career data:', res.data)
+            console.log(res)
 
             setCareers(res.data || [])
             setTotalItems(res.meta?.total || 0)

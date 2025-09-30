@@ -6,8 +6,7 @@ import { responseRequest, responseSuccess } from '../common/common.slice'
 export const getAllLogo = async (pageSize: number, page: number, signal: AbortSignal) => {
     try {
         const res = await Api.Logo.getAllLogo(pageSize, page, signal)
-        // const { data } = res
-        return res
+        return res.data
     } catch (error) {
         return execError(error)
     }

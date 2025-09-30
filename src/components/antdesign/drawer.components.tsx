@@ -1,5 +1,5 @@
 import { Button, ConfigProvider, Drawer, Form, Image, message, Select } from 'antd'
-import { ChangeEvent, Dispatch, use, useEffect, useState } from 'react'
+import { Dispatch, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArticleData, EConfigButtonType, ICareer, ICareerCreate, ICategory } from '../../types/state.types'
 import { createTestimonials, editTestimonials, getTestimonialById } from '../../redux/testimonials/testimonial.thunk'
@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../types/selector.types'
 import { createFaq, editFaq, getFaqById } from '../../redux/faq/faq.thunk'
 import { createLogo } from '../../redux/logo/logo.thunk'
-import { audioBoxRegex, videoRegex } from '../../quicker/quicker'
 import { createArticle, editArticle } from '../../redux/article/article.thunk'
 import { createCareer, editCareer, getCareerById } from '../../redux/career/career.thunk'
 import Editor from '../custom/Editor'
@@ -28,7 +27,6 @@ export const CreateTestimonialDrawer = ({
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [form] = Form.useForm()
-    const [isUploading, setIsUploading] = useState(false)
     const [categories, setCategories] = useState<Array<ICategory>>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -181,7 +179,7 @@ export const CreateTestimonialDrawer = ({
                                             }}
                                             className="w-full"
                                             accept="image/png,image/jpeg"
-                                            isUploading={isUploading}
+                                            isUploading={false}
                                         />
                                     </Form.Item>
                                 </div>
@@ -396,7 +394,6 @@ export const CreateLogoDrawer = ({
 
     const navigate = useNavigate()
     const [form] = Form.useForm()
-    const [isUploading, setIsUploading] = useState(false)
     const [logoFile, setLogoFile] = useState<File | null>(null)
 
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -431,11 +428,6 @@ export const CreateLogoDrawer = ({
         } finally {
             setIsSubmitting(false)
         }
-    }
-
-    const handleLogoUpload = (file: File) => {
-        setLogoFile(file)
-        form.setFieldsValue({ logo: 'uploaded' }) // Optional: visual feedback
     }
 
     return (
@@ -479,7 +471,7 @@ export const CreateLogoDrawer = ({
                                     rules={[{ required: true, message: 'Please upload a logo image' }]}>
                                     <UploadImgFile
                                         accept="image/png,image/jpeg"
-                                        isUploading={isUploading}
+                                        isUploading={false}
                                         onFileSelect={(file) => {
                                             setLogoFile(file)
                                         }}
@@ -548,15 +540,12 @@ export const CreateArticleDrawer = ({
 
     const navigate = useNavigate()
     const [form] = Form.useForm()
-    const [isUploading, setIsUploading] = useState(false)
     const [categories, setCategories] = useState<Array<ICategory>>([])
 
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     // Store the actual File objects
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
-
-    const combinedRegex = new RegExp(`${audioBoxRegex.source}|${videoRegex.source}`, 'i')
 
     const inputChangeHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         let value = event.target.value
@@ -715,7 +704,7 @@ export const CreateArticleDrawer = ({
                                         rules={[{ required: true, message: 'Please select image' }]}>
                                         <UploadImgFile
                                             accept="image/png,image/jpeg"
-                                            isUploading={isUploading}
+                                            isUploading={false}
                                             onChange={(fileName) => {
                                                 form.setFieldsValue({ thumbnail: fileName || '' })
                                             }}
@@ -882,7 +871,6 @@ export const EditArticleDrawer = ({
 
     const [form] = Form.useForm()
     const articleSlug = articleDetails?.id
-    const [isUploading, setIsUploading] = useState(false)
     const [uploadThumbnail, setUploadThumbnail] = useState<File | null>(null)
     const [categories, setCategories] = useState<Array<{ label: string; value: string }>>([])
 
@@ -1072,7 +1060,7 @@ export const EditArticleDrawer = ({
                                         rules={[{ required: false, message: 'Please select thumbnail' }]}>
                                         <UploadImgFile
                                             accept="image/png,image/jpeg"
-                                            isUploading={isUploading}
+                                            isUploading={false}
                                             handleFileUpload={() => {
                                                 return true
                                             }}
@@ -1158,7 +1146,6 @@ export const EditTestimonialDrawer = ({
     const testimonialId = selectedTestimonialId
 
     const [loading, setLoading] = useState(true)
-    const [isUploading, setIsUploading] = useState(false)
     const [uploadImage, setUploadImage] = useState<string | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -1256,134 +1243,143 @@ export const EditTestimonialDrawer = ({
             onClose={() => SetIsEditTestimonialDrawerOpen(false)}
             footer={null}
             width={644}>
-            <Form
-                form={form}
-                fields={[
-                    { name: 'name', value: formValues.name },
-                    { name: 'designation', value: formValues.designation },
-                    { name: 'description', value: formValues.description },
-                    { name: 'image', value: formValues.image }
-                ]}
-                className="font-sans w-full flexjustify-between flex-col h-full"
-                onFinish={submitBtnHandler}
-                layout="vertical">
-                <div className="font-sans flex flex-col justify-between h-full">
-                    <div className="">
-                        <div className="mb-4 space-y-2">
-                            <label className="font-sans text-font16 font-semibold text-gray44">
-                                Name<span className="font-sans text-red-500pl-1">*</span>{' '}
-                            </label>
-                            <TextItem
-                                name="name"
-                                type="text"
-                                max={512}
-                                min={2}
-                                placeholder="Enter name"
-                                required
-                                onChange={inputChangeHandler('name')}
-                                value={formValues.name}
-                            />
-                        </div>
-
-                        <div className="mb-4 space-y-2">
-                            <label className="font-sans text-font16 font-semibold text-gray44">
-                                Designation<span className="text-red-500pl-1">*</span>
-                            </label>
-                            <TextItem
-                                name="designation"
-                                type="text"
-                                max={512}
-                                min={2}
-                                placeholder="Enter designation"
-                                required
-                                onChange={inputChangeHandler('designation')}
-                                value={formValues.designation}
-                            />
-                        </div>
-
-                        <div className="mb-4 space-y-2">
-                            <label className="font-sans text-font16 font-semibold text-gray44">
-                                Description<span className="text-red-500pl-1">*</span>
-                            </label>
-                            <Form.Item
-                                name="description"
-                                rules={[{ required: true, message: 'Please enter description' }]}>
-                                <TextAreaItem
-                                    name="description"
-                                    placeholder="Enter description"
-                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
-                                    onChange={(e) => {
-                                        const value = e.target.value
-                                        form.setFieldsValue({ description: value })
-                                    }}
-                                    required={true}
-                                />
-                            </Form.Item>
-                        </div>
-
-                        <div className="font-sans col-span-2 h-auto">
-                            <div className="font-sans w-full">
-                                <label className="font-sans text-font16 font-semibold text-gray44 mb-2">
-                                    Image<span className="font-sans text-red-500pl-1">*</span>
+            {loading ? (
+                <div className="flex justify-center py-10">
+                    <LoadingOutlined
+                        style={{ fontSize: 24 }}
+                        spin
+                    />
+                </div>
+            ) : (
+                <Form
+                    form={form}
+                    fields={[
+                        { name: 'name', value: formValues.name },
+                        { name: 'designation', value: formValues.designation },
+                        { name: 'description', value: formValues.description },
+                        { name: 'image', value: formValues.image }
+                    ]}
+                    className="font-sans w-full flex justify-between flex-col h-full"
+                    onFinish={submitBtnHandler}
+                    layout="vertical">
+                    <div className="font-sans flex flex-col justify-between h-full">
+                        <div className="">
+                            <div className="mb-4 space-y-2">
+                                <label className="font-sans text-font16 font-semibold text-gray44">
+                                    Name<span className="font-sans text-red-500pl-1">*</span>{' '}
                                 </label>
-                                <div className="mt-2">
-                                    <Form.Item
-                                        name="image"
-                                        rules={[{ required: true, message: 'Please select image' }]}>
-                                        <UploadImgFile
-                                            accept="image/png,image/jpeg"
-                                            isUploading={isUploading}
-                                            onChange={(fileName) => {
-                                                form.setFieldsValue({ image: fileName || '' })
-                                            }}
-                                            handleFileUpload={async (file) => {
-                                                setImageFile(file)
-                                                // Your upload logic here if needed
-                                                return true
-                                            }}
-                                            onFileSelect={function (file: File): void {
-                                                throw new Error('Function not implemented.')
-                                            }}
-                                        />
+                                <TextItem
+                                    name="name"
+                                    type="text"
+                                    max={512}
+                                    min={2}
+                                    placeholder="Enter name"
+                                    required
+                                    onChange={inputChangeHandler('name')}
+                                    value={formValues.name}
+                                />
+                            </div>
 
-                                        {uploadImage && (
-                                            <div className="mt-2">
-                                                <Image
-                                                    width={200}
-                                                    src={uploadImage.startsWith('http') ? uploadImage : `/${uploadImage}`}
-                                                    preview={false}
-                                                    crossOrigin="anonymous"
-                                                />
-                                            </div>
-                                        )}
-                                    </Form.Item>
+                            <div className="mb-4 space-y-2">
+                                <label className="font-sans text-font16 font-semibold text-gray44">
+                                    Designation<span className="text-red-500pl-1">*</span>
+                                </label>
+                                <TextItem
+                                    name="designation"
+                                    type="text"
+                                    max={512}
+                                    min={2}
+                                    placeholder="Enter designation"
+                                    required
+                                    onChange={inputChangeHandler('designation')}
+                                    value={formValues.designation}
+                                />
+                            </div>
+
+                            <div className="mb-4 space-y-2">
+                                <label className="font-sans text-font16 font-semibold text-gray44">
+                                    Description<span className="text-red-500pl-1">*</span>
+                                </label>
+                                <Form.Item
+                                    name="description"
+                                    rules={[{ required: true, message: 'Please enter description' }]}>
+                                    <TextAreaItem
+                                        name="description"
+                                        placeholder="Enter description"
+                                        className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                        onChange={(e) => {
+                                            const value = e.target.value
+                                            form.setFieldsValue({ description: value })
+                                        }}
+                                        required={true}
+                                    />
+                                </Form.Item>
+                            </div>
+
+                            <div className="font-sans col-span-2 h-auto">
+                                <div className="font-sans w-full">
+                                    <label className="font-sans text-font16 font-semibold text-gray44 mb-2">
+                                        Image<span className="font-sans text-red-500pl-1">*</span>
+                                    </label>
+                                    <div className="mt-2">
+                                        <Form.Item
+                                            name="image"
+                                            rules={[{ required: true, message: 'Please select image' }]}>
+                                            <UploadImgFile
+                                                accept="image/png,image/jpeg"
+                                                isUploading={false}
+                                                onChange={(fileName) => {
+                                                    form.setFieldsValue({ image: fileName || '' })
+                                                }}
+                                                handleFileUpload={async (file) => {
+                                                    setImageFile(file)
+                                                    // Your upload logic here if needed
+                                                    return true
+                                                }}
+                                                onFileSelect={function (): void {
+                                                    throw new Error('Function not implemented.')
+                                                }}
+                                            />
+
+                                            {uploadImage && (
+                                                <div className="mt-2">
+                                                    <Image
+                                                        width={200}
+                                                        src={uploadImage.startsWith('http') ? uploadImage : `/${uploadImage}`}
+                                                        preview={false}
+                                                        crossOrigin="anonymous"
+                                                    />
+                                                </div>
+                                            )}
+                                        </Form.Item>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className=" grid grid-cols-2 gap-2">
-                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                            <Button
-                                onClick={() => navigate('/dashboard/testimonials')}
-                                type="default"
-                                className="h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none px-4 py-2">
-                                Cancel
-                            </Button>
-                        </ButtonThemeConfig>
-                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                            <Button
-                                htmlType="submit"
-                                type="primary"
-                                icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
-                                disabled={isSubmitting}
-                                className="font-sans  !rounded-[25px] h-auto bg-primary !hover:bg-primary text-white border-primary text-lg shadow-none flex justify-center item-center px-4 py-2">
-                                {isSubmitting ? 'Updating...' : 'Update'}
-                            </Button>
-                        </ButtonThemeConfig>
+                        <div className=" grid grid-cols-2 gap-2">
+                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                                <Button
+                                    onClick={() => navigate('/dashboard/testimonials')}
+                                    type="default"
+                                    className="h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none px-4 py-2">
+                                    Cancel
+                                </Button>
+                            </ButtonThemeConfig>
+                            <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                                <Button
+                                    htmlType="submit"
+                                    type="primary"
+                                    icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
+                                    disabled={isSubmitting}
+                                    className="font-sans  !rounded-[25px] h-auto bg-primary !hover:bg-primary text-white border-primary text-lg shadow-none flex justify-center item-center px-4 py-2">
+                                    {isSubmitting ? 'Updating...' : 'Update'}
+                                </Button>
+                            </ButtonThemeConfig>
+                        </div>
                     </div>
-                </div>
-            </Form>
+                </Form>
+            )}
         </Drawer>
     )
 }
@@ -1472,109 +1468,118 @@ export const EditFaqDrawer = ({
             onClose={() => SetIsEditFaqDrawerOpen(false)}
             footer={null}
             width={644}>
-            <Form
-                form={form}
-                className="font-sans w-full flex justify-between flex-col h-full"
-                onFinish={submitBtnHandler}>
-                <div className="font-sans space-y-6">
-                    <div className="">
-                        {/* Question Field */}
-                        <div className="space-y-2">
-                            <label className="font-sans text-font16 font-semibold text-gray44">
-                                Question<span className="font-sans text-red-500 pl-1">*</span>
-                            </label>
-                            <TextItem
-                                name="question"
-                                type="text"
-                                max={512}
-                                min={4}
-                                placeholder="Enter the question..."
-                                required={true}
-                                className="h-10 2xl:h-12"
-                                onChange={inputChangeHandler('question')}
-                            />
-                        </div>
-
-                        {/* Answer Field */}
-                        <div className="space-y-2">
-                            <label className="font-sans text-font16 font-semibold text-gray44">
-                                Answer<span className="font-sans text-red-500 pl-1">*</span>
-                            </label>
-                            <Form.Item
-                                name="answer"
-                                rules={[{ required: true, message: 'Please enter the answer' }]}>
-                                <textarea
-                                    className="w-full p-3 border border-[#e7e7e7] hover:border-[#e7e7e7] !rounded-[25px] focus:outline-none  font-sans text-base leading-relaxed resize-y"
-                                    rows={8}
-                                    placeholder="Write the detailed answer here..."
-                                    maxLength={2000}
+            {loading ? (
+                <div className="flex justify-center py-10">
+                    <LoadingOutlined
+                        style={{ fontSize: 24 }}
+                        spin
+                    />
+                </div>
+            ) : (
+                <Form
+                    form={form}
+                    className="font-sans w-full flex justify-between flex-col h-full"
+                    onFinish={submitBtnHandler}>
+                    <div className="font-sans space-y-6">
+                        <div className="">
+                            {/* Question Field */}
+                            <div className="space-y-2">
+                                <label className="font-sans text-font16 font-semibold text-gray44">
+                                    Question<span className="font-sans text-red-500 pl-1">*</span>
+                                </label>
+                                <TextItem
+                                    name="question"
+                                    type="text"
+                                    max={512}
+                                    min={4}
+                                    placeholder="Enter the question..."
+                                    required={true}
+                                    className="h-10 2xl:h-12"
+                                    onChange={inputChangeHandler('question')}
                                 />
-                            </Form.Item>
-                        </div>
+                            </div>
 
-                        {/* Page Dropdown */}
-                        <div className="space-y-2">
-                            <label className="font-sans text-font16 font-semibold text-gray44">
-                                Page<span className="font-sans text-red-500 pl-1">*</span>
-                            </label>
-                            <ConfigProvider
-                                theme={{
-                                    token: {
-                                        controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
-                                        colorPrimary: '#083050'
-                                    },
-                                    components: {
-                                        Select: {
-                                            activeOutlineColor: 'transparent'
-                                        }
-                                    }
-                                }}>
+                            {/* Answer Field */}
+                            <div className="space-y-2">
+                                <label className="font-sans text-font16 font-semibold text-gray44">
+                                    Answer<span className="font-sans text-red-500 pl-1">*</span>
+                                </label>
                                 <Form.Item
-                                    name="pageName"
-                                    rules={[{ required: true, message: 'Please select a page' }]}>
-                                    <Select
-                                        allowClear
-                                        style={{ width: '100%', height: '48px' }}
-                                        className="h-10 2xl:h-12 !font-sans !text-font16 !rounded-[6px] !focus:border-[#e7e7e7] !hover:border-[#e7e7e7] !border-[#e7e7e7] !text-[#919191]  !border !transition !ease-in !duration-500"
-                                        placeholder="Select page (e.g., Overview, Blog, Testimonial)"
-                                        options={[
-                                            { value: 'Overview', label: 'Overview' },
-                                            { value: 'Blog', label: 'Blog' },
-                                            { value: 'Testimonial', label: 'Testimonial' }
-                                        ]}
-                                        filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                                        onChange={(value) => form.setFieldsValue({ pageName: value })}
+                                    name="answer"
+                                    rules={[{ required: true, message: 'Please enter the answer' }]}>
+                                    <textarea
+                                        className="w-full p-3 border border-[#e7e7e7] hover:border-[#e7e7e7] !rounded-[25px] focus:outline-none  font-sans text-base leading-relaxed resize-y"
+                                        rows={8}
+                                        placeholder="Write the detailed answer here..."
+                                        maxLength={2000}
                                     />
                                 </Form.Item>
-                            </ConfigProvider>
+                            </div>
+
+                            {/* Page Dropdown */}
+                            <div className="space-y-2">
+                                <label className="font-sans text-font16 font-semibold text-gray44">
+                                    Page<span className="font-sans text-red-500 pl-1">*</span>
+                                </label>
+                                <ConfigProvider
+                                    theme={{
+                                        token: {
+                                            controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
+                                            colorPrimary: '#083050'
+                                        },
+                                        components: {
+                                            Select: {
+                                                activeOutlineColor: 'transparent'
+                                            }
+                                        }
+                                    }}>
+                                    <Form.Item
+                                        name="pageName"
+                                        rules={[{ required: true, message: 'Please select a page' }]}>
+                                        <Select
+                                            allowClear
+                                            style={{ width: '100%', height: '48px' }}
+                                            className="h-10 2xl:h-12 !font-sans !text-font16 !rounded-[6px] !focus:border-[#e7e7e7] !hover:border-[#e7e7e7] !border-[#e7e7e7] !text-[#919191]  !border !transition !ease-in !duration-500"
+                                            placeholder="Select page (e.g., Overview, Blog, Testimonial)"
+                                            options={[
+                                                { value: 'Overview', label: 'Overview' },
+                                                { value: 'Blog', label: 'Blog' },
+                                                { value: 'Testimonial', label: 'Testimonial' }
+                                            ]}
+                                            filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                                            onChange={(value) => form.setFieldsValue({ pageName: value })}
+                                        />
+                                    </Form.Item>
+                                </ConfigProvider>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Submit & Cancel Buttons */}
-                <div className="font-sans pt-6 w-full justify-end grid grid-cols-2 gap-4">
-                    <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                        <Button
-                            onClick={() => SetIsEditFaqDrawerOpen(false)}
-                            type="default"
-                            className="font-sans !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center items-center px-6 py-2 h-auto">
-                            Cancel
-                        </Button>
-                    </ButtonThemeConfig>
+                    {/* Submit & Cancel Buttons */}
+                    <div className="font-sans pt-6 w-full justify-end grid grid-cols-2 gap-4">
+                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                            <Button
+                                onClick={() => SetIsEditFaqDrawerOpen(false)}
+                                type="default"
+                                className="font-sans !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center items-center px-6 py-2 h-auto">
+                                Cancel
+                            </Button>
+                        </ButtonThemeConfig>
 
-                    <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
-                        <Button
-                            htmlType="submit"
-                            type="primary"
-                            icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
-                            disabled={isSubmitting}
-                            className="font-sans h-auto !rounded-[25px] bg-primary text-white !hover:bg-primary text-base 2xl:text-[20px] shadow-none flex justify-center items-center px-6 py-2"
-                            style={{ width: 'auto' }}>
-                            {isSubmitting ? 'Updating...' : 'Update FAQ'}
-                        </Button>
-                    </ButtonThemeConfig>
-                </div>
-            </Form>
+                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                            <Button
+                                htmlType="submit"
+                                type="primary"
+                                icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
+                                disabled={isSubmitting}
+                                className="font-sans h-auto !rounded-[25px] bg-primary text-white !hover:bg-primary text-base 2xl:text-[20px] shadow-none flex justify-center items-center px-6 py-2"
+                                style={{ width: 'auto' }}>
+                                {isSubmitting ? 'Updating...' : 'Update FAQ'}
+                            </Button>
+                        </ButtonThemeConfig>
+                    </div>
+                </Form>
+            )}
         </Drawer>
     )
 }
@@ -1843,7 +1848,10 @@ export const EditCareerDrawer = ({
                 className="font-sans w-full flex justify-between flex-col h-full">
                 {loading ? (
                     <div className="flex justify-center py-10">
-                        <p className="text-color51">Loading career details...</p>
+                        <LoadingOutlined
+                            style={{ fontSize: 24 }}
+                            spin
+                        />
                     </div>
                 ) : (
                     <div className="h-full flex flex-col justify-between">
