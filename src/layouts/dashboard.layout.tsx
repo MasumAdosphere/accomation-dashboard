@@ -16,8 +16,7 @@ import blogActive from '../assets/blogActive.svg'
 import blogInActive from '../assets/blogInactive.svg'
 import careerActive from '../assets/careerActive.svg'
 import careerInActive from '../assets/CareerInactive.svg'
-import categoryInActive from '../assets/categoryInactive.svg'
-import categoryActive from '../assets/categoryActive.svg'
+
 import testimonialActive from '../assets/testimonialsActive.svg'
 import testimonialInactive from '../assets/testimonialsInactive.svg'
 import faqInactive from '../assets/faqInactive.svg'
@@ -26,7 +25,6 @@ import clientInactive from '../assets/clientInactive.svg'
 import clientActive from '../assets/logoActive.svg'
 import userActive from '../assets/userActive.svg'
 import userInActive from '../assets/userInactive.svg'
-import { icons } from 'antd/es/image/PreviewGroup'
 
 const { Sider, Content } = Layout
 
@@ -35,10 +33,10 @@ const DashboardLayout = () => {
     const location = useLocation()
 
     const { user } = useSelector((state: RootState) => state.User)
+    const [isHoveredA, setIsHoveredA] = useState(false)
+    const [isHoveredC, setIsHoveredC] = useState(false)
 
     const [current, setCurrent] = useState(location.pathname.slice(11).split('/')[0])
-
-    const path = location.pathname
 
     const [profileName, setProfileName] = useState<string>('')
 
@@ -86,14 +84,84 @@ const DashboardLayout = () => {
             children: [
                 {
                     key: 'categories',
-                    label: '· Categories',
+                    label: (
+                        <div
+                            className="ps-7 flex items-center gap-1"
+                            onMouseEnter={() => setIsHoveredC(true)}
+                            onMouseLeave={() => setIsHoveredC(false)}>
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                style={{ cursor: 'pointer' }} // optional: show it's interactive
+                            >
+                                <mask
+                                    id="mask0_3716_4763"
+                                    style={{ maskType: 'alpha' }}
+                                    maskUnits="userSpaceOnUse"
+                                    x="0"
+                                    y="0"
+                                    width="24"
+                                    height="24">
+                                    <rect
+                                        width="24"
+                                        height="24"
+                                        fill="#D9D9D9"
+                                    />
+                                </mask>
+                                <g mask="url(#mask0_3716_4763)">
+                                    <path
+                                        d="M12 17C10.6071 17 9.4256 16.5149 8.45536 15.5446C7.48512 14.5744 7 13.3929 7 12C7 10.6071 7.48512 9.4256 8.45536 8.45536C9.4256 7.48512 10.6071 7 12 7C13.3929 7 14.5744 7.48512 15.5446 8.45536C16.5149 9.4256 17 10.6071 17 12C17 13.3929 16.5149 14.5744 15.5446 15.5446C14.5744 16.5149 13.3929 17 12 17Z"
+                                        fill={current === 'categories' ? '#FFDE39' : isHoveredC ? '#1c1c1c' : 'white'}
+                                    />
+                                </g>
+                            </svg>
+                            Categories
+                        </div>
+                    ),
                     to: 'categories'
 
                     // icon: current === 'categories' ? <img src={categoryActive} /> : <img src={categoryInActive} />
                 },
                 {
                     key: 'articles',
-                    label: '· Published Blogs',
+                    label: (
+                        <div
+                            className="ps-7 flex items-center gap-1"
+                            onMouseEnter={() => setIsHoveredA(true)}
+                            onMouseLeave={() => setIsHoveredA(false)}>
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <mask
+                                    id="mask0_3716_4763"
+                                    style={{ maskType: 'alpha' }}
+                                    maskUnits="userSpaceOnUse"
+                                    x="0"
+                                    y="0"
+                                    width="24"
+                                    height="24">
+                                    <rect
+                                        width="24"
+                                        height="24"
+                                        fill="#D9D9D9"
+                                    />
+                                </mask>
+                                <g mask="url(#mask0_3716_4763)">
+                                    <path
+                                        d="M12 17C10.6071 17 9.4256 16.5149 8.45536 15.5446C7.48512 14.5744 7 13.3929 7 12C7 10.6071 7.48512 9.4256 8.45536 8.45536C9.4256 7.48512 10.6071 7 12 7C13.3929 7 14.5744 7.48512 15.5446 8.45536C16.5149 9.4256 17 10.6071 17 12C17 13.3929 16.5149 14.5744 15.5446 15.5446C14.5744 16.5149 13.3929 17 12 17Z"
+                                        fill={current === 'articles' ? '#FFDE39' : isHoveredA ? '#1c1c1c' : 'white'}
+                                    />
+                                </g>
+                            </svg>
+                            Published Blogs
+                        </div>
+                    ),
                     to: 'articles'
                     // icon: current === 'blogs' ? <img src={blogInActive} /> : <img src={blogInActive} />
                 }
@@ -139,38 +207,6 @@ const DashboardLayout = () => {
         // setCurrent(e.key);
     }
 
-    const getHeaderText = () => {
-        if (path === '/dashboard/overview') {
-            return `Welcome, ${user?.username}`
-        } else if (path === '/dashboard/articles') {
-            return 'Articles'
-        } else if (path === '/dashboard/testimonials') {
-            return 'Testimonials'
-        } else if (path === `/dashboard/testimonials/add`) {
-            return 'Add Testimonial'
-        } else if (path.startsWith('/dashboard/testimonials/edit/')) {
-            return 'Edit Article'
-        } else if (path === `/dashboard/articles/add`) {
-            return 'Add Article'
-        } else if (path.startsWith('/dashboard/articles/edit/')) {
-            return 'Edit Article'
-        } else if (path === '/dashboard/categories') {
-            return 'Categories'
-        } else if (path === '/dashboard/users') {
-            return 'Users'
-        } else if (path === '/dashboard/faq') {
-            return 'Faqs'
-        } else if (path === `/dashboard/faq/add`) {
-            return 'Add Faqs'
-        } else if (path.startsWith('/dashboard/faq/edit/')) {
-            return 'Edit Faqs'
-        } else if (path === '/dashboard/logos') {
-            return 'Logos'
-        } else if (path === '/dashboard/logos/add') {
-            return 'Add Logos'
-        }
-    }
-
     const [openKeys, setOpenKeys] = useState<string[]>([])
 
     const handleOpenChange = (keys: string[]) => {
@@ -181,10 +217,10 @@ const DashboardLayout = () => {
         setCurrent(location.pathname.slice(11).split('/')[0])
     }, [location.pathname])
 
-    const renderMenuItems = (items: typeof adminItems, openKeys: string[]) => {
+    const renderMenuItems = (items: typeof adminItems, _openKeys: string[]) => {
         return items.map((item) => {
             const isActive = current === item.key
-            const isOpen = openKeys.includes(item.key)
+            // const isOpen = openKeys.includes(item.key)
             const isHovered = hoveredKey === item.key
 
             // Check if any child is active (for parent menus with children)
@@ -375,7 +411,7 @@ const DashboardLayout = () => {
                     collapsedWidth={150}>
                     <Link
                         to="/dashboard/overview"
-                        className="font-sans  py-4 2xl:pt-5 my-4 pb-3 2xl:pb-8 flex justify-center items-center ">
+                        className="font-sans mt-6 mb-4 flex justify-center items-center">
                         <img
                             src={Logo}
                             className="w-[240px] h-auto"
@@ -404,7 +440,7 @@ const DashboardLayout = () => {
 
                             <ButtonThemeConfig buttonType={EConfigButtonType.THIRD}>
                                 <Button
-                                    className="font-sans text-lg w-[160px] h-[48px] rounded-[100px] bg-darkblue  2xl:h-12 text-font16 text-white "
+                                    className="font-sans text-lg w-[160px] h-[48px] rounded-[100px] bg-darkblue border-none 2xl:h-12 text-font16 text-white "
                                     type="default"
                                     icon={
                                         <img

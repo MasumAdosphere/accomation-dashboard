@@ -213,32 +213,36 @@ const Article = () => {
             <Form>
                 <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     {/* Category Filter Dropdown */}
-                    <div className="w-full flex gap-3 sm:w-auto">
-                        <TextItem
-                            placeholder="Search articles..."
-                            value={searchQuery}
-                            icon={
-                                <img
-                                    src={searchIcon}
-                                    alt="logout"
-                                    className="w-3 h-3 mr-2 "
-                                />
-                            }
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            allowClear
-                            className="font-sans h-12 w-full text-font16 text-[#1c1c1c] font-semibold"
-                            name={''}
-                            required={false}
-                        />
-                        <Select
-                            placeholder="Filter by Category"
-                            value={selectedCategory || undefined}
-                            onChange={handleCategoryChange}
-                            options={categoryOptions}
-                            style={{ width: '256px', height: '48px', borderRadius: '8px', border: '1px solid #DDDDDD' }}
-                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-full"
-                            allowClear
-                        />
+                    <div className="w-full flex gap-3">
+                        <div className="max-w-[350px] w-full">
+                            <TextItem
+                                placeholder="Search articles..."
+                                value={searchQuery}
+                                icon={
+                                    <img
+                                        src={searchIcon}
+                                        alt="logout"
+                                        className="w-3 h-3 mr-2 "
+                                    />
+                                }
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                allowClear
+                                className="font-sans h-12 w-full text-font16 text-[#1c1c1c] font-semibold"
+                                name={''}
+                                required={false}
+                            />
+                        </div>
+                        <div className="max-w-[256px] w-full">
+                            <Select
+                                placeholder="Filter by Category"
+                                value={selectedCategory || undefined}
+                                onChange={handleCategoryChange}
+                                options={categoryOptions}
+                                style={{ height: '48px', borderRadius: '8px', borderColor: '#DDDDDD' }}
+                                className="font-sans text-font16 text-[#1c1c1c] font-semibold w-full"
+                                allowClear
+                            />
+                        </div>
                     </div>
 
                     {/* Add Button */}

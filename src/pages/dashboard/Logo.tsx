@@ -11,7 +11,6 @@ import { getAllLogo, publishLogoById } from '../../redux/logo/logo.thunk'
 import { CreateLogoDrawer } from '../../components/antdesign/drawer.components'
 import deleteIcon from '../../assets/delete.svg'
 import { setIsDataRefreshed } from '../../redux/common/common.slice'
-import plusicon from '../../assets/plus.svg'
 
 const Logo = () => {
     const pageSize = 20
@@ -91,7 +90,7 @@ const Logo = () => {
         {
             title: 'Logo',
             dataIndex: 'logo',
-            width: '25%',
+            width: '23%',
             key: 'logo',
             render: (_, record) => (
                 <div className="flex items-center justify-start">
@@ -107,10 +106,10 @@ const Logo = () => {
         {
             title: 'Created At',
             key: 'createdAt',
-            width: '15%',
+            width: '17%',
             dataIndex: 'createdAt',
             render: (_text: string, record: any) => (
-                <span className="font-sans text-darkblue font-semibold text-font16">{moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
+                <span className="font-sans text-gray44 font-medium text-font16">{moment(record.createdAt).format('DD-MM-YYYY HH:mm A')}</span>
             )
         },
         {
@@ -131,7 +130,7 @@ const Logo = () => {
 
                     <Tooltip title="Delete">
                         <div
-                            className=""
+                            className="cursor-pointer"
                             onClick={() => {
                                 setIsDeleteLogoModalOpen(true)
                                 setSelectedLogoId(record.id)

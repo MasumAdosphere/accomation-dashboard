@@ -189,7 +189,7 @@ const Faq = () => {
 
                     <Tooltip title="Delete">
                         <div
-                            className="w-10 h-8"
+                            className="w-10 h-8 cursor-pointer"
                             onClick={() => {
                                 setIsDeleteFaqModalOpen(true)
                                 setSelectedFaqId(record.id)
@@ -329,11 +329,11 @@ const Faq = () => {
 
                     {/* Add Button */}
                     <div className="w-full flex gap-2 sm:w-auto">
-                        <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
+                        <ButtonThemeConfig buttonType={EConfigButtonType.SECONDARY}>
                             <Button
                                 onClick={handleSaveChanges}
                                 icon={isSubmitting ? <LoadingOutlined spin /> : undefined} // show loader
-                                className="rounded-[25px] text-font16 font-semibold font-Metropolis  2xl:h-[48px] w-[160px] bg-primary text-white border-primary"
+                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-4 py-2 w-[140px]"
                                 type="default">
                                 {isSubmitting ? 'Saving...' : 'Save Changes'}
                             </Button>

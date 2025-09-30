@@ -110,7 +110,7 @@ export const TextItem = ({
         <ConfigProvider
             theme={{
                 token: {
-                    colorPrimary: '#083050'
+                    colorPrimary: '#7f69e2'
                 }
             }}>
             <Form.Item
@@ -130,7 +130,7 @@ export const TextItem = ({
                     className={
                         className
                             ? className
-                            : 'h-10 2xl:h-12 font-sans text-font16 rounded-[6px] text-[#919191] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500'
+                            : 'h-10 2xl:h-12 font-sans text-font16 rounded-[6px] text-[#444444] border-[#ddd] border-2 transition ease-in duration-500'
                     }
                     placeholder={placeholder}
                 />
@@ -321,7 +321,7 @@ export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploadin
             const blob = new Blob([file])
             return URL.createObjectURL(blob)
         },
-        onRemove(file) {
+        onRemove(_file) {
             if (onChange) {
                 onChange(null)
             }
@@ -333,16 +333,16 @@ export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploadin
     return (
         <Upload {...props}>
             <div
-                className={`border-2 border-[#e7e7e7] w-full rounded-md p-3 flex items-center justify-between cursor-pointer ${className}`}
+                className={`border-2 border-[#e7e7e7] w-full rounded-md py-1.5 px-2.5 flex items-center justify-between cursor-pointer ${className}`}
                 style={{
-                    minHeight: '40px',
+                    minHeight: '48px',
                     background: 'white'
                 }}>
                 <span className="text-font15 font-medium text-[#cccccc] font-Metropolis">{fileName ? fileName : 'Select Image'}</span>
                 <Button
                     type="default"
                     size="small"
-                    className="!bg-[#EBEBEB] !rounded-[5px] !text-font14 !text-[#515151] !font-semibold"
+                    className="!bg-[#EBEBEB] !rounded-[5px] !text-font14 !text-[#515151] !font-semibold border-[#EBEBEB] !px-3 !py-2 border hover:!border-[#4226C4] hover:!bg-white"
                     loading={isUploading}
                     disabled={isUploading}>
                     {isUploading ? 'Uploading...' : 'Choose File'}
