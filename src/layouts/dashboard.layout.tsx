@@ -133,6 +133,8 @@ const DashboardLayout = () => {
     ]
 
     const onClick = (e: any) => {
+        setHoveredKey(null) // Add this line to reset hover state
+
         navigate(e.key)
         // setCurrent(e.key);
     }
@@ -175,101 +177,114 @@ const DashboardLayout = () => {
         setOpenKeys(keys)
     }
 
+    useEffect(() => {
+        setCurrent(location.pathname.slice(11).split('/')[0])
+    }, [location.pathname])
+
     const renderMenuItems = (items: typeof adminItems, openKeys: string[]) => {
         return items.map((item) => {
             const isActive = current === item.key
             const isOpen = openKeys.includes(item.key)
+            const isHovered = hoveredKey === item.key
+
+            // Check if any child is active (for parent menus with children)
+            const isChildActive = item.children?.some((child) => current === child.key) ?? false
 
             let icon
 
-            if (item.key === 'articles') {
-                const isBlogSectionActive = location.pathname.startsWith('/dashboard/articles/')
+            if (item.key === 'overview') {
                 icon =
-                    isBlogSectionActive || isOpen ? (
+                    isActive || isHovered ? (
                         <img
                             src={blogActive}
-                            alt="Blogs"
+                            alt="Overview"
                         />
                     ) : (
                         <img
                             src={blogInActive}
-                            alt="Blogs"
+                            alt="Overview"
                         />
                     )
-            } else if (item.key === 'overview') {
-                icon = isActive ? (
+            } else if (item.key === 'blogs') {
+                // Only active if one of the child routes is active, ignore hover
+                icon = isChildActive ? (
                     <img
                         src={blogActive}
-                        alt="Overview"
+                        alt="Blogs"
                     />
                 ) : (
                     <img
                         src={blogInActive}
-                        alt="Overview"
+                        alt="Blogs"
                     />
                 )
             } else if (item.key === 'testimonials') {
-                icon = isActive ? (
-                    <img
-                        src={testimonialActive}
-                        alt="Testimonials"
-                    />
-                ) : (
-                    <img
-                        src={testimonialInactive}
-                        alt="Testimonials"
-                    />
-                )
+                icon =
+                    isActive || isHovered ? (
+                        <img
+                            src={testimonialActive}
+                            alt="Testimonials"
+                        />
+                    ) : (
+                        <img
+                            src={testimonialInactive}
+                            alt="Testimonials"
+                        />
+                    )
             } else if (item.key === 'faq') {
-                icon = isActive ? (
-                    <img
-                        src={faqActive}
-                        alt="FAQs"
-                    />
-                ) : (
-                    <img
-                        src={faqInactive}
-                        alt="FAQs"
-                    />
-                )
+                icon =
+                    isActive || isHovered ? (
+                        <img
+                            src={faqActive}
+                            alt="FAQs"
+                        />
+                    ) : (
+                        <img
+                            src={faqInactive}
+                            alt="FAQs"
+                        />
+                    )
             } else if (item.key === 'logos') {
-                icon = isActive ? (
-                    <img
-                        src={clientActive}
-                        alt="Logos"
-                    />
-                ) : (
-                    <img
-                        src={clientInactive}
-                        alt="Logos"
-                    />
-                )
+                icon =
+                    isActive || isHovered ? (
+                        <img
+                            src={clientActive}
+                            alt="Logos"
+                        />
+                    ) : (
+                        <img
+                            src={clientInactive}
+                            alt="Logos"
+                        />
+                    )
             } else if (item.key === 'career') {
-                icon = isActive ? (
-                    <img
-                        src={careerActive}
-                        alt="Career"
-                    />
-                ) : (
-                    <img
-                        src={careerInActive}
-                        alt="Career"
-                    />
-                )
+                icon =
+                    isActive || isHovered ? (
+                        <img
+                            src={careerActive}
+                            alt="Career"
+                        />
+                    ) : (
+                        <img
+                            src={careerInActive}
+                            alt="Career"
+                        />
+                    )
             } else if (item.key === 'users') {
-                icon = isActive ? (
-                    <img
-                        src={userActive}
-                        alt="Users"
-                    />
-                ) : (
-                    <img
-                        src={userInActive}
-                        alt="Users"
-                    />
-                )
+                icon =
+                    isActive || isHovered ? (
+                        <img
+                            src={userActive}
+                            alt="Users"
+                        />
+                    ) : (
+                        <img
+                            src={userInActive}
+                            alt="Users"
+                        />
+                    )
             } else {
-                icon = item.icon // fallback
+                icon = item.icon
             }
 
             if (item.children) {
@@ -277,10 +292,17 @@ const DashboardLayout = () => {
                     key: item.key,
                     label: item.label,
                     icon,
+                    onMouseEnter: () => setHoveredKey(item.key),
+                    onMouseLeave: () => setHoveredKey(null),
                     children: item.children.map((child) => ({
                         key: child.key,
                         label: child.label,
-                        onClick: () => onClick({ key: child.key } as any)
+                        onMouseEnter: () => setHoveredKey(item.key),
+                        onMouseLeave: () => setHoveredKey(null),
+                        onClick: () => {
+                            setHoveredKey(null)
+                            onClick({ key: child.key } as any)
+                        }
                     }))
                 }
             }
@@ -289,7 +311,12 @@ const DashboardLayout = () => {
                 key: item.key,
                 label: item.label,
                 icon,
-                onClick: () => onClick({ key: item.key } as any)
+                onMouseEnter: () => setHoveredKey(item.key),
+                onMouseLeave: () => setHoveredKey(null),
+                onClick: () => {
+                    setHoveredKey(null)
+                    onClick({ key: item.key } as any)
+                }
             }
         })
     }
@@ -401,7 +428,7 @@ const DashboardLayout = () => {
                         style={{
                             minHeight: 280
                         }}
-                        className="font-sans bg-white bg-cover bg-center bg-no-repeat min-h-screen w-full p-3  overflow-auto ">
+                        className="font-sans bg-white bg-cover bg-center bg-no-repeat min-h-screen w-full py-3 px-6  overflow-auto ">
                         <Outlet />
                     </Content>
                 </Layout>
