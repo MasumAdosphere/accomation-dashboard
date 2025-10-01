@@ -14,9 +14,12 @@ import { getProfile } from '../redux/user/user.thunk'
 
 import blogActive from '../assets/blogActive.svg'
 import blogInActive from '../assets/blogInactive.svg'
+import categoriesInActive from '../assets/categoryInactive.svg'
+import categoriesActive from '../assets/categoryActive.svg'
+import overviewInActive from '../assets/overview.svg'
+import overviewActive from '../assets/overviewActive.svg'
 import careerActive from '../assets/careerActive.svg'
 import careerInActive from '../assets/CareerInactive.svg'
-
 import testimonialActive from '../assets/testimonialsActive.svg'
 import testimonialInactive from '../assets/testimonialsInactive.svg'
 import faqInactive from '../assets/faqInactive.svg'
@@ -33,8 +36,6 @@ const DashboardLayout = () => {
     const location = useLocation()
 
     const { user } = useSelector((state: RootState) => state.User)
-    const [isHoveredA, setIsHoveredA] = useState(false)
-    const [isHoveredC, setIsHoveredC] = useState(false)
 
     const [current, setCurrent] = useState(location.pathname.slice(11).split('/')[0])
 
@@ -73,101 +74,21 @@ const DashboardLayout = () => {
         {
             key: 'overview',
             label: 'Overview',
-            icon: current === 'overview' ? <img src={blogActive} /> : <img src={blogInActive} />,
+            icon: current === 'overview' ? <img src={overviewActive} /> : <img src={overviewInActive} />,
             to: 'overview'
         },
         {
-            key: 'blogs',
-            label: 'Blog Management',
-            icon: current === 'categories' || current === 'articles' ? <img src={blogActive} /> : <img src={blogInActive} />,
-            to: 'blogs',
-            children: [
-                {
-                    key: 'categories',
-                    label: (
-                        <div
-                            className="ps-7 flex items-center gap-1"
-                            onMouseEnter={() => setIsHoveredC(true)}
-                            onMouseLeave={() => setIsHoveredC(false)}>
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                style={{ cursor: 'pointer' }} // optional: show it's interactive
-                            >
-                                <mask
-                                    id="mask0_3716_4763"
-                                    style={{ maskType: 'alpha' }}
-                                    maskUnits="userSpaceOnUse"
-                                    x="0"
-                                    y="0"
-                                    width="24"
-                                    height="24">
-                                    <rect
-                                        width="24"
-                                        height="24"
-                                        fill="#D9D9D9"
-                                    />
-                                </mask>
-                                <g mask="url(#mask0_3716_4763)">
-                                    <path
-                                        d="M12 17C10.6071 17 9.4256 16.5149 8.45536 15.5446C7.48512 14.5744 7 13.3929 7 12C7 10.6071 7.48512 9.4256 8.45536 8.45536C9.4256 7.48512 10.6071 7 12 7C13.3929 7 14.5744 7.48512 15.5446 8.45536C16.5149 9.4256 17 10.6071 17 12C17 13.3929 16.5149 14.5744 15.5446 15.5446C14.5744 16.5149 13.3929 17 12 17Z"
-                                        fill={current === 'categories' ? '#FFDE39' : isHoveredC ? '#1c1c1c' : 'white'}
-                                    />
-                                </g>
-                            </svg>
-                            Categories
-                        </div>
-                    ),
-                    to: 'categories'
-
-                    // icon: current === 'categories' ? <img src={categoryActive} /> : <img src={categoryInActive} />
-                },
-                {
-                    key: 'articles',
-                    label: (
-                        <div
-                            className="ps-7 flex items-center gap-1"
-                            onMouseEnter={() => setIsHoveredA(true)}
-                            onMouseLeave={() => setIsHoveredA(false)}>
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <mask
-                                    id="mask0_3716_4763"
-                                    style={{ maskType: 'alpha' }}
-                                    maskUnits="userSpaceOnUse"
-                                    x="0"
-                                    y="0"
-                                    width="24"
-                                    height="24">
-                                    <rect
-                                        width="24"
-                                        height="24"
-                                        fill="#D9D9D9"
-                                    />
-                                </mask>
-                                <g mask="url(#mask0_3716_4763)">
-                                    <path
-                                        d="M12 17C10.6071 17 9.4256 16.5149 8.45536 15.5446C7.48512 14.5744 7 13.3929 7 12C7 10.6071 7.48512 9.4256 8.45536 8.45536C9.4256 7.48512 10.6071 7 12 7C13.3929 7 14.5744 7.48512 15.5446 8.45536C16.5149 9.4256 17 10.6071 17 12C17 13.3929 16.5149 14.5744 15.5446 15.5446C14.5744 16.5149 13.3929 17 12 17Z"
-                                        fill={current === 'articles' ? '#FFDE39' : isHoveredA ? '#1c1c1c' : 'white'}
-                                    />
-                                </g>
-                            </svg>
-                            Published Blogs
-                        </div>
-                    ),
-                    to: 'articles'
-                    // icon: current === 'blogs' ? <img src={blogInActive} /> : <img src={blogInActive} />
-                }
-            ]
+            key: 'categories',
+            label: 'Blog Categories',
+            icon: current === 'categories' ? <img src={categoriesActive} /> : <img src={categoriesInActive} />,
+            to: 'categories'
         },
-
+        {
+            key: 'articles',
+            label: 'Published Blogs',
+            icon: current === 'articles' ? <img src={blogActive} /> : <img src={blogInActive} />,
+            to: 'articles'
+        },
         {
             key: 'testimonials',
             label: 'Testimonials',
@@ -194,7 +115,7 @@ const DashboardLayout = () => {
         },
         {
             key: 'users',
-            label: 'Users',
+            label: 'Manage Users',
             to: 'users',
             icon: current === 'users' ? <img src={careerActive} /> : <img src={careerInActive} />
         }
@@ -224,11 +145,23 @@ const DashboardLayout = () => {
             const isHovered = hoveredKey === item.key
 
             // Check if any child is active (for parent menus with children)
-            const isChildActive = item.children?.some((child) => current === child.key) ?? false
 
             let icon
 
             if (item.key === 'overview') {
+                icon =
+                    isActive || isHovered ? (
+                        <img
+                            src={overviewActive}
+                            alt="Overview"
+                        />
+                    ) : (
+                        <img
+                            src={overviewInActive}
+                            alt="Overview"
+                        />
+                    )
+            } else if (item.key === 'articles') {
                 icon =
                     isActive || isHovered ? (
                         <img
@@ -241,19 +174,19 @@ const DashboardLayout = () => {
                             alt="Overview"
                         />
                     )
-            } else if (item.key === 'blogs') {
-                // Only active if one of the child routes is active, ignore hover
-                icon = isChildActive ? (
-                    <img
-                        src={blogActive}
-                        alt="Blogs"
-                    />
-                ) : (
-                    <img
-                        src={blogInActive}
-                        alt="Blogs"
-                    />
-                )
+            } else if (item.key === 'categories') {
+                icon =
+                    isActive || isHovered ? (
+                        <img
+                            src={categoriesActive}
+                            alt="Blog Categories"
+                        />
+                    ) : (
+                        <img
+                            src={categoriesInActive}
+                            alt="categories"
+                        />
+                    )
             } else if (item.key === 'testimonials') {
                 icon =
                     isActive || isHovered ? (
@@ -323,26 +256,6 @@ const DashboardLayout = () => {
                 icon = item.icon
             }
 
-            if (item.children) {
-                return {
-                    key: item.key,
-                    label: item.label,
-                    icon,
-                    onMouseEnter: () => setHoveredKey(item.key),
-                    onMouseLeave: () => setHoveredKey(null),
-                    children: item.children.map((child) => ({
-                        key: child.key,
-                        label: child.label,
-                        onMouseEnter: () => setHoveredKey(item.key),
-                        onMouseLeave: () => setHoveredKey(null),
-                        onClick: () => {
-                            setHoveredKey(null)
-                            onClick({ key: child.key } as any)
-                        }
-                    }))
-                }
-            }
-
             return {
                 key: item.key,
                 label: item.label,
@@ -356,19 +269,6 @@ const DashboardLayout = () => {
             }
         })
     }
-
-    // const renderMenuItems = (
-    //     menuItems: {
-    //         key: string
-    //         label: string
-    //         to: string
-    //     }[]
-    // ) =>
-    //     menuItems.map((item) => ({
-    //         ...item,
-    //         label: <span>{item.label}</span>
-    //     }))
-
     useEffect(() => {
         setCurrent(location.pathname.slice(11).split('/')[0])
     }, [location.pathname])

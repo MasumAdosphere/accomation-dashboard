@@ -34,22 +34,29 @@ export const PasswordInput = ({ name, required = true, placeholder, icon, onChan
     }
 
     return (
-        <Form.Item
-            name={name}
-            className={
-                className
-                    ? className
-                    : 'h-[52px]  w-full font-sans text-font16 rounded-[6px] text-[#444444] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500'
-            }
-            rules={rules}>
-            <Input.Password
-                className="h-[52px]  font-sans text-font16 rounded-[6px] text-[#444444] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
-                placeholder={placeholder}
-                autoComplete="off"
-                prefix={icon}
-                onChange={onChange}
-            />
-        </Form.Item>
+        <ConfigProvider
+            theme={{
+                token: {
+                    colorPrimary: '#7f69e2'
+                }
+            }}>
+            <Form.Item
+                name={name}
+                className="w-full"
+                rules={rules}>
+                <Input.Password
+                    className={
+                        className
+                            ? className
+                            : 'h-[52px]  w-full font-sans text-font16 rounded-[6px] text-[#444444] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500'
+                    }
+                    placeholder={placeholder}
+                    autoComplete="off"
+                    prefix={icon}
+                    onChange={onChange}
+                />
+            </Form.Item>
+        </ConfigProvider>
     )
 }
 
@@ -177,7 +184,7 @@ export const TextAreaItem = ({ name, required = true, min, max, onChange, placeh
                 className={
                     className
                         ? className
-                        : 'h-10 2xl:h-12 font-sans text-font16 rounded-[6px] text-[#919191] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500'
+                        : 'h-10 2xl:h-12 font-sans text-font16 border-2 rounded-[6px] text-[#919191] hover:border-[#e7e7e7] border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500'
                 }
             />
         </Form.Item>

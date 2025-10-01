@@ -26,7 +26,6 @@ export const CreateTestimonialDrawer = ({
 }) => {
     const dispatch = useDispatch()
     const [form] = Form.useForm()
-    const [categories, setCategories] = useState<Array<ICategory>>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imageFile, setImageFile] = useState<File | null>(null)
 
@@ -66,29 +65,6 @@ export const CreateTestimonialDrawer = ({
         }
     }
 
-    const fetchCategories = async (signal: AbortSignal) => {
-        try {
-            const feature = 'Blog'
-            const { data } = await getAllCategories(10, 1, feature, signal)
-
-            if (data) {
-                const categoryItems = data.map((cat: ICategory) => ({
-                    label: cat.title,
-                    value: cat.id
-                }))
-                setCategories(categoryItems)
-            }
-        } catch (error) {
-            //@ts-ignore
-            message.error(error.message)
-        }
-    }
-
-    useEffect(() => {
-        const controller = new AbortController()
-        const signal = controller.signal
-        fetchCategories(signal)
-    }, [])
     return (
         <Drawer
             open={isCreateTestimonialDrawerOpen}
@@ -144,7 +120,7 @@ export const CreateTestimonialDrawer = ({
                                 <TextAreaItem
                                     name="description"
                                     placeholder="Enter description"
-                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
                                     onChange={(e) => {
                                         const value = e.target.value
                                         form.setFieldsValue({ description: value })
@@ -181,6 +157,9 @@ export const CreateTestimonialDrawer = ({
                                             isUploading={false}
                                         />
                                     </Form.Item>
+                                    <span className="text-gray44 font-Metropolis">
+                                        Note: Please ensure to upload square image for better visualization
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -292,7 +271,6 @@ export const CreateFaqDrawer = ({
                                 min={4}
                                 placeholder="Enter the question..."
                                 required={true}
-                                className="h-10 2xl:h-12"
                                 onChange={inputChangeHandler('question')}
                             />
                         </div>
@@ -306,7 +284,7 @@ export const CreateFaqDrawer = ({
                                 name="answer"
                                 rules={[{ required: true, message: 'Please enter the answer' }]}>
                                 <TextAreaItem
-                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
                                     placeholder="Write the detailed answer here..."
                                     onChange={() => {}}
                                     name={''}
@@ -323,12 +301,12 @@ export const CreateFaqDrawer = ({
                             <ConfigProvider
                                 theme={{
                                     token: {
-                                        controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
-                                        colorPrimary: '#083050'
+                                        colorPrimary: '#7f69e2'
                                     },
                                     components: {
                                         Select: {
-                                            activeOutlineColor: 'transparent'
+                                            activeOutlineColor: '#7f69e2',
+                                            hoverBorderColor: '#7f69e2'
                                         }
                                     }
                                 }}>
@@ -337,12 +315,12 @@ export const CreateFaqDrawer = ({
                                     rules={[{ required: true, message: 'Please select a page' }]}>
                                     <Select
                                         allowClear
-                                        className="h-10 2xl:h-12 !font-sans !text-font16 !rounded-[6px] !focus:border-[#e7e7e7] !hover:border-[#e7e7e7] !border-[#e7e7e7] !text-[#919191]  !border !transition !ease-in !duration-500"
+                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
                                         placeholder="Select page (e.g., Overview, Blog, Testimonial)"
                                         options={[
-                                            { value: 'Overview', label: 'Overview' },
-                                            { value: 'Blog', label: 'Blog' },
-                                            { value: 'Testimonial', label: 'Testimonial' }
+                                            { value: 'overview', label: 'Overview' },
+                                            { value: 'blog', label: 'Blog' },
+                                            { value: 'testimonial', label: 'Testimonial' }
                                         ]}
                                         filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
                                         onChange={(value) => form.setFieldsValue({ pageName: value })}
@@ -612,7 +590,7 @@ export const CreateArticleDrawer = ({
             open={isCreateArticleDrawerOpen}
             onClose={() => SetIsCreateArticleDrawerOpen(false)}
             footer={null}
-            width={644}>
+            width={944}>
             <Form
                 form={form}
                 className="font-sans w-full flex justify-between flex-col h-full"
@@ -642,12 +620,12 @@ export const CreateArticleDrawer = ({
                             <ConfigProvider
                                 theme={{
                                     token: {
-                                        controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
-                                        colorPrimary: '#083050'
+                                        colorPrimary: '#7f69e2'
                                     },
                                     components: {
                                         Select: {
-                                            activeOutlineColor: 'transparent'
+                                            activeOutlineColor: '#7f69e2',
+                                            hoverBorderColor: '#7f69e2'
                                         }
                                     }
                                 }}>
@@ -659,8 +637,7 @@ export const CreateArticleDrawer = ({
                                     <Select
                                         maxCount={3}
                                         allowClear
-                                        style={{ width: '100%', height: '48px' }}
-                                        className="h-10 2xl:h-12 text-primary font-sans text-lg font-dmSans focus-visible:shadow-none  transition ease-in duration-500 rounded"
+                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
                                         options={categories}
                                         filterOption={filterOption}
                                         placeholder="Select category"
@@ -669,29 +646,7 @@ export const CreateArticleDrawer = ({
                                 </Form.Item>
                             </ConfigProvider>
                         </div>
-
-                        <div className="font-sans col-span-2 mb-4 h-auto">
-                            <label className="font-sans text-font16 font-semibold text-gray44 mb-2">
-                                Content
-                                <span className="font-sans text-red-500 pl-1">*</span>
-                            </label>
-                            <div className="mt-2">
-                                <Editor
-                                    name="content"
-                                    onChange={(value) => form.setFieldsValue({ content: value })}
-                                    initialContent={''}
-                                />
-
-                                {/* <TextEditor
-                                name="content"
-                                required={true}
-                                onChange={(value) => form.setFieldsValue({ content: value })}
-                                value={form.getFieldValue('content')}
-                            /> */}
-                            </div>
-                        </div>
-
-                        <div className="font-sans col-span-2 h-auto">
+                        <div className="font-sans col-span-2 h-auto mb-4">
                             <div className="font-sans  w-full">
                                 <label className="font-sans text-font16 font-semibold text-gray44 mb-2">
                                     Upload Thumbnail
@@ -716,6 +671,19 @@ export const CreateArticleDrawer = ({
                                         />
                                     </Form.Item>
                                 </div>
+                            </div>
+                        </div>
+                        <div className="font-sans col-span-2 mb-4 h-auto">
+                            <label className="font-sans text-font16 font-semibold text-gray44 mb-2">
+                                Content
+                                <span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <div className="mt-2">
+                                <Editor
+                                    name="content"
+                                    onChange={(value) => form.setFieldsValue({ content: value })}
+                                    initialContent={''}
+                                />
                             </div>
                         </div>
                     </div>
@@ -996,7 +964,7 @@ export const EditArticleDrawer = ({
             open={isEditArticleDrawerOpen}
             onClose={() => SetIsEditArticleDrawerOpen(false)}
             footer={null}
-            width={644}>
+            width={944}>
             <Form
                 form={form}
                 fields={[
@@ -1030,13 +998,24 @@ export const EditArticleDrawer = ({
                             <label className="font-sans  text-font16 font-semibold text-gray44">
                                 Category<span className="text-red-500 pl-1">*</span>
                             </label>
-                            <ConfigProvider theme={{ token: { colorPrimary: '#083050' } }}>
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        colorPrimary: '#7f69e2'
+                                    },
+                                    components: {
+                                        Select: {
+                                            activeOutlineColor: '#7f69e2',
+                                            hoverBorderColor: '#7f69e2'
+                                        }
+                                    }
+                                }}>
                                 <Form.Item
                                     name="category"
                                     rules={[{ required: true, message: 'Please select category' }]}>
                                     <Select
                                         allowClear
-                                        style={{ width: '100%', height: '48px' }}
+                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
                                         options={categories}
                                         filterOption={filterOption}
                                         placeholder="Select Category"
@@ -1306,7 +1285,7 @@ export const EditTestimonialDrawer = ({
                                     <TextAreaItem
                                         name="description"
                                         placeholder="Enter description"
-                                        className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                        className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
                                         onChange={(e) => {
                                             const value = e.target.value
                                             form.setFieldsValue({ description: value })
@@ -1495,7 +1474,6 @@ export const EditFaqDrawer = ({
                                     min={4}
                                     placeholder="Enter the question..."
                                     required={true}
-                                    className="h-10 2xl:h-12"
                                     onChange={inputChangeHandler('question')}
                                 />
                             </div>
@@ -1505,16 +1483,14 @@ export const EditFaqDrawer = ({
                                 <label className="font-sans text-font16 font-semibold text-gray44">
                                     Answer<span className="font-sans text-red-500 pl-1">*</span>
                                 </label>
-                                <Form.Item
+
+                                <TextAreaItem
                                     name="answer"
-                                    rules={[{ required: true, message: 'Please enter the answer' }]}>
-                                    <textarea
-                                        className="w-full p-3 border border-[#e7e7e7] hover:border-[#e7e7e7] !rounded-[6px] focus:outline-none !font-Metropolis text-base leading-relaxed resize-y"
-                                        rows={8}
-                                        placeholder="Write the detailed answer here..."
-                                        maxLength={2000}
-                                    />
-                                </Form.Item>
+                                    required
+                                    onChange={() => {}}
+                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    placeholder="Write the detailed answer here..."
+                                />
                             </div>
 
                             {/* Page Dropdown */}
@@ -1525,12 +1501,12 @@ export const EditFaqDrawer = ({
                                 <ConfigProvider
                                     theme={{
                                         token: {
-                                            controlItemBgActive: 'rgba(5, 5, 5, 0.06)',
-                                            colorPrimary: '#083050'
+                                            colorPrimary: '#7f69e2'
                                         },
                                         components: {
                                             Select: {
-                                                activeOutlineColor: 'transparent'
+                                                activeOutlineColor: '#7f69e2',
+                                                hoverBorderColor: '#7f69e2'
                                             }
                                         }
                                     }}>
@@ -1539,8 +1515,7 @@ export const EditFaqDrawer = ({
                                         rules={[{ required: true, message: 'Please select a page' }]}>
                                         <Select
                                             allowClear
-                                            style={{ width: '100%', height: '48px' }}
-                                            className="h-10 2xl:h-12 !font-sans !text-font16 !rounded-[6px] !focus:border-[#e7e7e7] !hover:border-[#e7e7e7] !border-[#e7e7e7] !text-[#919191]  !border !transition !ease-in !duration-500"
+                                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
                                             placeholder="Select page (e.g., Overview, Blog, Testimonial)"
                                             options={[
                                                 { value: 'Overview', label: 'Overview' },
@@ -1665,19 +1640,32 @@ export const CreateCareerDrawer = ({
                             <label className="font-sans text-font16 font-semibold text-gray44">
                                 Employment Type<span className="font-sans text-red-500 pl-1">*</span>
                             </label>
-                            <Form.Item
-                                name="employmentType"
-                                className="font-sans w-full">
-                                <Select
-                                    placeholder="Select employment type"
-                                    options={[
-                                        { value: 'Full Time', label: 'Full Time' },
-                                        { value: 'Part Time', label: 'Part Time' },
-                                        { value: 'Internship', label: 'Internship' }
-                                    ]}
-                                    className="h-10 2xl:h-12 text-primary font-sans text-lg font-dmSans focus-visible:shadow-none  transition ease-in duration-500 rounded"
-                                />
-                            </Form.Item>
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        colorPrimary: '#7f69e2'
+                                    },
+                                    components: {
+                                        Select: {
+                                            activeOutlineColor: '#7f69e2',
+                                            hoverBorderColor: '#7f69e2'
+                                        }
+                                    }
+                                }}>
+                                <Form.Item
+                                    name="employmentType"
+                                    className="font-sans w-full">
+                                    <Select
+                                        placeholder="Select employment type"
+                                        options={[
+                                            { value: 'Full Time', label: 'Full Time' },
+                                            { value: 'Part Time', label: 'Part Time' },
+                                            { value: 'Internship', label: 'Internship' }
+                                        ]}
+                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                    />
+                                </Form.Item>
+                            </ConfigProvider>
                         </div>
 
                         <div className="font-sans mb-4 space-y-1">
@@ -1724,7 +1712,7 @@ export const CreateCareerDrawer = ({
                                 <TextAreaItem
                                     name="jobDescription"
                                     placeholder="Describe responsibilities, skills, qualifications..."
-                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
                                     onChange={(e) => {
                                         const value = e.target.value
                                         form.setFieldsValue({ description: value })
@@ -1884,20 +1872,33 @@ export const EditCareerDrawer = ({
                                 <label className="font-sans text-font16 font-semibold text-gray44">
                                     Employment Type<span className="font-sans text-red-500 pl-1">*</span>
                                 </label>
-                                <Form.Item
-                                    name="employmentType"
-                                    className="font-sans w-full"
-                                    rules={[{ required: true, message: 'Please select employment type' }]}>
-                                    <Select
-                                        placeholder="Select employment type"
-                                        options={[
-                                            { value: 'Full-time', label: 'Full Time' },
-                                            { value: 'Part-time', label: 'Part Time' },
-                                            { value: 'Contract', label: 'Contract' }
-                                        ]}
-                                        className="h-10 2xl:h-12 border border-[#dddddd] hover:border-[#dddddd] font-sans text-lg font-dmSans focus-visible:shadow-none  transition ease-in duration-500 rounded"
-                                    />
-                                </Form.Item>
+                                <ConfigProvider
+                                    theme={{
+                                        token: {
+                                            colorPrimary: '#7f69e2'
+                                        },
+                                        components: {
+                                            Select: {
+                                                activeOutlineColor: '#7f69e2',
+                                                hoverBorderColor: '#7f69e2'
+                                            }
+                                        }
+                                    }}>
+                                    <Form.Item
+                                        name="employmentType"
+                                        className="font-sans w-full"
+                                        rules={[{ required: true, message: 'Please select employment type' }]}>
+                                        <Select
+                                            placeholder="Select employment type"
+                                            options={[
+                                                { value: 'Full-time', label: 'Full Time' },
+                                                { value: 'Part-time', label: 'Part Time' },
+                                                { value: 'Contract', label: 'Contract' }
+                                            ]}
+                                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                        />
+                                    </Form.Item>
+                                </ConfigProvider>
                             </div>
 
                             <div className="font-sans mb-4 space-y-1">
@@ -1948,7 +1949,7 @@ export const EditCareerDrawer = ({
                                     <TextAreaItem
                                         name="jobDescription"
                                         placeholder="Describe responsibilities, skills, qualifications..."
-                                        className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#e7e7e7] hover:border-[#e7e7e7]  border border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                        className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
                                         onChange={(e) => {
                                             const value = e.target.value
                                             form.setFieldsValue({ description: value })

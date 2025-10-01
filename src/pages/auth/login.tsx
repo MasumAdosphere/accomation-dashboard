@@ -58,7 +58,7 @@ const Login = () => {
                 <img
                     src={Logo}
                     alt="logo"
-                    className="w-[54px] h-[54px]"
+                    className="w-[54px] h-[54px] mb-8"
                 />
                 <h2 className=" text-darkblue font-Metropolis font-semibold text-font22 mb-2">Sign in with email</h2>
                 <p className="text-gray44 font-Metropolis font-medium text-font18">Log in using your email address for Accomation CRM</p>
@@ -92,7 +92,7 @@ const Login = () => {
                                 className="w-5 h-5 mr-2"
                             />
                         }
-                        className=" text-gray44 font-Metropolis h-[52px] rounded-[6px] text-font20 font-medium border border-[#e5e5e5] hover:border-[#e5e5e5]  "
+                        className="h-10 2xl:h-12 font-sans text-font20 rounded-[6px] text-[#444444] border-[#ddd] border-2 transition ease-in duration-500"
                     />
                     {/* <PhoneNumberItem
                         name="whatsAppNumber"
@@ -101,7 +101,7 @@ const Login = () => {
                         onChange={phoneInputChangeHandler}
                     /> */}
                 </div>
-                <div className="flex flex-col items-start justify-center gap-2 pb-4 !mt-4">
+                <div className="flex flex-col items-start justify-center gap-2 pb-4 !mt-4 w-full">
                     {/* <label className="font-sans text-lg 2xl:text-[22px]">Password</label> */}
                     <PasswordInput
                         name="password"
@@ -116,7 +116,7 @@ const Login = () => {
                         }
                         regex={/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,24}$/}
                         onChange={inputChangeHandler('password')}
-                        className=" text-gray44 w-full font-Metropolis h-[52px] rounded-[6px] text-font20 font-medium border border-[#e5e5e5] hover:border-[#e5e5e5]"
+                        className="h-10 2xl:h-12 w-full font-sans text-font20 rounded-[6px] text-[#444444] border-[#ddd] border-2 transition ease-in duration-500"
                     />
                 </div>
                 <div className="flex justify-center items-center">

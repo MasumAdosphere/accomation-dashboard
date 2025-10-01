@@ -41,7 +41,7 @@ export default function Editor({ onChange, initialContent }: EditorProps) {
     }
     const editor = useEditor({
         extensions: [
-            StarterKit.configure({ heading: { levels: [3, 4, 5, 6] } }),
+            StarterKit.configure({ heading: { levels: [2, 3, 4, 5, 6] } }),
             Underline,
             Link.configure({
                 openOnClick: false
@@ -131,8 +131,8 @@ export default function Editor({ onChange, initialContent }: EditorProps) {
         setGalleryModalOpen(true)
     }
     return (
-        <div className="bg-white font-sans">
-            <div className="flex flex-wrap gap-3 items-center bg-[#EFF0F1] p-[10px]">
+        <div className="bg-white font-sans relative">
+            <div className="flex flex-wrap gap-3 items-center bg-[#EFF0F1] p-[10px] sticky -top-4 z-10">
                 {/* heading */}
                 <Popover
                     className="flex items-center gap-3 font-sans font-semibold text-base text-textBlack"
@@ -140,6 +140,12 @@ export default function Editor({ onChange, initialContent }: EditorProps) {
                     color="#EFF0F1"
                     content={
                         <div className="flex flex-col">
+                            <ToolbarButton
+                                className=" font-bold text-xl text-left"
+                                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                                active={editor.isActive('heading', { level: 2 })}>
+                                Heading 2
+                            </ToolbarButton>
                             <ToolbarButton
                                 className=" font-bold text-xl text-left"
                                 onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}

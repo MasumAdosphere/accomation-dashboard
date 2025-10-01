@@ -7,7 +7,7 @@ import { setIsDataRefreshed } from '../../redux/common/common.slice'
 import { ArticleData, EConfigButtonType, ICategory } from '../../types/state.types'
 import { DeleteArticleModal } from '../../components/antdesign/modal.components'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
-import { Button, ConfigProvider, Form, Input, message, Select, Switch, Table, Tooltip } from 'antd'
+import { Button, ConfigProvider, Form, message, Select, Switch, Table, Tooltip } from 'antd'
 import { getAllArticles, publishActionById } from '../../redux/article/article.thunk'
 import { CreateArticleDrawer, EditArticleDrawer } from '../../components/antdesign/drawer.components'
 import { getAllCategories } from '../../redux/category/category.thunk' // 👈 Import the thunk
@@ -128,10 +128,10 @@ const Article = () => {
             width: '10%',
             render: (record) => (
                 <div className="flex justify-start items-center gap-2">
-                    <Tooltip title={record?.isFeatured ? 'Unpublish' : 'Publish'}>
+                    <Tooltip title={record?.isFeatured ? 'Unpublish' : !record?.category?.title ? 'Assign Category To Publish' : 'Publish'}>
                         <Switch
                             checked={record?.isFeatured}
-                            disabled={loading}
+                            disabled={loading || !record?.category?.title}
                             onChange={async (checked) => {
                                 handleSwitchChange(record?.id, checked)
                             }}
@@ -233,15 +233,27 @@ const Article = () => {
                             />
                         </div>
                         <div className="max-w-[256px] w-full">
-                            <Select
-                                placeholder="Filter by Category"
-                                value={selectedCategory || undefined}
-                                onChange={handleCategoryChange}
-                                options={categoryOptions}
-                                style={{ height: '48px', borderRadius: '8px', borderColor: '#DDDDDD' }}
-                                className="font-sans text-font16 text-[#1c1c1c] font-semibold w-full"
-                                allowClear
-                            />
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        colorPrimary: '#7f69e2'
+                                    },
+                                    components: {
+                                        Select: {
+                                            activeOutlineColor: '#7f69e2',
+                                            hoverBorderColor: '#7f69e2'
+                                        }
+                                    }
+                                }}>
+                                <Select
+                                    placeholder="Filter by Category"
+                                    value={selectedCategory || undefined}
+                                    onChange={handleCategoryChange}
+                                    options={categoryOptions}
+                                    className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                    allowClear
+                                />
+                            </ConfigProvider>
                         </div>
                     </div>
 

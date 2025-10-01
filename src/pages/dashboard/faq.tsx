@@ -316,15 +316,27 @@ const Faq = () => {
                 <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     {/* Filter Dropdown */}
                     <div className="w-full sm:w-auto">
-                        <Select
-                            placeholder="Filter by Category"
-                            value={pageName}
-                            onChange={handlePageNameChange}
-                            options={pageNameOptions}
-                            style={{ width: '256px', height: '48px', borderRadius: '8px', border: '1px solid #DDDDDD' }}
-                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-full"
-                            allowClear
-                        />
+                        <ConfigProvider
+                            theme={{
+                                token: {
+                                    colorPrimary: '#7f69e2'
+                                },
+                                components: {
+                                    Select: {
+                                        activeOutlineColor: '#7f69e2',
+                                        hoverBorderColor: '#7f69e2'
+                                    }
+                                }
+                            }}>
+                            <Select
+                                placeholder="Filter by Category"
+                                value={pageName}
+                                onChange={handlePageNameChange}
+                                options={pageNameOptions}
+                                className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                allowClear
+                            />
+                        </ConfigProvider>
                     </div>
 
                     {/* Add Button */}
