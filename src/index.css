@@ -102,7 +102,6 @@ body {
 }
 
 @keyframes color {
-
     100%,
     0% {
         stroke: #1f3040;
@@ -197,7 +196,7 @@ body {
     align-self: center;
 }
 
-.ant-menu-inline-collapsed>.ant-menu-item {
+.ant-menu-inline-collapsed > .ant-menu-item {
     padding-inline: 4px !important;
 }
 
@@ -364,7 +363,6 @@ body {
 .ant-select-selection-placeholder {
     font-size: 16px !important;
     font-weight: 600 !important;
-
 }
 
 .jodit-container {
@@ -427,7 +425,7 @@ body {
     padding: 24px !important;
 }
 
-.ant-menu-submenu-selected>.ant-menu-submenu-title {
+.ant-menu-submenu-selected > .ant-menu-submenu-title {
     color: #0e082b !important;
     padding: 24px !important;
 }
@@ -484,14 +482,9 @@ body {
     font-weight: 500 !important;
 }
 
-:where(.css-dev-only-do-not-override-axy5xs).ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
-    background-color: #4226c4 !important;
-}
-
 .ant-menu-submenu-title {
     padding: 24px !important;
 }
-
 
 .ant-input-affix-wrapper {
     border-width: 2px !important;
@@ -499,4 +492,25 @@ body {
 
 .ant-drawer-body {
     padding: 16px 24px 24px !important;
+}
+.ant-input-outlined:hover {
+    border-color: #4226c4 !important;
+}
+.ant-table-thead > tr > th::after {
+    content: '';
+    position: absolute !important;
+    right: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 1px !important;
+    height: 24px !important;
+    background-color: #bcbcbc !important;
+}
+.ant-table-thead > tr > th:last-child::after {
+    width: 0px !important;
+    height: 0px !important;
+}
+
+:where(.css-dev-only-do-not-override-77uokv).ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
+    background-color: #0e082b !important;
 }

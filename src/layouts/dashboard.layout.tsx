@@ -332,7 +332,7 @@ const DashboardLayout = () => {
                     <Header className="font-sans p-0 flex items-center flex-row justify-between h-[88px] !bg-transparent border-b-[1px] border-[#EEEEEE] bg-cover bg-center bg-no-repeat w-full  ">
                         <div className="lg:flex w-full hidden  justify-between items-center bg-transparent py-5 px-6">
                             <div className="">
-                                <h3 className=" font-sans text-primary text-base 2xl:text-lg font-semibold capitalize">Welcome {profileName}</h3>
+                                <h3 className=" font-sans text-primary text-base 2xl:text-font22 font-semibold capitalize">Welcome {profileName}</h3>
                                 <div className=" text-font16 font-medium font-Metropolis !text-gray44">
                                     {current !== 'overview' && <AppBreadcrumb />}
                                 </div>

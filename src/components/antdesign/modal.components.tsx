@@ -199,6 +199,7 @@ export const DeleteCategoryModal = ({
             open={isDeleteCategoryModalOpen}
             onCancel={() => setIsDeleteCategoryModalOpen(false)}
             footer={null}
+            title="Delete Category"
             centered
             width={500}>
             <div className="flex items-center mt-5 gap-[12px]">
@@ -348,6 +349,7 @@ export const DeleteTestimonialModal = ({
             onCancel={() => setIsDeleteTestimonialModalOpen(false)}
             footer={null}
             centered
+            title="Delete Testimonial"
             width={500}>
             <div className="flex item-center mt-5 gap-[12px]">
                 <img
@@ -424,6 +426,7 @@ export const DeleteFaqModal = ({
             open={isDeleteFaqModalOpen}
             onCancel={() => setIsDeleteFaqModalOpen(false)}
             footer={null}
+            title="Delete Faq"
             centered
             width={500}>
             <div className="flex item-center mt-5 gap-[12px]">
@@ -498,6 +501,7 @@ export const DeleteLogoModal = ({
             onCancel={() => setIsDeleteLogoModalOpen(false)}
             footer={null}
             centered
+            title="Delete Logo"
             width={500}
             className="rounded-xl">
             <div className="flex items-center mt-5 gap-[12px]">
@@ -575,6 +579,7 @@ export const DeleteCareerModal = ({
             onCancel={() => setIsDeleteCareerModalOpen(false)}
             footer={null}
             centered
+            title="Delete Career"
             width={500}
             className="rounded-xl">
             <div className="flex items-center mt-5 gap-[12px]">
@@ -653,6 +658,7 @@ export const DeleteUserModal = ({
             footer={null}
             centered
             width={500}
+            title="Delete User"
             className="rounded-xl">
             <div className="flex items-center mt-5 gap-[12px]">
                 <img

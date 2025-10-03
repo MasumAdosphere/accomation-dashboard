@@ -78,7 +78,7 @@ const Users = () => {
 
                     <Tooltip title="Delete">
                         <div
-                            className="w-10 h-8"
+                            className="w-10 cursor-pointer h-8"
                             onClick={() => {
                                 setIsDeleteUserModalOpen(true)
                                 setSelectedUserId(record.id)
@@ -141,7 +141,7 @@ const Users = () => {
     return (
         <div>
             <div className="font-sans">
-                <div className="w-full flex flex-col justify-end gap-2 sm:w-auto">
+                <div className="w-full flex flex-col justify-end gap-3 sm:w-auto">
                     <div
                         className="flex justify-end
                     ">

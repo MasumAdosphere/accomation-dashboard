@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { ColumnsType } from 'antd/es/table'
 import { RootState } from '../../types/selector.types'
-import { Table, Button, message, ConfigProvider, Tooltip } from 'antd'
+import { Table, Button, message, ConfigProvider, Tooltip, Divider } from 'antd'
 import { getAllCategories } from '../../redux/category/category.thunk'
 import { EConfigButtonType, ICategory } from '../../types/state.types'
 import { ButtonThemeConfig } from '../../components/antdesign/configs.components'
@@ -40,7 +40,9 @@ const Categories = () => {
             dataIndex: 'index',
             key: 'index',
             render: (_text: string, _record: any, index: number) => (
-                <span className=" font-Metropolis font-medium text-font16 text-[#515151]">{(page - 1) * pageSize + index + 1}</span>
+                <div className="">
+                    <span className=" font-Metropolis font-medium text-font16 text-[#515151]">{(page - 1) * pageSize + index + 1}</span>
+                </div>
             )
         },
         {

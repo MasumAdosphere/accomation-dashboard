@@ -9,11 +9,11 @@ export const ButtonThemeConfig = ({ buttonType, children }: { buttonType: EConfi
     switch (buttonType) {
         case 'primary':
             buttonTheme = {
-                defaultHoverBg: '#4226C4',
+                defaultHoverBg: '#0E082B',
                 defaultActiveBg: '#4226C4',
                 defaultHoverColor: '#FFFFFF',
                 defaultActiveColor: '#FFFFFF',
-                defaultHoverBorderColor: '#4226C4'
+                defaultHoverBorderColor: '#0E082B'
                 // defaultActiveBorderColor: "#20273C",
             }
             break

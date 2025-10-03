@@ -11,17 +11,19 @@ import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import { XEmbed } from '../../extensions/XEmbed'
 import { InstagramEmbed } from '../../extensions/InstagramEmbed'
-import { Popover } from 'antd'
+import { Popover, Select } from 'antd'
 import Link from '@tiptap/extension-link'
 import GetImgUrlModal from '../custom/GetImgUrlModal'
 import { EMediaType } from '../../types/state.types'
+import { TextStyle } from '@tiptap/extension-text-style'
+import { FontSize } from '../../extensions/FontSize'
+
 interface EditorProps {
     name?: string
     onChange?: (html: string, json: any) => void
     initialContent: string
 }
 export default function Editor({ onChange, initialContent }: EditorProps) {
-    console.log('init', initialContent)
     const [embedType, setEmbedType] = useState('youtube')
     const [url, setUrl] = useState('')
     const [hyperLink, setHyperLink] = useState('')
@@ -59,7 +61,9 @@ export default function Editor({ onChange, initialContent }: EditorProps) {
                 }
             }),
             TableRow,
+            TextStyle,
             TableCell,
+            FontSize,
             TableHeader
         ],
         content: initialContent,
@@ -131,7 +135,7 @@ export default function Editor({ onChange, initialContent }: EditorProps) {
         setGalleryModalOpen(true)
     }
     return (
-        <div className="bg-white font-sans relative">
+        <div className="bg-white font-sans border-2 border-[#dddddd] rounded-[6px] relative">
             <div className="flex flex-wrap gap-3 items-center bg-[#EFF0F1] p-[10px] sticky -top-4 z-10">
                 {/* heading */}
                 <Popover
@@ -140,51 +144,81 @@ export default function Editor({ onChange, initialContent }: EditorProps) {
                     color="#EFF0F1"
                     content={
                         <div className="flex flex-col">
+                            {/* Paragraph option */}
                             <ToolbarButton
-                                className=" font-bold text-xl text-left"
+                                className="text-font18 font-semibold text-left"
+                                onClick={() => editor.chain().focus().setParagraph().run()}
+                                active={editor.isActive('paragraph')}>
+                                Paragraph
+                            </ToolbarButton>
+
+                            {/* Headings */}
+                            <ToolbarButton
+                                className="font-bold text-xl text-left"
                                 onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                                 active={editor.isActive('heading', { level: 2 })}>
                                 Heading 2
                             </ToolbarButton>
                             <ToolbarButton
-                                className=" font-bold text-xl text-left"
+                                className="font-bold text-lg text-left"
                                 onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
                                 active={editor.isActive('heading', { level: 3 })}>
                                 Heading 3
                             </ToolbarButton>
                             <ToolbarButton
+                                className="font-bold text-lg text-left"
                                 onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-                                className=" font-bold text-lg text-left"
                                 active={editor.isActive('heading', { level: 4 })}>
                                 Heading 4
                             </ToolbarButton>
                             <ToolbarButton
+                                className="font-bold text-base text-left"
                                 onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
-                                className=" font-bold text-base text-left"
                                 active={editor.isActive('heading', { level: 5 })}>
                                 Heading 5
                             </ToolbarButton>
                             <ToolbarButton
+                                className="font-bold text-sm text-left"
                                 onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
-                                className=" font-bold text-sm text-left"
                                 active={editor.isActive('heading', { level: 6 })}>
                                 Heading 6
                             </ToolbarButton>
                         </div>
                     }>
-                    Heading
-                    <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M7.59747 8.83763L5.1203 6.58553C5.08637 6.55468 5.05768 6.51851 5.03424 6.47701C5.01141 6.43606 5 6.39204 5 6.34492C5 6.2507 5.03393 6.16966 5.10179 6.10179C5.17088 6.03393 5.26157 6 5.37384 6H10.6271C10.7387 6 10.8288 6.03477 10.8973 6.10432C10.9658 6.17386 11 6.25463 11 6.34661C11 6.37016 10.9599 6.4498 10.8797 6.58553L8.40253 8.83763C8.34516 8.88979 8.28347 8.92989 8.21746 8.95794C8.15145 8.98598 8.07896 9 8 9C7.92104 9 7.84855 8.98598 7.78254 8.95794C7.71653 8.92989 7.65484 8.88979 7.59747 8.83763Z"
-                            fill="black"
-                        />
-                    </svg>
+                    <span className="flex items-center">
+                        Heading
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M7.59747 8.83763L5.1203 6.58553C5.08637 6.55468 5.05768 6.51851 5.03424 6.47701C5.01141 6.43606 5 6.39204 5 6.34492C5 6.2507 5.03393 6.16966 5.10179 6.10179C5.17088 6.03393 5.26157 6 5.37384 6H10.6271C10.7387 6 10.8288 6.03477 10.8973 6.10432C10.9658 6.17386 11 6.25463 11 6.34661C11 6.37016 10.9599 6.4498 10.8797 6.58553L8.40253 8.83763C8.34516 8.88979 8.28347 8.92989 8.21746 8.95794C8.15145 8.98598 8.07896 9 8 9C7.92104 9 7.84855 8.98598 7.78254 8.95794C7.71653 8.92989 7.65484 8.88979 7.59747 8.83763Z"
+                                fill="black"
+                            />
+                        </svg>
+                    </span>
                 </Popover>
+                <Select
+                    defaultValue="16px"
+                    style={{ width: 90, marginLeft: 8 }}
+                    onChange={(value) => {
+                        editor.chain().focus().setMark('textStyle', { fontSize: value }).run()
+                    }}
+                    options={[
+                        { value: '12px', label: '12px' },
+                        { value: '14px', label: '14px' },
+                        { value: '16px', label: '16px' },
+                        { value: '18px', label: '18px' },
+                        { value: '20px', label: '20px' },
+                        { value: '22px', label: '22px' },
+                        { value: '24px', label: '24px' },
+                        { value: '28px', label: '28px' },
+                        { value: '30px', label: '30px' },
+                        { value: '32px', label: '32px' }
+                    ]}
+                />
                 {/* bold */}
                 <ToolbarButton
                     onClick={() => editor.chain().focus().toggleBold().run()}
@@ -708,7 +742,7 @@ export default function Editor({ onChange, initialContent }: EditorProps) {
 
             <EditorContent
                 editor={editor}
-                className="min-h-[200px] border p-4 bg-white text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 tiptap-content"
+                className="min-h-[200px] p-4 bg-white text-base leading-relaxed focus:outline-none  tiptap-content"
             />
 
             {/* Global styles for the Tiptap editor content */}

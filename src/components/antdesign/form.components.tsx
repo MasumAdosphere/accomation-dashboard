@@ -340,7 +340,7 @@ export const UploadImgFile: React.FC<UploadImgFileProps> = ({ accept, isUploadin
     return (
         <Upload {...props}>
             <div
-                className={`border-2 border-[#e7e7e7] w-full rounded-md py-1.5 px-2.5 flex items-center justify-between cursor-pointer ${className}`}
+                className={`border-2 border-[#dddddd] hover:border-[#4226C4] w-full rounded-md py-1.5 px-2.5 flex items-center justify-between cursor-pointer ${className}`}
                 style={{
                     minHeight: '48px',
                     background: 'white'

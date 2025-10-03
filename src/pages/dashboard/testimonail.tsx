@@ -13,7 +13,6 @@ import { CreateTestimonialDrawer, EditTestimonialDrawer } from '../../components
 
 import deleteIcon from '../../assets/delete.svg'
 import editIcon from '../../assets/edit.svg'
-import plusicon from '../../assets/plus.svg'
 
 const Testimonial = () => {
     const pageSize = 20

@@ -120,7 +120,7 @@ export const CreateTestimonialDrawer = ({
                                 <TextAreaItem
                                     name="description"
                                     placeholder="Enter description"
-                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    className="w-full !h-[256px] p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#dddddd] hover:border-[#dddddd] border-2 border-[#dddddd] focus-visible:shadow-none transition ease-in duration-500"
                                     onChange={(e) => {
                                         const value = e.target.value
                                         form.setFieldsValue({ description: value })
@@ -136,7 +136,7 @@ export const CreateTestimonialDrawer = ({
                                 <label className="font-sans text-font16 font-semibold text-gray44 mb-1">
                                     Upload Image<span className="font-sans text-red-500pl-1">*</span>
                                 </label>
-                                <div className="grid grid-cols-1 !border-[#000] p-1 !w-full !rounded-[25px] ">
+                                <div className="grid grid-cols-1 !border-[#000] p-1 !w-full !rounded-[100px] ">
                                     <Form.Item
                                         name="image"
                                         rules={[{ required: true, message: 'Please select image' }]}>
@@ -157,7 +157,7 @@ export const CreateTestimonialDrawer = ({
                                             isUploading={false}
                                         />
                                     </Form.Item>
-                                    <span className="text-gray44 font-Metropolis">
+                                    <span className="text-gray44 mt-2 font-medium font-Metropolis">
                                         Note: Please ensure to upload square image for better visualization
                                     </span>
                                 </div>
@@ -173,7 +173,7 @@ export const CreateTestimonialDrawer = ({
                                     SetIsCreateTestimonialDrawerOpen(false)
                                 }}
                                 type="default"
-                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
@@ -184,7 +184,7 @@ export const CreateTestimonialDrawer = ({
                                 type="primary"
                                 icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                 disabled={isSubmitting}
-                                className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
+                                className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white  border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
                                 style={{ width: 'auto' }}>
                                 {isSubmitting ? 'Adding...' : 'Add'}
                             </Button>
@@ -284,7 +284,7 @@ export const CreateFaqDrawer = ({
                                 name="answer"
                                 rules={[{ required: true, message: 'Please enter the answer' }]}>
                                 <TextAreaItem
-                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    className="w-full !h-[256px] p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#dddddd] hover:border-[#dddddd] border-2 border-[#dddddd] focus-visible:shadow-none transition ease-in duration-500"
                                     placeholder="Write the detailed answer here..."
                                     onChange={() => {}}
                                     name={''}
@@ -315,7 +315,7 @@ export const CreateFaqDrawer = ({
                                     rules={[{ required: true, message: 'Please select a page' }]}>
                                     <Select
                                         allowClear
-                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#dddddd]"
                                         placeholder="Select page (e.g., Overview, Blog, Testimonial)"
                                         options={[
                                             { value: 'overview', label: 'Overview' },
@@ -337,7 +337,7 @@ export const CreateFaqDrawer = ({
                         <Button
                             onClick={() => SetIsCreateFaqDrawerOpen(false)}
                             type="default"
-                            className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                            className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                             Cancel
                         </Button>
                     </ButtonThemeConfig>
@@ -348,7 +348,7 @@ export const CreateFaqDrawer = ({
                             type="primary"
                             icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                             disabled={isSubmitting}
-                            className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
+                            className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
                             style={{ width: 'auto' }}>
                             {isSubmitting ? 'Creating...' : 'Create FAQ'}
                         </Button>
@@ -461,7 +461,7 @@ export const CreateLogoDrawer = ({
 
                         {/* Preview (Optional) */}
                         {logoFile && (
-                            <div className="mt-4 p-4 bg-gray-50 !rounded-[25px] border border-dashed border-gray-300">
+                            <div className="mt-4 p-4 bg-gray-50 !rounded-[100px] border border-dashed border-gray-300">
                                 <p className="text-sm font-medium text-gray-700">Preview:</p>
                                 <img
                                     src={URL.createObjectURL(logoFile)}
@@ -482,7 +482,7 @@ export const CreateLogoDrawer = ({
                             <Button
                                 onClick={() => navigate('/dashboard/logos')}
                                 type="default"
-                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
@@ -493,7 +493,7 @@ export const CreateLogoDrawer = ({
                                 type="primary"
                                 icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                 disabled={isSubmitting}
-                                className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
+                                className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
                                 style={{ width: 'auto' }}>
                                 {isSubmitting ? 'Uploading...' : 'Upload Logo'}
                             </Button>
@@ -637,7 +637,7 @@ export const CreateArticleDrawer = ({
                                     <Select
                                         maxCount={3}
                                         allowClear
-                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#dddddd]"
                                         options={categories}
                                         filterOption={filterOption}
                                         placeholder="Select category"
@@ -694,7 +694,7 @@ export const CreateArticleDrawer = ({
                                     SetIsCreateArticleDrawerOpen(false)
                                 }}
                                 type="default"
-                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
@@ -705,7 +705,7 @@ export const CreateArticleDrawer = ({
                                 type="primary"
                                 icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                 disabled={isSubmitting}
-                                className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
+                                className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
                                 style={{ width: 'auto' }}>
                                 {isSubmitting ? 'Adding...' : 'Add'}
                             </Button>
@@ -803,7 +803,7 @@ export const CreateCategoryDrawer = ({
                         <Button
                             type="default"
                             onClick={() => SetIsCreateCategoryDrawerOpen(false)}
-                            className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                            className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                             Cancel
                         </Button>
                     </ButtonThemeConfig>
@@ -813,7 +813,7 @@ export const CreateCategoryDrawer = ({
                             htmlType="submit"
                             icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                             disabled={isSubmitting}
-                            className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                            className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                             {isSubmitting ? 'Adding...' : 'Add'}
                         </Button>
                     </ButtonThemeConfig>
@@ -1015,7 +1015,7 @@ export const EditArticleDrawer = ({
                                     rules={[{ required: true, message: 'Please select category' }]}>
                                     <Select
                                         allowClear
-                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#dddddd]"
                                         options={categories}
                                         filterOption={filterOption}
                                         placeholder="Select Category"
@@ -1087,7 +1087,7 @@ export const EditArticleDrawer = ({
                             <Button
                                 onClick={() => SetIsEditArticleDrawerOpen(false)}
                                 type="default"
-                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
@@ -1097,7 +1097,7 @@ export const EditArticleDrawer = ({
                                 type="primary"
                                 icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                 disabled={isSubmitting}
-                                className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 {isSubmitting ? 'Updating...' : 'Update'}
                             </Button>
                         </ButtonThemeConfig>
@@ -1285,7 +1285,7 @@ export const EditTestimonialDrawer = ({
                                     <TextAreaItem
                                         name="description"
                                         placeholder="Enter description"
-                                        className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                        className="w-full !h-[256px] p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#dddddd] hover:border-[#dddddd] border-2 border-[#dddddd] focus-visible:shadow-none transition ease-in duration-500"
                                         onChange={(e) => {
                                             const value = e.target.value
                                             form.setFieldsValue({ description: value })
@@ -1341,7 +1341,7 @@ export const EditTestimonialDrawer = ({
                                 <Button
                                     onClick={() => navigate('/dashboard/testimonials')}
                                     type="default"
-                                    className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                    className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                     Cancel
                                 </Button>
                             </ButtonThemeConfig>
@@ -1351,7 +1351,7 @@ export const EditTestimonialDrawer = ({
                                     type="primary"
                                     icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                     disabled={isSubmitting}
-                                    className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                    className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                     {' '}
                                     {isSubmitting ? 'Updating...' : 'Update'}
                                 </Button>
@@ -1488,7 +1488,7 @@ export const EditFaqDrawer = ({
                                     name="answer"
                                     required
                                     onChange={() => {}}
-                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    className="w-full !h-[256px] p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#dddddd] hover:border-[#dddddd] border-2 border-[#dddddd] focus-visible:shadow-none transition ease-in duration-500"
                                     placeholder="Write the detailed answer here..."
                                 />
                             </div>
@@ -1515,7 +1515,7 @@ export const EditFaqDrawer = ({
                                         rules={[{ required: true, message: 'Please select a page' }]}>
                                         <Select
                                             allowClear
-                                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#dddddd]"
                                             placeholder="Select page (e.g., Overview, Blog, Testimonial)"
                                             options={[
                                                 { value: 'Overview', label: 'Overview' },
@@ -1537,7 +1537,7 @@ export const EditFaqDrawer = ({
                             <Button
                                 onClick={() => SetIsEditFaqDrawerOpen(false)}
                                 type="default"
-                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
@@ -1548,7 +1548,7 @@ export const EditFaqDrawer = ({
                                 type="primary"
                                 icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                 disabled={isSubmitting}
-                                className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
+                                className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
                                 style={{ width: 'auto' }}>
                                 {isSubmitting ? 'Updating...' : 'Update FAQ'}
                             </Button>
@@ -1627,7 +1627,7 @@ export const CreateCareerDrawer = ({
                                 name="jobrole"
                                 className="font-sans w-full">
                                 <TextItem
-                                    placeholder="e.g., Frontend Developer"
+                                    placeholder="e.g., Account Manager"
                                     name="jobrole"
                                     className="h-10 2xl:h-12 font-sans text-font16 rounded-[6px] text-[#444444] border-[#ddd] border-2 transition ease-in duration-500 font-semibold"
                                     required={false}
@@ -1647,8 +1647,8 @@ export const CreateCareerDrawer = ({
                                     },
                                     components: {
                                         Select: {
-                                            activeOutlineColor: '#7f69e2',
-                                            hoverBorderColor: '#7f69e2'
+                                            activeOutlineColor: '#4226C4',
+                                            hoverBorderColor: '#4226C4'
                                         }
                                     }
                                 }}>
@@ -1662,7 +1662,7 @@ export const CreateCareerDrawer = ({
                                             { value: 'Part Time', label: 'Part Time' },
                                             { value: 'Internship', label: 'Internship' }
                                         ]}
-                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                        className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#4226C4]"
                                     />
                                 </Form.Item>
                             </ConfigProvider>
@@ -1712,7 +1712,7 @@ export const CreateCareerDrawer = ({
                                 <TextAreaItem
                                     name="jobDescription"
                                     placeholder="Describe responsibilities, skills, qualifications..."
-                                    className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                    className="w-full !h-[256px] p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#dddddd] hover:border-[#dddddd] border-2 border-[#dddddd] focus-visible:shadow-none transition ease-in duration-500"
                                     onChange={(e) => {
                                         const value = e.target.value
                                         form.setFieldsValue({ description: value })
@@ -1726,7 +1726,7 @@ export const CreateCareerDrawer = ({
                         <ButtonThemeConfig buttonType={EConfigButtonType.SECONDARY}>
                             <Button
                                 onClick={() => SetIsCreateCareerDrawerOpen(false)}
-                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
@@ -1736,7 +1736,7 @@ export const CreateCareerDrawer = ({
                                 htmlType="submit"
                                 onClick={handleSubmit}
                                 disabled={isSubmitting}
-                                className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 {isSubmitting ? 'Creating...' : 'Create'}
                             </Button>
                         </ButtonThemeConfig>
@@ -1859,7 +1859,7 @@ export const EditCareerDrawer = ({
                                     className="font-sans w-full"
                                     rules={[{ required: true, message: 'Please enter job role' }]}>
                                     <TextItem
-                                        placeholder="e.g., Frontend Developer"
+                                        placeholder="e.g., Account Manager"
                                         name="jobrole"
                                         required={false}
                                         className="h-10 2xl:h-12 font-sans text-font16 rounded-[6px] text-[#444444] border-[#ddd] border-2 transition ease-in duration-500 font-semibold"
@@ -1895,7 +1895,7 @@ export const EditCareerDrawer = ({
                                                 { value: 'Part-time', label: 'Part Time' },
                                                 { value: 'Contract', label: 'Contract' }
                                             ]}
-                                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#7f69e2]"
+                                            className="font-sans text-font16 text-[#1c1c1c] font-semibold w-[256px] h-[48px] rounded-lg border-2 border-[#DDD] hover:border-[#dddddd]"
                                         />
                                     </Form.Item>
                                 </ConfigProvider>
@@ -1949,7 +1949,7 @@ export const EditCareerDrawer = ({
                                     <TextAreaItem
                                         name="jobDescription"
                                         placeholder="Describe responsibilities, skills, qualifications..."
-                                        className="w-full h-32 p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#7f69e2] hover:border-[#7f69e2] border-2 border-[#e7e7e7] focus-visible:shadow-none transition ease-in duration-500"
+                                        className="w-full !h-[256px] p-2  font-sans text-font16 rounded-[6px] text-[#444444] focus:border-[#dddddd] hover:border-[#dddddd] border-2 border-[#dddddd] focus-visible:shadow-none transition ease-in duration-500"
                                         onChange={(e) => {
                                             const value = e.target.value
                                             form.setFieldsValue({ description: value })
@@ -1963,7 +1963,7 @@ export const EditCareerDrawer = ({
                             <ButtonThemeConfig buttonType={EConfigButtonType.SECONDARY}>
                                 <Button
                                     onClick={() => SetIsEditCareerDrawerOpen(false)}
-                                    className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                    className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                     Cancel
                                 </Button>
                             </ButtonThemeConfig>
@@ -1973,7 +1973,7 @@ export const EditCareerDrawer = ({
                                     htmlType="submit"
                                     onClick={handleSubmit}
                                     disabled={isSubmitting || loading}
-                                    className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                    className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                     {isSubmitting ? 'Updating...' : 'Update'}
                                 </Button>
                             </ButtonThemeConfig>
@@ -2088,7 +2088,7 @@ export const EditCategoryDrawer = ({
                         <Button
                             onClick={() => SetIsEditCategoryDrawerOpen(false)}
                             type="default"
-                            className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                            className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                             Cancel
                         </Button>
                     </ButtonThemeConfig>
@@ -2099,7 +2099,7 @@ export const EditCategoryDrawer = ({
                             type="primary"
                             icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                             disabled={isSubmitting}
-                            className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
+                            className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
                             style={{ width: 'auto' }}>
                             {isSubmitting ? 'Updating...' : 'Update'}
                         </Button>
@@ -2216,7 +2216,7 @@ export const CreateUserDrawer = ({
                                     navigate('/dashboard/articles')
                                 }}
                                 type="default"
-                                className="font-sans h-auto !rounded-[25px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
@@ -2227,7 +2227,7 @@ export const CreateUserDrawer = ({
                                 type="primary"
                                 icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                 disabled={isSubmitting}
-                                className="font-sans h-auto w-full !rounded-[25px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
+                                className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
                                 style={{ width: 'auto' }}>
                                 {isSubmitting ? 'Adding...' : 'Add'}
                             </Button>
