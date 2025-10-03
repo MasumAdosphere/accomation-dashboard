@@ -479,7 +479,7 @@ export const CreateLogoDrawer = ({
                     <div className="font-sans pt-6 grid grid-cols-2 gap-3">
                         <ButtonThemeConfig buttonType={EConfigButtonType.SECONDARY}>
                             <Button
-                                onClick={() => navigate('/dashboard/logos')}
+                                onClick={() => SetIsCreateLogoDrawerOpen(false)}
                                 type="default"
                                 className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
                                 Cancel
