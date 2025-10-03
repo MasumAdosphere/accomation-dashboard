@@ -420,7 +420,7 @@ export const DeleteFaqModal = ({
             open={isDeleteFaqModalOpen}
             onCancel={() => setIsDeleteFaqModalOpen(false)}
             footer={null}
-            title="Delete Faq?"
+            title="Delete FAQ?"
             centered
             width={500}>
             <div className="flex item-center gap-[12px]">

@@ -97,7 +97,7 @@ const DashboardLayout = () => {
         },
         {
             key: 'faq',
-            label: 'Faqs',
+            label: 'FAQs',
             to: 'faq',
             icon: current === 'faq' ? <img src={faqActive} /> : <img src={faqInactive} />
         },
