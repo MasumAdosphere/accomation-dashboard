@@ -8,6 +8,7 @@ import Testimonial from './pages/dashboard/testimonail'
 import Faq from './pages/dashboard/faq'
 import Logo from './pages/dashboard/Logo'
 import Career from './pages/dashboard/career'
+import ProtectedRoute from './ProtectedRoutes'
 
 const { Categories, Overview } = DashboardPages
 
@@ -41,40 +42,49 @@ const generateRoutes = (): RouteObject[] => {
                 {
                     path: 'overview',
                     element: (
-                        // <ProtectedRoute allowedRoles={allowedRoles.overview}>
-                        <Overview />
-                        // </ProtectedRoute>
+                        <ProtectedRoute allowedPermissions={['Logo:read', 'Logo:read', 'Logo:update', 'Logo:delete']}>
+                            <Overview />
+                        </ProtectedRoute>
                     )
                 },
                 {
                     path: 'articles',
                     element: (
+                        <ProtectedRoute allowedPermissions={['Blog:create', 'Blog:read', 'Blog:update', 'Blog:delete']}>
+                            <Article />
+                        </ProtectedRoute>
+
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <Article />
                         // </ProtectedRoute>
                     )
                 },
                 {
                     path: 'testimonials',
                     element: (
+                        <ProtectedRoute allowedPermissions={['Testimonial:create', 'Testimonial:read', 'Testimonial:update', 'Testimonial:delete']}>
+                            <Testimonial />
+                        </ProtectedRoute>
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <Testimonial />
                         // </ProtectedRoute>
                     )
                 },
                 {
                     path: 'faq',
                     element: (
+                        <ProtectedRoute allowedPermissions={['Faq:create', 'Faq:read', 'Faq:update', 'Faq:delete']}>
+                            <Faq />
+                        </ProtectedRoute>
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <Faq />
                         // </ProtectedRoute>
                     )
                 },
                 {
                     path: 'logos',
                     element: (
+                        <ProtectedRoute allowedPermissions={['Logo:create', 'Logo:read', 'Logo:update', 'Logo:delete']}>
+                            <Logo />
+                        </ProtectedRoute>
                         // <ProtectedRoute allowedRoles={allowedRoles.article}>
-                        <Logo />
                         // </ProtectedRoute>
                     )
                 },
@@ -82,24 +92,30 @@ const generateRoutes = (): RouteObject[] => {
                 {
                     path: 'categories',
                     element: (
+                        <ProtectedRoute allowedPermissions={['Category:create', 'Category:read', 'Category:update', 'Category:delete']}>
+                            <Categories />
+                        </ProtectedRoute>
                         // <ProtectedRoute allowedRoles={allowedRoles.categories}>
-                        <Categories />
                         // </ProtectedRoute>
                     )
                 },
                 {
                     path: 'career',
                     element: (
+                        <ProtectedRoute allowedPermissions={['Career:create', 'Career:read', 'Career:update', 'Career:delete']}>
+                            <Career />
+                        </ProtectedRoute>
                         // <ProtectedRoute allowedRoles={allowedRoles.categories}>
-                        <Career />
                         // </ProtectedRoute>
                     )
                 },
                 {
                     path: 'users',
                     element: (
+                        <ProtectedRoute allowedPermissions={['Admin:create', 'Admin:read', 'Admin:update', 'Admin:delete']}>
+                            <Users />
+                        </ProtectedRoute>
                         // <ProtectedRoute allowedRoles={allowedRoles.categories}>
-                        <Users />
                         // </ProtectedRoute>
                     )
                 }

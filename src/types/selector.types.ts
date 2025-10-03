@@ -20,6 +20,7 @@ export interface ISelf {
     }
     createdAt: string
     editedAt: string
+    permissions: string[]
 }
 
 export interface UserState {
