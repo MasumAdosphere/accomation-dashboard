@@ -2118,15 +2118,24 @@ export const CreateUserDrawer = ({
 }) => {
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
     const dispatch = useDispatch()
+    const permissionsList = ['Overview', 'Blogs', 'Blog Categories', 'Testimonials', "FAQ's", 'Careers', 'Client Logo', 'Manage Users']
 
     const navigate = useNavigate()
     const [form] = Form.useForm()
 
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [permissions, setPermissions] = useState<string[]>([])
 
     const inputChangeHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         let value = event.target.value
         form.setFieldsValue({ [name]: value })
+    }
+    const togglePermission = (perm: string) => {
+        if (permissions.includes(perm)) {
+            setPermissions(permissions.filter((p) => p !== perm))
+        } else {
+            setPermissions([...permissions, perm])
+        }
     }
 
     const submitBtnHandler = async () => {
@@ -2206,6 +2215,21 @@ export const CreateUserDrawer = ({
                                 required={true}
                                 onChange={inputChangeHandler('password')}
                             />
+                        </div>
+                        <div className="mt-4">
+                            <label className="font-semibold text-gray-600 mb-2 block">Assign Permissions</label>
+                            <div className="flex flex-wrap gap-3">
+                                {permissionsList.map((perm) => (
+                                    <div
+                                        key={perm}
+                                        onClick={() => togglePermission(perm)}
+                                        className={`cursor-pointer px-4 py-2 rounded-md font-semibold transition-colors ${
+                                            permissions.includes(perm) ? 'bg-[#4226C4] text-white' : 'bg-[#FFEBFB] text-gray-600'
+                                        }`}>
+                                        {perm}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     <div className="font-sans grid grid-cols-2 pt-3 w-full justify-end gap-3">

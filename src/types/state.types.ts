@@ -189,3 +189,7 @@ export interface ArticlePayload {
     image?: string
     thumbnail?: string
 }
+export interface Permission {
+    label: string
+    value: string
+}
