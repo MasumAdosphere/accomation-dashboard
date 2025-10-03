@@ -153,7 +153,7 @@ const Article = () => {
                     </Tooltip>
                     <Tooltip title="Edit">
                         <div
-                            className="flex cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary justify-center items-center rounded-[50px]"
+                            className="flex cursor-pointer gap-[6px] w-[80px] h-[32px] bg-primary edit-btn justify-center items-center rounded-[50px]"
                             onClick={() => {
                                 setIsEditArticleDrawerOpen(true)
                                 setSelectedArticle(record)

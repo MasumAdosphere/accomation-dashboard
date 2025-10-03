@@ -514,3 +514,19 @@ body {
 :where(.css-dev-only-do-not-override-77uokv).ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
     background-color: #0e082b !important;
 }
+.ant-modal-title {
+    font-family: 'Metropolis', sans-serif !important;
+    font-size: 22px !important;
+    font-weight: normal;
+    color: #080418 !important;
+}
+.ant-modal-content {
+    padding: 40px !important;
+}
+.ant-modal .ant-modal-header {
+    margin-bottom: 4px !important;
+}
+.delete-btn:hover,
+.edit-btn:hover {
+    background-color: #080418 !important;
+}

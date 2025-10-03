@@ -432,7 +432,7 @@ export const CreateLogoDrawer = ({
                                 min={2}
                                 placeholder="Enter logo name (e.g., Navshakti)"
                                 required={true}
-                                className="h-10 2xl:h-12"
+                                className="h-10 2xl:h-12 font-sans text-font16 rounded-[6px] text-[#444444] border-[#ddd] border-2 transition ease-in duration-500 font-semibold"
                                 onChange={inputChangeHandler('companyName')}
                             />
                         </div>
@@ -457,20 +457,19 @@ export const CreateLogoDrawer = ({
                                     />
                                 </Form.Item>
                             </div>
+                            <p className="text-gray44 mt-2 font-medium font-Metropolis">
+                                Note: Please upload the logo in 240px (width) x 92px (height) to ensure proper alignment with other logos.
+                            </p>
                         </div>
 
                         {/* Preview (Optional) */}
                         {logoFile && (
-                            <div className="mt-4 p-4 bg-gray-50 !rounded-[100px] border border-dashed border-gray-300">
+                            <div className="mt-4 p-4 bg-gray-50 !rounded-[6px] border border-dashed border-gray-300">
                                 <p className="text-sm font-medium text-gray-700">Preview:</p>
                                 <img
                                     src={URL.createObjectURL(logoFile)}
                                     alt="Logo preview"
                                     className="h-20 w-auto object-contain mt-2 rounded"
-                                    onError={(e) => {
-                                        const target = e.target as HTMLImageElement
-                                        target.src = 'https://via.placeholder.com/200x80?text=Preview+Unavailable'
-                                    }}
                                 />
                             </div>
                         )}

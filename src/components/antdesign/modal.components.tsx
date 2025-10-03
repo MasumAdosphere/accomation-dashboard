@@ -150,7 +150,7 @@ export const CreateNewCategoryModal = ({
                             <Button
                                 type="default"
                                 htmlType="submit"
-                                className="font-sans h-auto rounded-[100px] bg-primary text-white border-none text-sm 2xl:text-base shadow-none flex justify-center items-center px-3 2xl:px-6 py-1 2xl:py-2">
+                                className="font-sans h-auto rounded-[100px]  text-white border-none text-sm 2xl:text-base shadow-none flex justify-center items-center px-3 2xl:px-6 py-1 2xl:py-2">
                                 Add
                             </Button>
                         </ButtonThemeConfig>
@@ -199,27 +199,25 @@ export const DeleteCategoryModal = ({
             open={isDeleteCategoryModalOpen}
             onCancel={() => setIsDeleteCategoryModalOpen(false)}
             footer={null}
-            title="Delete Category"
+            title="Delete Category?"
             centered
             width={500}>
-            <div className="flex items-center mt-5 gap-[12px]">
-                <img
-                    src={Exclaim}
-                    alt=""
-                />
-                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Category?</h6>
+            <div className="flex items-center  gap-[12px]">
+                <h6 className="font-sans text-gray44 font-normal text-[20px]">
+                    Are you sure you want to delete the category ? This will delete ALL THE BLOGS under (category) .
+                </h6>
             </div>
             <div className="flex w-full justify-end mt-6 gap-[17px]">
                 <button
                     className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
                     onClick={() => setIsDeleteCategoryModalOpen(false)}>
-                    No
+                    Cancel
                 </button>
 
                 <button
                     disabled={isDisabled}
                     onClick={() => deleteContent()}
-                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    className={`font-sans h-auto rounded bg-primary delete-btn text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
                     {loading && (
                         <img
                             src={loadingSvg}
@@ -227,7 +225,7 @@ export const DeleteCategoryModal = ({
                             alt=""
                         />
                     )}{' '}
-                    Yes, Delete Category
+                    Yes Delete
                 </button>
             </div>
         </Modal>
@@ -275,25 +273,24 @@ export const DeleteArticleModal = ({
             onCancel={() => setIsDeleteArticleModalOpen(false)}
             footer={null}
             centered
+            title="Delete Blog?"
             width={500}>
-            <div className="flex items-center mt-5 gap-[12px]">
-                <img
-                    src={Exclaim}
-                    alt=""
-                />
-                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Article?</h6>
+            <div className="flex items-center  gap-[12px]">
+                <h6 className="font-sans text-gray44 font-normal text-[20px]">
+                    Are you sure you want to delete this Blog? Once deleted, it will not be recoverable.
+                </h6>
             </div>
             <div className="flex w-full justify-end mt-6 gap-[17px]">
                 <button
                     className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
                     onClick={() => setIsDeleteArticleModalOpen(false)}>
-                    No
+                    Cancel
                 </button>
 
                 <button
                     disabled={isDisabled}
                     onClick={() => deleteContent()}
-                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    className={`font-sans h-auto rounded bg-primary delete-btn text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
                     {loading && (
                         <img
                             src={loadingSvg}
@@ -301,7 +298,7 @@ export const DeleteArticleModal = ({
                             alt=""
                         />
                     )}{' '}
-                    Yes, Delete Article
+                    Yes Delete
                 </button>
             </div>
         </Modal>
@@ -349,26 +346,24 @@ export const DeleteTestimonialModal = ({
             onCancel={() => setIsDeleteTestimonialModalOpen(false)}
             footer={null}
             centered
-            title="Delete Testimonial"
+            title="Delete Testimonial?"
             width={500}>
-            <div className="flex item-center mt-5 gap-[12px]">
-                <img
-                    src={Exclaim}
-                    alt=""
-                />
-                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Testimonial?</h6>
+            <div className="flex item-center  gap-[12px]">
+                <h6 className="font-sans font-normal text-gray44 text-[20px]">
+                    Are you sure you want to delete this testimonial? Once deleted, it will not be recoverable.
+                </h6>
             </div>
             <div className="flex w-full justify-end mt-6 gap-[17px]">
                 <button
-                    className="borderrounded h-autobg-white text-primary border-primary text-base shadow-none px-4 py-2"
+                    className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
                     onClick={() => setIsDeleteTestimonialModalOpen(false)}>
-                    No
+                    Cancel
                 </button>
 
                 <button
                     disabled={isDisabled}
                     onClick={() => deleteContent()}
-                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center item-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed b' : ''}`}>
+                    className={`font-sans h-auto rounded bg-primary delete-btn text-white border-primary text-lg shadow-none flex justify-center item-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed b' : ''}`}>
                     {loading && (
                         <img
                             src={loadingSvg}
@@ -376,7 +371,7 @@ export const DeleteTestimonialModal = ({
                             alt=""
                         />
                     )}{' '}
-                    Yes, Delete Testimonial
+                    Yes Delete
                 </button>
             </div>
         </Modal>
@@ -398,7 +393,6 @@ export const DeleteFaqModal = ({
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
 
     const deleteContent = async () => {
-        console.log('id', selectedFaqId)
         try {
             setLoading(true)
             setIsDisabled(true)
@@ -426,27 +420,25 @@ export const DeleteFaqModal = ({
             open={isDeleteFaqModalOpen}
             onCancel={() => setIsDeleteFaqModalOpen(false)}
             footer={null}
-            title="Delete Faq"
+            title="Delete Faq?"
             centered
             width={500}>
-            <div className="flex item-center mt-5 gap-[12px]">
-                <img
-                    src={Exclaim}
-                    alt=""
-                />
-                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Faq?</h6>
+            <div className="flex item-center gap-[12px]">
+                <h6 className="font-sans font-normal text-gray44 text-[20px]">
+                    Are you sure you want to delete this FAQ? Once deleted, it will not be recoverable.
+                </h6>
             </div>
             <div className="flex w-full justify-end mt-6 gap-[17px]">
                 <button
                     className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
                     onClick={() => setIsDeleteFaqModalOpen(false)}>
-                    No
+                    Cancel
                 </button>
 
                 <button
                     disabled={isDisabled}
                     onClick={() => deleteContent()}
-                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center item-center px-4 py-2 ${isDisabled ? 'opacity-40cursor-not-allowed' : ''}`}>
+                    className={`font-sans h-auto rounded bg-primary delete-btn  text-white border-primary text-lg shadow-none flex justify-center item-center px-4 py-2 ${isDisabled ? 'opacity-40cursor-not-allowed' : ''}`}>
                     {loading && (
                         <img
                             src={loadingSvg}
@@ -454,7 +446,7 @@ export const DeleteFaqModal = ({
                             alt=""
                         />
                     )}{' '}
-                    Yes, Delete Faq
+                    Yes Delete
                 </button>
             </div>
         </Modal>
@@ -501,29 +493,23 @@ export const DeleteLogoModal = ({
             onCancel={() => setIsDeleteLogoModalOpen(false)}
             footer={null}
             centered
-            title="Delete Logo"
+            title="Delete Logo?"
             width={500}
             className="rounded-xl">
-            <div className="flex items-center mt-5 gap-[12px]">
-                <img
-                    src={Exclaim}
-                    alt="Warning"
-                    width={24}
-                    height={24}
-                />
-                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Logo?</h6>
+            <div className="flex items-center  gap-[12px]">
+                <h6 className="font-sans font-normal text-gray44 text-[20px]">Not Recoverable</h6>
             </div>
             <div className="flex w-full justify-end mt-6 gap-[17px]">
                 <button
                     className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
                     onClick={() => setIsDeleteLogoModalOpen(false)}>
-                    No
+                    Cancel
                 </button>
 
                 <button
                     disabled={isDisabled}
                     onClick={deleteContent}
-                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    className={`font-sans h-auto rounded bg-primary delete-btn text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
                     {loading && (
                         <img
                             src={loadingSvg}
@@ -531,7 +517,7 @@ export const DeleteLogoModal = ({
                             alt="Loading"
                         />
                     )}
-                    Yes, Delete Logo
+                    Yes Delete
                 </button>
             </div>
         </Modal>
@@ -579,29 +565,26 @@ export const DeleteCareerModal = ({
             onCancel={() => setIsDeleteCareerModalOpen(false)}
             footer={null}
             centered
-            title="Delete Career"
+            title="Delete Job Posting?
+"
             width={500}
             className="rounded-xl">
-            <div className="flex items-center mt-5 gap-[12px]">
-                <img
-                    src={Exclaim}
-                    alt="Warning"
-                    width={24}
-                    height={24}
-                />
-                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this Career Listing?</h6>
+            <div className="flex items-center  gap-[12px]">
+                <h6 className="font-sans font-normal text-gray44 text-[20px]">
+                    Are you sure you want to delete this Job Posting? Once deleted, it will not be recoverable.
+                </h6>
             </div>
             <div className="flex w-full justify-end mt-6 gap-[17px]">
                 <button
                     className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
                     onClick={() => setIsDeleteCareerModalOpen(false)}>
-                    No
+                    Cancel
                 </button>
 
                 <button
                     disabled={isDisabled}
                     onClick={deleteContent}
-                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    className={`font-sans h-auto rounded bg-primary delete-btn text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
                     {loading && (
                         <img
                             src={loadingSvg}
@@ -609,7 +592,7 @@ export const DeleteCareerModal = ({
                             alt="Loading"
                         />
                     )}
-                    Yes, Delete Career
+                    Yes Delete
                 </button>
             </div>
         </Modal>
@@ -658,28 +641,24 @@ export const DeleteUserModal = ({
             footer={null}
             centered
             width={500}
-            title="Delete User"
+            title="Delete User?"
             className="rounded-xl">
-            <div className="flex items-center mt-5 gap-[12px]">
-                <img
-                    src={Exclaim}
-                    alt="Warning"
-                    width={24}
-                    height={24}
-                />
-                <h6 className="font-notoKannada font-normal text-[20px]">Are you sure you want to delete this User?</h6>
+            <div className="flex items-center  gap-[12px]">
+                <h6 className="font-sans font-normal text-gray44 text-[20px]">
+                    Are you sure you want to delete this User? Once deleted, it will not be recoverable.
+                </h6>
             </div>
             <div className="flex w-full justify-end mt-6 gap-[17px]">
                 <button
                     className="border rounded h-auto bg-white text-primary border-primary text-base shadow-none px-4 py-2"
                     onClick={() => setIsDeleteUserModalOpen(false)}>
-                    No
+                    Cancel
                 </button>
 
                 <button
                     disabled={isDisabled}
                     onClick={deleteContent}
-                    className={`font-sans h-auto rounded bg-primary text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    className={`font-sans h-auto rounded bg-primary delete-btn text-white border-primary text-lg shadow-none flex justify-center items-center px-4 py-2 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
                     {loading && (
                         <img
                             src={loadingSvg}
@@ -687,7 +666,7 @@ export const DeleteUserModal = ({
                             alt="Loading"
                         />
                     )}
-                    Yes, Delete User
+                    Yes Delete
                 </button>
             </div>
         </Modal>
