@@ -1,4 +1,4 @@
-import { Button, ConfigProvider, Drawer, Form, Image, message, Select } from 'antd'
+import { Button, Checkbox, ConfigProvider, Drawer, Form, Image, message, Select } from 'antd'
 import { Dispatch, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArticleData, EConfigButtonType, ICareer, ICareerCreate, ICategory } from '../../types/state.types'
@@ -2374,14 +2374,14 @@ export const CreateUserDrawer = ({
                             <label className="font-semibold text-gray-600 mb-2 block">Assign Permissions</label>
                             <div className="flex flex-wrap gap-3">
                                 {permissionsList.map((perm) => (
-                                    <div
+                                    <Checkbox
                                         key={perm}
-                                        onClick={() => togglePermission(perm)}
-                                        className={`cursor-pointer px-4 py-2 rounded-md font-semibold transition-colors ${
-                                            permissions.includes(perm) ? 'bg-[#4226C4] text-white' : 'bg-[#FFEBFB] text-gray-600'
-                                        }`}>
+                                        checked={permissions.includes(perm)}
+                                        onChange={() => togglePermission(perm)}
+                                        className={`custom-permission-checkbox !px-4 !py-2 !rounded-md !font-semibold cursor-pointer transition-colors
+            ${permissions.includes(perm) ? '!bg-[#4226C4] !text-white' : '!bg-[#FFEBFB] !text-gray-600'}`}>
                                         {perm}
-                                    </div>
+                                    </Checkbox>
                                 ))}
                             </div>
                         </div>
