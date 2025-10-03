@@ -967,7 +967,7 @@ export const EditArticleDrawer = ({
         fetchCategories(signal)
 
         return () => controller.abort()
-    }, [articleDetails]) // Use selectedArticleId instead of articleSlug
+    }, [articleDetails])
 
     useEffect(() => {
         if (articleDetails) {
