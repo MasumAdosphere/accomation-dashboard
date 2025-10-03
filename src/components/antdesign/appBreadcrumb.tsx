@@ -48,7 +48,7 @@ const AppBreadcrumb = () => {
 
     const pathTitleMap: PathTitleMap = {
         '/dashboard/overview': 'Overview',
-        '/dashboard/articles': 'Articles',
+        '/dashboard/articles': 'Blogs',
         '/dashboard/testimonials': 'Testimonials',
         '/dashboard/testimonials/add': 'Add Testimonials',
         '/dashboard/testimonials/edit': 'Edit Testimonials',
@@ -56,7 +56,7 @@ const AppBreadcrumb = () => {
         '/dashboard/categories': 'Categories',
         '/dashboard/articles/add': 'Add Article',
         '/dashboard/users': 'Users',
-        '/dashboard/faq': 'Faq',
+        '/dashboard/faq': 'FAQs',
         '/dashboard/faq/add': 'Add Faq',
         '/dashboard/faq/edit': 'Edit Faq',
         '/dashboard/logos': 'Logos',

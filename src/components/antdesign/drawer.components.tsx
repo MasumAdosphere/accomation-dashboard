@@ -1,5 +1,5 @@
 import { Button, ConfigProvider, Drawer, Form, Image, message, Select } from 'antd'
-import { Dispatch, useEffect, useState } from 'react'
+import { Dispatch, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArticleData, EConfigButtonType, ICareer, ICareerCreate, ICategory } from '../../types/state.types'
 import { createTestimonials, editTestimonials, getTestimonialById } from '../../redux/testimonials/testimonial.thunk'
@@ -17,6 +17,9 @@ import { createCareer, editCareer, getCareerById } from '../../redux/career/care
 import Editor from '../custom/Editor'
 import { createUsers } from '../../redux/user/user.thunk'
 
+import { Cropper, CropperRef } from 'react-advanced-cropper'
+import 'react-advanced-cropper/dist/style.css'
+
 export const CreateTestimonialDrawer = ({
     isCreateTestimonialDrawerOpen,
     SetIsCreateTestimonialDrawerOpen
@@ -27,11 +30,57 @@ export const CreateTestimonialDrawer = ({
     const dispatch = useDispatch()
     const [form] = Form.useForm()
     const [isSubmitting, setIsSubmitting] = useState(false)
+
     const [imageFile, setImageFile] = useState<File | null>(null)
+    const [originalFile, setOriginalFile] = useState<File | null>(null) // 🔹 store original selected file
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+    const [isCropping, setIsCropping] = useState(false)
+    const cropperRef = useRef<CropperRef>(null)
 
     const inputChangeHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         let value = event.target.value
         form.setFieldsValue({ [name]: value })
+    }
+
+    const handleImageSelect = (file: File) => {
+        setOriginalFile(file) // keep original
+        setImageFile(file)
+        const url = URL.createObjectURL(file)
+        setPreviewUrl(url)
+        setIsCropping(true)
+    }
+    const applyCrop = () => {
+        if (cropperRef.current) {
+            const canvas = cropperRef.current.getCanvas()
+            if (canvas) {
+                canvas.toBlob(
+                    (blob) => {
+                        if (blob) {
+                            const croppedFile = new File([blob], imageFile?.name || 'cropped.jpg', {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            })
+                            setImageFile(croppedFile)
+                            setPreviewUrl(URL.createObjectURL(croppedFile))
+                        }
+                        setIsCropping(false)
+                    },
+                    'image/jpeg',
+                    0.9
+                )
+            }
+        }
+    }
+
+    const cancelCrop = () => {
+        // 🔹 Restore original file instead of clearing
+        if (originalFile) {
+            setImageFile(originalFile)
+            const url = URL.createObjectURL(originalFile)
+            setPreviewUrl(url)
+        }
+        setIsCropping(false)
     }
 
     const { isDataRefreshed } = useSelector((state: RootState) => state.Common)
@@ -53,6 +102,7 @@ export const CreateTestimonialDrawer = ({
             const success = await createTestimonials(formData)
             if (success) {
                 setImageFile(null)
+                setPreviewUrl(null)
                 form.resetFields()
                 dispatch(setIsDataRefreshed(!isDataRefreshed))
 
@@ -72,16 +122,47 @@ export const CreateTestimonialDrawer = ({
             footer={null}
             title="Add Testimonial"
             width={644}>
-            <Form
-                form={form}
-                className="font-sans w-full flex justify-between flex-col h-full"
-                onFinish={submitBtnHandler}>
-                <div className="font-sans flex flex-col justify-between h-full">
-                    {/* Name */}
-                    <div className="">
-                        <div className="font-sans mb-4 space-y-1">
+            {isCropping ? (
+                <div className="flex flex-col h-full">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-sans text-font16 font-semibold">Crop Image</h3>
+                        <div className="space-x-2">
+                            <button
+                                onClick={cancelCrop}
+                                className="px-4 py-2 text-gray-600 rounded-md hover:bg-gray-100">
+                                Cancel
+                            </button>
+                            <button
+                                onClick={applyCrop}
+                                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90">
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex-1 border rounded-lg overflow-hidden">
+                        {previewUrl && (
+                            <Cropper
+                                ref={cropperRef}
+                                src={previewUrl}
+                                className="w-full h-full"
+                                stencilProps={{
+                                    aspectRatio: 1,
+                                    grid: true
+                                }}
+                            />
+                        )}
+                    </div>
+                </div>
+            ) : (
+                <Form
+                    form={form}
+                    className="font-sans w-full flex flex-col h-full"
+                    onFinish={submitBtnHandler}>
+                    <div className="flex flex-col flex-1">
+                        {/* Name */}
+                        <div className="mb-4 space-y-1">
                             <label className="font-sans text-font16 font-semibold text-gray44">
-                                Name<span className="font-sans text-red-500pl-1">*</span>
+                                Name<span className="font-sans text-red-500 pl-1">*</span>
                             </label>
                             <TextItem
                                 name="name"
@@ -95,10 +176,10 @@ export const CreateTestimonialDrawer = ({
                             />
                         </div>
 
-                        {/*Designation*/}
-                        <div className="font-sans mb-4 space-y-1">
+                        {/* Designation */}
+                        <div className="mb-4 space-y-1">
                             <label className="font-sans text-font16 font-semibold text-gray44">
-                                Designation<span className="font-sans text-red-500pl-1">*</span>
+                                Designation<span className="font-sans text-red-500 pl-1">*</span>
                             </label>
                             <TextItem
                                 name="designation"
@@ -111,10 +192,10 @@ export const CreateTestimonialDrawer = ({
                             />
                         </div>
 
-                        {/*Description*/}
-                        <div className="font-sans mb-4 space-y-1">
+                        {/* Description */}
+                        <div className="mb-4 space-y-1">
                             <label className="font-sans text-font16 font-semibold text-gray44">
-                                Description<span className="font-sans text-red-500pl-1">*</span>
+                                Description<span className="font-sans text-red-500 pl-1">*</span>
                             </label>
                             <Form.Item name="description">
                                 <TextAreaItem
@@ -130,50 +211,53 @@ export const CreateTestimonialDrawer = ({
                             </Form.Item>
                         </div>
 
-                        {/*Image*/}
-                        <div className="font-sans col-span-2 h-auto">
-                            <div className="font-sans w-full">
-                                <label className="font-sans text-font16 font-semibold text-gray44 mb-1">
-                                    Upload Image<span className="font-sans text-red-500pl-1">*</span>
-                                </label>
-                                <div className="grid grid-cols-1 !border-[#000] p-1 !w-full !rounded-[100px] ">
-                                    <Form.Item
-                                        name="image"
-                                        rules={[{ required: true, message: 'Please select image' }]}>
-                                        <UploadImgFile
-                                            onFileSelect={(file) => {
-                                                setImageFile(file)
-                                            }}
-                                            onChange={(fileName) => {
-                                                form.setFieldsValue({ image: fileName || '' })
-                                            }}
-                                            handleFileUpload={async (file) => {
-                                                setImageFile(file)
-                                                // Your upload logic here if needed
-                                                return true
-                                            }}
-                                            className="w-full"
-                                            accept="image/png,image/jpeg"
-                                            isUploading={false}
-                                        />
-                                    </Form.Item>
-                                    <span className="text-gray44 mt-2 font-medium font-Metropolis">
-                                        Note: Please ensure to upload square image for better visualization
-                                    </span>
+                        {/* Image Upload */}
+                        <div className="mb-4">
+                            <label className="font-sans text-font16 font-semibold text-gray44 mb-1 block">
+                                Upload Image<span className="font-sans text-red-500 pl-1">*</span>
+                            </label>
+                            <Form.Item
+                                name="image"
+                                rules={[{ required: true, message: 'Please select image' }]}>
+                                <UploadImgFile
+                                    onFileSelect={handleImageSelect}
+                                    onChange={(fileName) => {
+                                        form.setFieldsValue({ image: fileName || '' })
+                                    }}
+                                    handleFileUpload={async (file) => {
+                                        setImageFile(file)
+                                        // Your upload logic here if needed
+                                        return true
+                                    }}
+                                    className="w-full"
+                                    accept="image/png,image/jpeg"
+                                    isUploading={false}
+                                />
+                            </Form.Item>
+                            <span className="text-gray44 mt-2 font-medium font-Metropolis block">
+                                Note: Please ensure to upload square image for better visualization
+                            </span>
+                        </div>
+                        {previewUrl && (
+                            <div className="mt-4 p-4 bg-gray-50 !rounded-[6px] border border-dashed border-gray-300 flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-700">Preview:</p>
+                                    <img
+                                        src={previewUrl}
+                                        alt="Cropped image preview"
+                                        className="h-20 w-auto object-contain mt-2 rounded"
+                                    />
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
-                    {/*Buttons*/}
-                    <div className="font-sans grid grid-cols-2 w-full pt-3 justify-end  gap-2">
+                    {/* Buttons */}
+                    <div className="grid grid-cols-2 gap-2 pt-3">
                         <ButtonThemeConfig buttonType={EConfigButtonType.SECONDARY}>
                             <Button
-                                onClick={() => {
-                                    SetIsCreateTestimonialDrawerOpen(false)
-                                }}
-                                type="default"
-                                className="font-sans h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
+                                onClick={() => SetIsCreateTestimonialDrawerOpen(false)}
+                                className="h-auto !rounded-[100px] bg-white text-primary border-primary text-base shadow-none px-6 py-4">
                                 Cancel
                             </Button>
                         </ButtonThemeConfig>
@@ -181,17 +265,15 @@ export const CreateTestimonialDrawer = ({
                         <ButtonThemeConfig buttonType={EConfigButtonType.PRIMARY}>
                             <Button
                                 htmlType="submit"
-                                type="primary"
                                 icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                 disabled={isSubmitting}
-                                className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white  border-primary text-base shadow-none flex justify-center item-center px-6 py-4"
-                                style={{ width: 'auto' }}>
+                                className="h-auto !rounded-[100px] bg-primary text-white border-primary text-base shadow-none px-6 py-4">
                                 {isSubmitting ? 'Adding...' : 'Add'}
                             </Button>
                         </ButtonThemeConfig>
                     </div>
-                </div>
-            </Form>
+                </Form>
+            )}
         </Drawer>
     )
 }
@@ -1126,7 +1208,13 @@ export const EditTestimonialDrawer = ({
     const [loading, setLoading] = useState(true)
     const [uploadImage, setUploadImage] = useState<string | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+    // 🔹 Cropping States
     const [imageFile, setImageFile] = useState<File | null>(null)
+    const [originalFile, setOriginalFile] = useState<File | null>(null)
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+    const [isCropping, setIsCropping] = useState(false)
+    const cropperRef = useRef<CropperRef>(null)
 
     const [formValues, setFormValues] = useState({
         name: '',
@@ -1157,6 +1245,7 @@ export const EditTestimonialDrawer = ({
                 setFormValues(updatedValues)
                 setImageFile(null)
                 setUploadImage(data.image || '')
+                setPreviewUrl(data.image || null) // show existing image in preview
                 form.setFieldsValue(updatedValues)
 
                 setLoading(false)
@@ -1169,11 +1258,54 @@ export const EditTestimonialDrawer = ({
 
     useEffect(() => {
         const controller = new AbortController()
-
         fetchTestimonialDetails()
-
         return () => controller.abort()
     }, [testimonialId])
+
+    // 🔹 Handle image select
+    const handleImageSelect = (file: File) => {
+        setOriginalFile(file)
+        setImageFile(file)
+        const url = URL.createObjectURL(file)
+        setPreviewUrl(url)
+        setIsCropping(true)
+    }
+
+    // 🔹 Apply crop
+    const applyCrop = () => {
+        if (cropperRef.current) {
+            const canvas = cropperRef.current.getCanvas()
+            if (canvas) {
+                canvas.toBlob(
+                    (blob) => {
+                        if (blob) {
+                            const croppedFile = new File([blob], imageFile?.name || 'cropped.jpg', {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            })
+                            setImageFile(croppedFile)
+                            setPreviewUrl(URL.createObjectURL(croppedFile))
+                        }
+                        setIsCropping(false)
+                    },
+                    'image/jpeg',
+                    0.9
+                )
+            }
+        }
+    }
+
+    // 🔹 Cancel crop → restore original
+    const cancelCrop = () => {
+        if (originalFile) {
+            setImageFile(originalFile)
+            const url = URL.createObjectURL(originalFile)
+            setPreviewUrl(url)
+        } else if (formValues.image) {
+            setPreviewUrl(formValues.image)
+        }
+        setIsCropping(false)
+    }
 
     const submitBtnHandler = async () => {
         try {
@@ -1185,21 +1317,15 @@ export const EditTestimonialDrawer = ({
             formData.append('designation', values.designation)
             formData.append('description', values.description || '')
 
-            // Always send image field
             if (imageFile) {
-                //New file uploadeded
-                formData.append('image', imageFile)
-            } else {
-                //No new file → send existing URL
-                if (formValues.image) {
-                    formData.append('image', formValues.image)
-                }
+                formData.append('image', imageFile) // new cropped/uploaded file
+            } else if (formValues.image) {
+                formData.append('image', formValues.image) // keep old image if not changed
             }
 
             const success = editTestimonials(testimonialId!, formData)
             if (await success) {
                 message.success('Testimonial updated successfully')
-
                 SetIsEditTestimonialDrawerOpen(false)
                 dispatch(setIsDataRefreshed(!isDataRefreshed))
             }
@@ -1209,10 +1335,6 @@ export const EditTestimonialDrawer = ({
             setIsSubmitting(false)
         }
     }
-
-    // if (loading) {
-    //     return <LoadingComponent />
-    // }
 
     return (
         <Drawer
@@ -1228,6 +1350,37 @@ export const EditTestimonialDrawer = ({
                         spin
                     />
                 </div>
+            ) : isCropping ? (
+                <div className="flex flex-col h-full">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-sans text-font16 font-semibold">Crop Image</h3>
+                        <div className="space-x-2">
+                            <button
+                                onClick={cancelCrop}
+                                className="px-4 py-2 text-gray-600 rounded-md hover:bg-gray-100">
+                                Cancel
+                            </button>
+                            <button
+                                onClick={applyCrop}
+                                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90">
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex-1 border rounded-lg overflow-hidden">
+                        {previewUrl && (
+                            <Cropper
+                                ref={cropperRef}
+                                src={previewUrl}
+                                className="w-full h-full"
+                                stencilProps={{
+                                    aspectRatio: 1,
+                                    grid: true
+                                }}
+                            />
+                        )}
+                    </div>
+                </div>
             ) : (
                 <Form
                     form={form}
@@ -1241,10 +1394,11 @@ export const EditTestimonialDrawer = ({
                     onFinish={submitBtnHandler}
                     layout="vertical">
                     <div className="font-sans flex flex-col justify-between h-full">
-                        <div className="">
+                        <div>
+                            {/* Name */}
                             <div className="mb-4 space-y-1">
                                 <label className="font-sans text-font16 font-semibold text-gray44">
-                                    Name<span className="font-sans text-red-500pl-1">*</span>{' '}
+                                    Name<span className="font-sans text-red-500pl-1">*</span>
                                 </label>
                                 <TextItem
                                     name="name"
@@ -1258,6 +1412,7 @@ export const EditTestimonialDrawer = ({
                                 />
                             </div>
 
+                            {/* Designation */}
                             <div className="mb-4 space-y-1">
                                 <label className="font-sans text-font16 font-semibold text-gray44">
                                     Designation<span className="text-red-500pl-1">*</span>
@@ -1274,6 +1429,7 @@ export const EditTestimonialDrawer = ({
                                 />
                             </div>
 
+                            {/* Description */}
                             <div className="mb-4 space-y-1">
                                 <label className="font-sans text-font16 font-semibold text-gray44">
                                     Description<span className="text-red-500pl-1">*</span>
@@ -1294,6 +1450,7 @@ export const EditTestimonialDrawer = ({
                                 </Form.Item>
                             </div>
 
+                            {/* Image Upload */}
                             <div className="font-sans col-span-2 h-auto">
                                 <div className="font-sans w-full">
                                     <label className="font-sans text-font16 font-semibold text-gray44 mb-2">
@@ -1306,24 +1463,21 @@ export const EditTestimonialDrawer = ({
                                             <UploadImgFile
                                                 accept="image/png,image/jpeg"
                                                 isUploading={false}
+                                                onFileSelect={handleImageSelect}
                                                 onChange={(fileName) => {
                                                     form.setFieldsValue({ image: fileName || '' })
                                                 }}
                                                 handleFileUpload={async (file) => {
                                                     setImageFile(file)
-                                                    // Your upload logic here if needed
                                                     return true
-                                                }}
-                                                onFileSelect={function (): void {
-                                                    throw new Error('Function not implemented.')
                                                 }}
                                             />
 
-                                            {uploadImage && (
+                                            {previewUrl && (
                                                 <div className="mt-2">
                                                     <Image
                                                         width={200}
-                                                        src={uploadImage.startsWith('http') ? uploadImage : `/${uploadImage}`}
+                                                        src={previewUrl}
                                                         preview={false}
                                                         crossOrigin="anonymous"
                                                     />
@@ -1335,6 +1489,7 @@ export const EditTestimonialDrawer = ({
                             </div>
                         </div>
 
+                        {/* Buttons */}
                         <div className=" grid grid-cols-2 gap-2">
                             <ButtonThemeConfig buttonType={EConfigButtonType.SECONDARY}>
                                 <Button
@@ -1351,7 +1506,6 @@ export const EditTestimonialDrawer = ({
                                     icon={isSubmitting ? <LoadingOutlined spin /> : undefined}
                                     disabled={isSubmitting}
                                     className="font-sans h-auto w-full !rounded-[100px] bg-primary !hover:bg-primary text-white border-primary text-base shadow-none flex justify-center item-center px-6 py-4">
-                                    {' '}
                                     {isSubmitting ? 'Updating...' : 'Update'}
                                 </Button>
                             </ButtonThemeConfig>
